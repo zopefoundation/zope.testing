@@ -4,29 +4,30 @@
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
-# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
 # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
 # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Tests for the testing framework.
+"""Sample test script using zope.testing.testrunner
+
+see zope.testing testrunner.txt
 
 $Id$
 """
-import os
-import sys
-import unittest
-from zope.testing import doctest, testrunner
 
-def test_suite():
-    return unittest.TestSuite((
-        doctest.DocTestSuite('zope.testing.renormalizing'),
-        doctest.DocFileSuite('formparser.txt'),
-        doctest.DocTestSuite('zope.testing.loggingsupport'),
-        testrunner.test_suite(),
-        ))
+import os, sys
 
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')
+src = os.path.join(os.path.split(sys.argv[0])[0], 'src')
+sys.path.append(src)
+
+from zope.testing import testrunner
+
+defaults = [
+    '--path', src,
+    '--tests-pattern', '^tests$',
+    ]
+
+testrunner.run(defaults)

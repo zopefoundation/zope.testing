@@ -2130,7 +2130,11 @@ def _unittest_count(docstring):
             
     return count or 1
             
-    
+
+class DocTestFailureException(AssertionError):
+    """Use custom exception for doctest unit test failures
+    """
+
 class DocTestCase(unittest.TestCase):
 
     def __init__(self, test, optionflags=0, setUp=None, tearDown=None,
@@ -2161,6 +2165,8 @@ class DocTestCase(unittest.TestCase):
             self._dt_tearDown(test)
 
         test.globs.clear()
+
+    failureException = DocTestFailureException
 
     def runTest(self):
         test = self._dt_test
