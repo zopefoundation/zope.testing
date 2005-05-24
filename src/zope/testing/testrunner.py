@@ -478,6 +478,8 @@ def find_test_files_(options):
 
 def walk_with_symlinks(options, dir):
     for dirpath, dirs, files in os.walk(dir):
+        dirs.sort()
+        files.sort()
         dirs[:] = [d for d in dirs if d not in options.ignore_dir]
         yield (dirpath, dirs, files)
         for d in dirs:

@@ -417,6 +417,19 @@ You can specify multiple packages:
         test_y0 (sample1.sample11.sampletests)
         test_z1 (sample1.sample11.sampletests)
         testrunner-ex/sample1/sample11/../../sampletests.txt
+        test_x1 (sample1.sample13.sampletests.TestA)
+        test_y0 (sample1.sample13.sampletests.TestA)
+        test_z0 (sample1.sample13.sampletests.TestA)
+        test_x0 (sample1.sample13.sampletests.TestB)
+        test_y1 (sample1.sample13.sampletests.TestB)
+        test_z0 (sample1.sample13.sampletests.TestB)
+        test_1 (sample1.sample13.sampletests.TestNotMuch)
+        test_2 (sample1.sample13.sampletests.TestNotMuch)
+        test_3 (sample1.sample13.sampletests.TestNotMuch)
+        test_x0 (sample1.sample13.sampletests)
+        test_y0 (sample1.sample13.sampletests)
+        test_z1 (sample1.sample13.sampletests)
+        testrunner-ex/sample1/sample13/../../sampletests.txt
         test_x1 (sample1.sampletests.test1.TestA)
         test_y0 (sample1.sampletests.test1.TestA)
         test_z0 (sample1.sampletests.test1.TestA)
@@ -443,19 +456,19 @@ You can specify multiple packages:
         test_y0 (sample1.sampletests.test_one)
         test_z1 (sample1.sampletests.test_one)
         testrunner-ex/sample1/sampletests/../../sampletests.txt
-        test_x1 (sample1.sample13.sampletests.TestA)
-        test_y0 (sample1.sample13.sampletests.TestA)
-        test_z0 (sample1.sample13.sampletests.TestA)
-        test_x0 (sample1.sample13.sampletests.TestB)
-        test_y1 (sample1.sample13.sampletests.TestB)
-        test_z0 (sample1.sample13.sampletests.TestB)
-        test_1 (sample1.sample13.sampletests.TestNotMuch)
-        test_2 (sample1.sample13.sampletests.TestNotMuch)
-        test_3 (sample1.sample13.sampletests.TestNotMuch)
-        test_x0 (sample1.sample13.sampletests)
-        test_y0 (sample1.sample13.sampletests)
-        test_z1 (sample1.sample13.sampletests)
-        testrunner-ex/sample1/sample13/../../sampletests.txt
+        test_x1 (sample2.sample21.sampletests.TestA)
+        test_y0 (sample2.sample21.sampletests.TestA)
+        test_z0 (sample2.sample21.sampletests.TestA)
+        test_x0 (sample2.sample21.sampletests.TestB)
+        test_y1 (sample2.sample21.sampletests.TestB)
+        test_z0 (sample2.sample21.sampletests.TestB)
+        test_1 (sample2.sample21.sampletests.TestNotMuch)
+        test_2 (sample2.sample21.sampletests.TestNotMuch)
+        test_3 (sample2.sample21.sampletests.TestNotMuch)
+        test_x0 (sample2.sample21.sampletests)
+        test_y0 (sample2.sample21.sampletests)
+        test_z1 (sample2.sample21.sampletests)
+        testrunner-ex/sample2/sample21/../../sampletests.txt
         test_x1 (sample2.sampletests.test_1.TestA)
         test_y0 (sample2.sampletests.test_1.TestA)
         test_z0 (sample2.sampletests.test_1.TestA)
@@ -482,20 +495,7 @@ You can specify multiple packages:
         test_y0 (sample2.sampletests.testone)
         test_z1 (sample2.sampletests.testone)
         testrunner-ex/sample2/sampletests/../../sampletests.txt
-        test_x1 (sample2.sample21.sampletests.TestA)
-        test_y0 (sample2.sample21.sampletests.TestA)
-        test_z0 (sample2.sample21.sampletests.TestA)
-        test_x0 (sample2.sample21.sampletests.TestB)
-        test_y1 (sample2.sample21.sampletests.TestB)
-        test_z0 (sample2.sample21.sampletests.TestB)
-        test_1 (sample2.sample21.sampletests.TestNotMuch)
-        test_2 (sample2.sample21.sampletests.TestNotMuch)
-        test_3 (sample2.sample21.sampletests.TestNotMuch)
-        test_x0 (sample2.sample21.sampletests)
-        test_y0 (sample2.sample21.sampletests)
-        test_z1 (sample2.sample21.sampletests)
-        testrunner-ex/sample2/sample21/../../sampletests.txt
-      Ran 128 tests with 0 failures and 0 errors in 0.026 seconds.
+      Ran 128 tests with 0 failures and 0 errors in 0.025 seconds.
 
 We can select by test module name:
 
@@ -557,9 +557,9 @@ and by test within the module:
       Running:
         testrunner-ex/sample1/../sampletests.txt
         testrunner-ex/sample1/sample11/../../sampletests.txt
-        testrunner-ex/sample1/sampletests/../../sampletests.txt
-        testrunner-ex/sample1/sampletests/../../sampletests.txt
         testrunner-ex/sample1/sample13/../../sampletests.txt
+        testrunner-ex/sample1/sampletests/../../sampletests.txt
+        testrunner-ex/sample1/sampletests/../../sampletests.txt
       Ran 20 tests with 0 failures and 0 errors in 0.004 seconds.
 
 Sometimes, there are tests that you don't want to run by default.
@@ -584,33 +584,33 @@ level.  For example, with the following options:
         test_y0 (sample1.sample11.sampletests.TestA)
         test_y1 (sample1.sample11.sampletests.TestB)
         test_y0 (sample1.sample11.sampletests)
+        test_y0 (sample1.sample13.sampletests.TestA)
+        test_y1 (sample1.sample13.sampletests.TestB)
+        test_y0 (sample1.sample13.sampletests)
         test_y0 (sample1.sampletests.test1.TestA)
         test_y1 (sample1.sampletests.test1.TestB)
         test_y0 (sample1.sampletests.test1)
         test_y0 (sample1.sampletests.test_one.TestA)
         test_y1 (sample1.sampletests.test_one.TestB)
         test_y0 (sample1.sampletests.test_one)
-        test_y0 (sample1.sample13.sampletests.TestA)
-        test_y1 (sample1.sample13.sampletests.TestB)
-        test_y0 (sample1.sample13.sampletests)
-        test_y0 (sampletests.test1.TestA)
-        test_y1 (sampletests.test1.TestB)
-        test_y0 (sampletests.test1)
-        test_y0 (sampletests.test_one.TestA)
-        test_y1 (sampletests.test_one.TestB)
-        test_y0 (sampletests.test_one)
-        test_y0 (sample3.sampletests.TestA)
-        test_y1 (sample3.sampletests.TestB)
-        test_y0 (sample3.sampletests)
+        test_y0 (sample2.sample21.sampletests.TestA)
+        test_y1 (sample2.sample21.sampletests.TestB)
+        test_y0 (sample2.sample21.sampletests)
         test_y0 (sample2.sampletests.test_1.TestA)
         test_y1 (sample2.sampletests.test_1.TestB)
         test_y0 (sample2.sampletests.test_1)
         test_y0 (sample2.sampletests.testone.TestA)
         test_y1 (sample2.sampletests.testone.TestB)
         test_y0 (sample2.sampletests.testone)
-        test_y0 (sample2.sample21.sampletests.TestA)
-        test_y1 (sample2.sample21.sampletests.TestB)
-        test_y0 (sample2.sample21.sampletests)
+        test_y0 (sample3.sampletests.TestA)
+        test_y1 (sample3.sampletests.TestB)
+        test_y0 (sample3.sampletests)
+        test_y0 (sampletests.test1.TestA)
+        test_y1 (sampletests.test1.TestB)
+        test_y0 (sampletests.test1)
+        test_y0 (sampletests.test_one.TestA)
+        test_y1 (sampletests.test_one.TestB)
+        test_y0 (sampletests.test_one)
       Ran 36 tests with 0 failures and 0 errors in 0.009 seconds.
 
 
@@ -633,33 +633,33 @@ additional tests:
         test_y1 (sample1.sample11.sampletests.TestB)
         test_y1 (sample1.sample11.sampletests.TestB2)
         test_y0 (sample1.sample11.sampletests)
+        test_y0 (sample1.sample13.sampletests.TestA)
+        test_y1 (sample1.sample13.sampletests.TestB)
+        test_y0 (sample1.sample13.sampletests)
         test_y0 (sample1.sampletests.test1.TestA)
         test_y1 (sample1.sampletests.test1.TestB)
         test_y0 (sample1.sampletests.test1)
         test_y0 (sample1.sampletests.test_one.TestA)
         test_y1 (sample1.sampletests.test_one.TestB)
         test_y0 (sample1.sampletests.test_one)
-        test_y0 (sample1.sample13.sampletests.TestA)
-        test_y1 (sample1.sample13.sampletests.TestB)
-        test_y0 (sample1.sample13.sampletests)
-        test_y0 (sampletests.test1.TestA)
-        test_y1 (sampletests.test1.TestB)
-        test_y0 (sampletests.test1)
-        test_y0 (sampletests.test_one.TestA)
-        test_y1 (sampletests.test_one.TestB)
-        test_y0 (sampletests.test_one)
-        test_y0 (sample3.sampletests.TestA)
-        test_y1 (sample3.sampletests.TestB)
-        test_y0 (sample3.sampletests)
+        test_y0 (sample2.sample21.sampletests.TestA)
+        test_y1 (sample2.sample21.sampletests.TestB)
+        test_y0 (sample2.sample21.sampletests)
         test_y0 (sample2.sampletests.test_1.TestA)
         test_y1 (sample2.sampletests.test_1.TestB)
         test_y0 (sample2.sampletests.test_1)
         test_y0 (sample2.sampletests.testone.TestA)
         test_y1 (sample2.sampletests.testone.TestB)
         test_y0 (sample2.sampletests.testone)
-        test_y0 (sample2.sample21.sampletests.TestA)
-        test_y1 (sample2.sample21.sampletests.TestB)
-        test_y0 (sample2.sample21.sampletests)
+        test_y0 (sample3.sampletests.TestA)
+        test_y1 (sample3.sampletests.TestB)
+        test_y0 (sample3.sampletests)
+        test_y0 (sampletests.test1.TestA)
+        test_y1 (sampletests.test1.TestB)
+        test_y0 (sampletests.test1)
+        test_y0 (sampletests.test_one.TestA)
+        test_y1 (sampletests.test_one.TestB)
+        test_y0 (sampletests.test_one)
       Ran 38 tests with 0 failures and 0 errors in 0.009 seconds.
 
 We can use the --all option to run tests at all levels:
@@ -681,33 +681,33 @@ We can use the --all option to run tests at all levels:
         test_y1 (sample1.sample11.sampletests.TestB)
         test_y1 (sample1.sample11.sampletests.TestB2)
         test_y0 (sample1.sample11.sampletests)
+        test_y0 (sample1.sample13.sampletests.TestA)
+        test_y1 (sample1.sample13.sampletests.TestB)
+        test_y0 (sample1.sample13.sampletests)
         test_y0 (sample1.sampletests.test1.TestA)
         test_y1 (sample1.sampletests.test1.TestB)
         test_y0 (sample1.sampletests.test1)
         test_y0 (sample1.sampletests.test_one.TestA)
         test_y1 (sample1.sampletests.test_one.TestB)
         test_y0 (sample1.sampletests.test_one)
-        test_y0 (sample1.sample13.sampletests.TestA)
-        test_y1 (sample1.sample13.sampletests.TestB)
-        test_y0 (sample1.sample13.sampletests)
-        test_y0 (sampletests.test1.TestA)
-        test_y1 (sampletests.test1.TestB)
-        test_y0 (sampletests.test1)
-        test_y0 (sampletests.test_one.TestA)
-        test_y1 (sampletests.test_one.TestB)
-        test_y0 (sampletests.test_one)
-        test_y0 (sample3.sampletests.TestA)
-        test_y1 (sample3.sampletests.TestB)
-        test_y0 (sample3.sampletests)
+        test_y0 (sample2.sample21.sampletests.TestA)
+        test_y1 (sample2.sample21.sampletests.TestB)
+        test_y0 (sample2.sample21.sampletests)
         test_y0 (sample2.sampletests.test_1.TestA)
         test_y1 (sample2.sampletests.test_1.TestB)
         test_y0 (sample2.sampletests.test_1)
         test_y0 (sample2.sampletests.testone.TestA)
         test_y1 (sample2.sampletests.testone.TestB)
         test_y0 (sample2.sampletests.testone)
-        test_y0 (sample2.sample21.sampletests.TestA)
-        test_y1 (sample2.sample21.sampletests.TestB)
-        test_y0 (sample2.sample21.sampletests)
+        test_y0 (sample3.sampletests.TestA)
+        test_y1 (sample3.sampletests.TestB)
+        test_y0 (sample3.sampletests)
+        test_y0 (sampletests.test1.TestA)
+        test_y1 (sampletests.test1.TestB)
+        test_y0 (sampletests.test1)
+        test_y0 (sampletests.test_one.TestA)
+        test_y1 (sampletests.test_one.TestB)
+        test_y0 (sampletests.test_one)
       Ran 39 tests with 0 failures and 0 errors in 0.009 seconds.
 
 Test Progress
@@ -1005,16 +1005,15 @@ If we ask for single verbosity, the dotted output will be interrupted:
     Running unit tests:
       Running:
         ..................................................
-        ..................................................
-        .............................................
+        ...............................................
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_e)
     Failed doctest test for sample2.sampletests_e.eek
       File "testrunner-ex/sample2/sampletests_e.py", line 28, in eek
     <BLANKLINE>
     ----------------------------------------------------------------------
-    File "testrunner-ex/sample2/sampletests_e.py", line 30, in 
-              sample2.sampletests_e.eek
+    File "testrunner-ex/sample2/sampletests_e.py", line 30,
+        in sample2.sampletests_e.eek
     Failed example:
         f()
     Exception raised:
@@ -1031,6 +1030,7 @@ If we ask for single verbosity, the dotted output will be interrupted:
     <BLANKLINE>
     ...
     <BLANKLINE>
+    <BLANKLINE>
     Error in test test3 (sample2.sampletests_e.Test)
     Traceback (most recent call last):
       File "testrunner-ex/sample2/sampletests_e.py", line 43, in test3
@@ -1041,8 +1041,7 @@ If we ask for single verbosity, the dotted output will be interrupted:
         x = y + 1
     NameError: global name 'y' is not defined
     <BLANKLINE>
-    ..
-        .
+    ...
     <BLANKLINE>
     Failure in test testrunner-ex/sample2/e.txt
     Failed doctest test for e.txt
@@ -1072,9 +1071,10 @@ If we ask for single verbosity, the dotted output will be interrupted:
         raise self.failureException, \
     AssertionError: 1 != 0
     <BLANKLINE>
-    ................................................
+    ..............................................
+        ..................................................
     <BLANKLINE>
-      Ran 200 tests with 3 failures and 1 errors in 0.159 seconds.
+      Ran 200 tests with 3 failures and 1 errors in 0.040 seconds.
 
 Similarly for progress output:
 
@@ -1205,7 +1205,7 @@ the test
     >>> sys.argv = ('test --tests-pattern ^sampletests(f|_e|_f)?$ -u -ssample2'
     ...             ' -vv').split()
     >>> testrunner.run(defaults)
-    ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
+    ... # doctest: +NORMALIZE_WHITESPACE
     Running tests at level 1
     Running unit tests:
       Running:
@@ -1282,6 +1282,19 @@ the test
     AssertionError: 1 != 0
     <BLANKLINE>
     <BLANKLINE>
+        test_x1 (sample2.sample21.sampletests.TestA)
+        test_y0 (sample2.sample21.sampletests.TestA)
+        test_z0 (sample2.sample21.sampletests.TestA)
+        test_x0 (sample2.sample21.sampletests.TestB)
+        test_y1 (sample2.sample21.sampletests.TestB)
+        test_z0 (sample2.sample21.sampletests.TestB)
+        test_1 (sample2.sample21.sampletests.TestNotMuch)
+        test_2 (sample2.sample21.sampletests.TestNotMuch)
+        test_3 (sample2.sample21.sampletests.TestNotMuch)
+        test_x0 (sample2.sample21.sampletests)
+        test_y0 (sample2.sample21.sampletests)
+        test_z1 (sample2.sample21.sampletests)
+        testrunner-ex/sample2/sample21/../../sampletests.txt
         test_x1 (sample2.sampletests.test_1.TestA)
         test_y0 (sample2.sampletests.test_1.TestA)
         test_z0 (sample2.sampletests.test_1.TestA)
@@ -1308,19 +1321,6 @@ the test
         test_y0 (sample2.sampletests.testone)
         test_z1 (sample2.sampletests.testone)
         testrunner-ex/sample2/sampletests/../../sampletests.txt
-        test_x1 (sample2.sample21.sampletests.TestA)
-        test_y0 (sample2.sample21.sampletests.TestA)
-        test_z0 (sample2.sample21.sampletests.TestA)
-        test_x0 (sample2.sample21.sampletests.TestB)
-        test_y1 (sample2.sample21.sampletests.TestB)
-        test_z0 (sample2.sample21.sampletests.TestB)
-        test_1 (sample2.sample21.sampletests.TestNotMuch)
-        test_2 (sample2.sample21.sampletests.TestNotMuch)
-        test_3 (sample2.sample21.sampletests.TestNotMuch)
-        test_x0 (sample2.sample21.sampletests)
-        test_y0 (sample2.sample21.sampletests)
-        test_z1 (sample2.sample21.sampletests)
-        testrunner-ex/sample2/sample21/../../sampletests.txt
       Ran 56 tests with 3 failures and 1 errors in 0.060 seconds.
     <BLANKLINE>
     Tests with errors:
