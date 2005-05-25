@@ -1,2 +1,2 @@
-This directory and it's subdirectories contains example tests for
+This directory and its subdirectories contain example tests for
 testing the test runner, testrunner.py.
