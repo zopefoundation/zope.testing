@@ -945,7 +945,13 @@ def test_suite():
         (re.compile(r'0[.]\d\d\d seconds'), '0.NNN seconds'),
         (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
-        (re.compile('"[^\n]+(doc|unit)test.py'), r'".../\1test.py'),
+
+        # omit traceback entries for unittest.py or doctest.py from
+        # output:
+        (re.compile(r'\n +File "[^\n]+(doc|unit)test.py", [^\n]+\n[^\n]+\n'),
+         r'\n'),
+
+
         ])
 
     def setUp(test):
