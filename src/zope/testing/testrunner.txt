@@ -2,44 +2,44 @@ Test Runner
 ===========
 
 The testrunner module is used to run automated tests defined using the
-unittest framework.  It's primary feature is that it *finds* tests by
+unittest framework.  Its primary feature is that it *finds* tests by
 searching directory trees.  It doesn't require the manual
-concatination of specific test suites.  It is highly customizable and
+concatenation of specific test suites.  It is highly customizable and
 should be usable with any project.  In addition to finding and running
-tests, it provides the folloawing additional features:
+tests, it provides the following additional features:
 
 - Test filtering using specifications of:
 
   o test packages within a larger tree
 
-  o regular expression patters for test modules
+  o regular expression patterns for test modules
 
-  o regular expression patters for individual tests
+  o regular expression patterns for individual tests
 
-- Organization of tests into lavels and layers
+- Organization of tests into levels and layers
 
   Sometimes, tests take so long to run that you don't want to run them
   on every run of the test runner.  Tests can be defined at different
-  levels. The test runner can be configured to only run tests at a
+  levels.  The test runner can be configured to only run tests at a
   specific level or below by default.  Command-line options can be
   used to specify a minimum level to use for a specific run, or to run
   all tests.  Individual tests or test suites can specify their level
   via a 'level' attribute. where levels are integers increasing from 1.
 
-  Most tests are unit tests. They don;t depend on other facilities or
+  Most tests are unit tests.  They don't depend on other facilities, or
   set up whatever dependencies they have.  For larger applications,
   it's useful to specify common facilities that a large number of
   tests share.  Making each test set up and and tear down these
-  facilities is both ineffecient and inconvenient. For this reason,
+  facilities is both ineffecient and inconvenient.  For this reason,
   we've introduced the concept of layers, based on the idea of layered
   application architectures.  Software build for a layer should be
-  able to depend on the facilities of lower layers already beeing set
+  able to depend on the facilities of lower layers already being set
   up.  For example, Zope defines a component architecture.  Much Zope
   software depends on that architecture.  We should be able to treat
-  the compent architecture as a layer that we set up once and reuse.
-  Similarly, zope application software should be able to depend on the
+  the component architecture as a layer that we set up once and reuse.
+  Similarly, Zope application software should be able to depend on the
   Zope application server without having to set it up in each test.
-  
+
   The test runner introduces test layers, which are objects that can
   set up environments for tests within the layers to use.  A layer is
   set up before running the tests in it.  Individual tests or test
@@ -48,13 +48,13 @@ tests, it provides the folloawing additional features:
 
 - Reporting
 
-  - Progress meter
+  - progress meter
 
   - summaries of tests run
 
 - Analysis of test execution
 
-  - Post-mortem debugging of test failures 
+  - post-mortem debugging of test failures
 
   - memory leaks
 
@@ -90,7 +90,7 @@ Typically, a test script does 2 things:
 - Calls the test runner with default arguments and arguments supplied
   to the script.
 
-  Normally, it just passes default/setup arguments. The test runner
+  Normally, it just passes default/setup arguments.  The test runner
   uses `sys.argv` to get the user's input.
 
 This directory contains a number of sample packages with tests.
@@ -153,7 +153,7 @@ Now, if we run the tests, without any other options:
       Tear down samplelayers.Layerx in 0.000 seconds.
     Total: 405 tests, 0 failures, 0 errors
 
-we see the normal testrunner output, which summarizes the tests runfor
+we see the normal testrunner output, which summarizes the tests run for
 each layer.  For each layer, we see what layers had to be torn down or
 set up to run the layer and we see the number of tests run, with
 results.
@@ -251,7 +251,7 @@ test:
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
 
-If there are more than 50 tests, the dots are printed in groups of 
+If there are more than 50 tests, the dots are printed in groups of
 50:
 
     >>> sys.argv = 'test -uv'.split()
@@ -531,7 +531,7 @@ We can select by test module name:
         test_z1 (sample1.sampletests.test_one)
         testrunner-ex/sample1/sampletests/../../sampletests.txt
       Ran 32 tests with 0 failures and 0 errors in 0.008 seconds.
-    
+
 and by test within the module:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m_one -mtest1 -tx0 -ty0'.split()
@@ -714,8 +714,8 @@ Test Progress
 -------------
 
 If the --progress (-p) option is used, progress information is printed and
-a carriage return, rather than a new-line is printed between 
-detail lines. Let's look at the effect of --progress (-p) at different
+a carriage return (rather than a new-line) is printed between
+detail lines.  Let's look at the effect of --progress (-p) at different
 levels of verbosity.
 
     >>> sys.argv = 'test --layer 122 -p'.split()
@@ -901,7 +901,7 @@ Let's look at tests that have errors and failures:
       File "testrunner-ex/sample2/sampletests_e.py", line 28, in eek
     <BLANKLINE>
     ----------------------------------------------------------------------
-    File "testrunner-ex/sample2/sampletests_e.py", line 30, 
+    File "testrunner-ex/sample2/sampletests_e.py", line 30,
                               in sample2.sampletests_e.eek
     Failed example:
         f()
@@ -1091,7 +1091,7 @@ Similarly for progress output:
       File "testrunner-ex/sample2/sampletests_e.py", line 28, in eek
     <BLANKLINE>
     ----------------------------------------------------------------------
-    File "testrunner-ex/sample2/sampletests_e.py", line 30, 
+    File "testrunner-ex/sample2/sampletests_e.py", line 30,
            in sample2.sampletests_e.eek
     Failed example:
         f()
@@ -1216,7 +1216,7 @@ the test
       File "testrunner-ex/sample2/sampletests_e.py", line 28, in eek
     <BLANKLINE>
     ----------------------------------------------------------------------
-    File "testrunner-ex/sample2/sampletests_e.py", line 30, 
+    File "testrunner-ex/sample2/sampletests_e.py", line 30,
            in sample2.sampletests_e.eek
     Failed example:
         f()
