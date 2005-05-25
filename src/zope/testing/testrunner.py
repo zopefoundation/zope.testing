@@ -45,7 +45,7 @@ def run_with_options(options):
         else:
             print "Running tests at level %d" % options.at_level
 
-    
+
     # XXX add tracing later
 
     # Add directories to the path
@@ -75,12 +75,12 @@ def run_with_options(options):
                         break
             else:
                 should_run = True
-                
+
             if should_run:
                 print "Running unit tests:"
                 nlayers += 1
                 ran += run_tests(options, tests, 'unit', failures, errors)
-        
+
     setup_layers = {}
     for layer_name, layer, tests in ordered_layers(tests_by_layer_name):
         if options.layer:
@@ -117,7 +117,7 @@ def run_with_options(options):
     if nlayers != 1:
         print "Total: %s tests, %s failures, %s errors" % (
             ran, len(failures), len(errors))
-    
+
 
 def run_tests(options, tests, name, failures, errors):
     repeat = options.repeat or 1
@@ -145,7 +145,7 @@ def run_tests(options, tests, name, failures, errors):
         ran += result.testsRun
 
     return ran
-    
+
 
 def run_layer(options, layer_name, layer, tests, setup_layers,
               failures, errors):
@@ -171,7 +171,7 @@ def tear_down_unneeded(needed, setup_layers):
         l.tearDown()
         del setup_layers[l]
         print "in %.3f seconds." % (time.time() - t)
-    
+
 
 def setup_layer(layer, setup_layers):
     if layer not in setup_layers:
@@ -187,8 +187,8 @@ def dependencies(bases, result):
     for base in bases:
         result[base] = 1
         dependencies(base.__bases__, result)
-    
-    
+
+
 
 class TestResult(unittest.TestResult):
 
@@ -217,7 +217,7 @@ class TestResult(unittest.TestResult):
                 )
             sys.stdout.write(s)
             self.test_width += len(s)
-            
+
         elif options.verbose == 1:
             for i in range(count):
                 sys.stdout.write('.')
@@ -227,7 +227,7 @@ class TestResult(unittest.TestResult):
                     print '    ',
         elif options.verbose > 1:
             print '   ',
-            
+
         if options.verbose > 1:
             s = str(test)
             sys.stdout.write(' ')
@@ -260,7 +260,7 @@ class TestResult(unittest.TestResult):
         self.test_width = self.last_width = 0
 
     def addFailure(self, test, exc_info):
-        
+
         if self.options.verbose > 2:
             print " (%.3f ms)" % (time.time() - self._start_time)
 
@@ -322,7 +322,7 @@ def post_mortem(exc_info):
             # Print out location info if the error was in a doctest
             if exc_info[2].tb_frame.f_code.co_filename == '<string>':
                 print_doctest_location(err)
-            
+
         else:
             print_doctest_location(err)
             # Hm, we have a DocTestFailure exception.  We need to
@@ -333,7 +333,7 @@ def post_mortem(exc_info):
                       ) in err.test.globs
             except:
                 exc_info = sys.exc_info()
-        
+
     print "%s:" % (exc_info[0], )
     print exc_info[1]
     pdb.post_mortem(exc_info[2])
@@ -400,7 +400,7 @@ def tests_from_suite(suite, options, dlevel=1, dlayer='unit'):
     layer = getattr(suite, 'layer', dlayer)
     if not isinstance(layer, basestring):
         layer = layer.__module__ + '.' + layer.__name__
-        
+
     if isinstance(suite, unittest.TestSuite):
         for possible_suite in suite:
             for r in tests_from_suite(possible_suite, options, level, layer):
@@ -427,7 +427,7 @@ def find_suites(options):
                         "Couldn't get suite for %s" % module_name,
                         sys.exc_info()
                         )
-                
+
                 yield suite
                 break
 
@@ -442,7 +442,7 @@ class StartUpFailure(unittest.TestCase):
 
     def __str__(self):
         return "Startup failure: %s" % self.message
-    
+
     def runTest(self):
         raise self.exc_info[0], self.exc_info[1], self.exc_info[2]
 
@@ -679,7 +679,7 @@ Output progress status
 def report_only_first_failure(*args):
     old = doctest.set_unittest_reportflags(0)
     doctest.set_unittest_reportflags(old | doctest.REPORT_ONLY_FIRST_FAILURE)
-    
+
 reporting.add_option(
     '-1', action="callback", callback=report_only_first_failure,
     help="""\
@@ -711,7 +711,7 @@ def gc_callback(option, opt, GC_THRESHOLD, *args):
     else:
         gc.set_threshold(GC_THRESHOLD)
         print "gc threshold:", gc.get_threshold()
-    
+
 analysis.add_option(
     '--gc', action="callback", callback=gc_callback, dest='gc', type="int",
     help="""\
@@ -735,7 +735,7 @@ def refcount_available(*args):
 The Python you are running was not configured with --with-pydebug.
 This is required to use the --refount option.
 """)
-    
+
 analysis.add_option(
     '--refcount',
     action="callback", callback=refcount_available,
@@ -758,7 +758,7 @@ def do_pychecker(*args):
     if not os.environ.get("PYCHECKER"):
         os.environ["PYCHECKER"] = "-q"
     import pychecker.checker
-    
+
 analysis.add_option(
     '--pychecker', action="callback", callback=do_pychecker,
     help="""\
@@ -873,7 +873,7 @@ def get_options(args=None, defaults=None):
         merge_options(defaults, default_setup)
     else:
         defaults = default_setup
-    
+
     if args is None:
         args = sys.argv[1:]
     options, positional = parser.parse_args(args)
@@ -886,7 +886,7 @@ def get_options(args=None, defaults=None):
                 options.module.append(module_filter)
             else:
                 options.module = [module_filter]
-            
+
         if positional:
             test_filter = [positional]
             if options.test:
@@ -899,7 +899,7 @@ def get_options(args=None, defaults=None):
     options.tests_pattern = re.compile(options.tests_pattern).search
     options.test = map(compile_filter, options.test or ('.'))
     options.module = map(compile_filter, options.module or ('.'))
-        
+
     if options.package:
         options.package = [p.replace('/', '.').replace('\\', '.')
                            for p in options.package]
@@ -907,14 +907,14 @@ def get_options(args=None, defaults=None):
     options.prefix = [p + os.path.sep for p in options.path]
     if options.all:
         options.at_level = sys.maxint
-    
+
     if options.unit:
         options.layer = ['unit']
     if options.layer:
         options.layer = map(compile_filter, options.layer)
 
     options.layer = options.layer and dict([(l, 1) for l in options.layer])
-    
+
     return options
 
 # Command-line UI
@@ -940,7 +940,7 @@ def test_suite():
     import renormalizing
     checker = renormalizing.RENormalizing([
         (re.compile('\\\\'), '/'),   # hopefully, we'll make windows happy
-        (re.compile('/r'), '\\\\r'), # undo damage from previous 
+        (re.compile('/r'), '\\\\r'), # undo damage from previous
         (re.compile(r'\r'), '\\\\r\n'),
         (re.compile(r'0[.]\d\d\d seconds'), '0.NNN seconds'),
         (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),

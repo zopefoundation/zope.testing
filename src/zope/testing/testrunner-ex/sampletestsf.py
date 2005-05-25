@@ -35,7 +35,7 @@ class TestA(unittest.TestCase):
 
 class TestA2(unittest.TestCase):
     level = 2
-    
+
     def setUp(self):
         global x
         x = 1
@@ -104,7 +104,7 @@ class Layered:
     layerx = '0'
 
 class TestA1(unittest.TestCase, Layered):
-    
+
     def setUp(self):
         global x
         x = 1

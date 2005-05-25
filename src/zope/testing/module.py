@@ -29,7 +29,7 @@ class FakeModule:
 
 def setUp(test, name='README.txt'):
     dict = test.globs
-    dict['__name__'] = name    
+    dict['__name__'] = name
     sys.modules[name] = FakeModule(dict)
 
 def tearDown(test, name='README.txt'):

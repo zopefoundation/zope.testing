@@ -24,7 +24,7 @@ class Layer1:
     layer = '1'
     base = '0'
     layerx = '0'
-    
+
     def setUp(self):
         global layer
         if layer != self.base:
@@ -42,7 +42,7 @@ class Layer1:
 class Layerx:
     layerx = '1' # Internal to samples. Not part of layer API
     basex = '0'
-    
+
     def setUp(self):
         global layerx
         if layerx != self.basex:

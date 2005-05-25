@@ -39,16 +39,16 @@ we have some times and addresses:
     >>> got = '''\
     ... <object object at 0xb7f14458>
     ... completed in 1.235 seconds.
-    ... 
+    ...
     ... <object object at 0xb7f14460>
     ... completed in 123.233 seconds.
-    ... 
+    ...
     ... <object object at 0xb7f14468>
     ... completed in .231 seconds.
-    ... 
+    ...
     ... <object object at 0xb7f14470>
     ... completed in 1.23 seconds.
-    ... 
+    ...
     ... '''
 
 We may wish to consider these two strings to match, even though they
@@ -80,10 +80,10 @@ Usual OutputChecker options work as exected:
     ... completed in 1.234 seconds.
     ... <BLANKLINE>
     ... '''
-    
+
     >>> checker.check_output(want_ellided, got, 0)
     False
-    
+
     >>> checker.check_output(want, got, doctest.ELLIPSIS)
     True
 
@@ -169,7 +169,7 @@ When we get differencs, we output them with normalized text:
         <object object at 0xb7f14470>
         completed in 1.23 seconds.
         <BLANKLINE>
-    <BLANKLINE>    
+    <BLANKLINE>
 
 $Id$
 """
@@ -204,10 +204,10 @@ class RENormalizing(doctest.OutputChecker):
         if not want.strip():
             return doctest.OutputChecker.output_difference(
                 self, example, got, optionflags)
-        
-        # Dang, this isn't as easy to override as we might wish        
+
+        # Dang, this isn't as easy to override as we might wish
         original = want
-        
+
         for pattern, repl in self.patterns:
             want = pattern.sub(repl, want)
             got = pattern.sub(repl, got)

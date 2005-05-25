@@ -26,7 +26,7 @@ z=0
 
 class TestA(unittest.TestCase):
     layer = layername
-        
+
     def setUp(self):
         global x
         x = 1

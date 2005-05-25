@@ -2127,9 +2127,9 @@ def _unittest_count(docstring):
                 words = 0
         else:
             words = 1
-            
+
     return count or 1
-            
+
 
 class DocTestFailureException(AssertionError):
     """Use custom exception for doctest unit test failures

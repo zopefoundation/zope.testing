@@ -36,7 +36,7 @@ class TestA(unittest.TestCase):
 class TestA3(unittest.TestCase):
 
     level = 3
-    
+
     def setUp(self):
         global x
         x = 1
@@ -66,7 +66,7 @@ class TestB(unittest.TestCase):
 
 class TestB2(unittest.TestCase):
     level = 2
-    
+
     def setUp(self):
         global y
         y = 1

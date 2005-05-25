@@ -47,7 +47,7 @@ class Test(unittest.TestCase):
 
     def test5(self):
         pass
-        
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(doctest.DocTestSuite())
