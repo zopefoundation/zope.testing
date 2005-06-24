@@ -1330,3 +1330,169 @@ the test
        eek (sample2.sampletests_e)
        testrunner-ex/sample2/e.txt
        test (sample2.sampletests_f.Test)
+
+Suppressing multiple doctest errors
+-----------------------------------
+
+Often, when a doctest example fails, the failure will cause later
+examples in the same test to fail.  Each failure is reported:
+
+    >>> sys.argv = 'test --tests-pattern ^sampletests_1$'.split()
+    >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test eek (sample2.sampletests_1)
+    Failed doctest test for sample2.sampletests_1.eek
+      File "testrunner-ex/sample2/sampletests_1.py", line 17, in eek
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 19, 
+         in sample2.sampletests_1.eek
+    Failed example:
+        x = y
+    Exception raised:
+        Traceback (most recent call last):
+          File "src/zope/testing/doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+            x = y
+        NameError: name 'y' is not defined
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 21, 
+         in sample2.sampletests_1.eek
+    Failed example:
+        x
+    Exception raised:
+        Traceback (most recent call last):
+          File "src/zope/testing/doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[1]>", line 1, in ?
+            x
+        NameError: name 'x' is not defined
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 24, 
+         in sample2.sampletests_1.eek
+    Failed example:
+        z = x + 1
+    Exception raised:
+        Traceback (most recent call last):
+          File "src/zope/testing/doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[2]>", line 1, in ?
+            z = x + 1
+        NameError: name 'x' is not defined
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+
+This can be a bid confusing, especially when there are enough tests
+that they scroll off a screen.  Often you just want to see the first
+failure.  This can be accomplished with the -1 option (for "just show
+me the first failed example in a doctest" :)
+
+    >>> sys.argv = 'test --tests-pattern ^sampletests_1$ -1'.split()
+    >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test eek (sample2.sampletests_1)
+    Failed doctest test for sample2.sampletests_1.eek
+      File "testrunner-ex/sample2/sampletests_1.py", line 17, in eek
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 19, 
+         in sample2.sampletests_1.eek
+    Failed example:
+        x = y
+    Exception raised:
+        Traceback (most recent call last):
+          File "src/zope/testing/doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+            x = y
+        NameError: name 'y' is not defined
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.001 seconds.
+
+
+Testing-Module Import Errors
+----------------------------
+
+If there are errors when importing a test module, these errors are
+reported:
+
+    >>> sys.argv = ('test --tests-pattern ^sampletests(f|_i)?$ --layer 1 '
+    ...            ).split()
+    >>> testrunner.run(defaults)
+    ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
+    Test-module import failures:
+    <BLANKLINE>
+    Module: sample2.sampletests_i
+    <BLANKLINE>
+      File "testrunner-ex/sample2/sampletests_i.py", line 15
+        importx unittest
+                       ^
+    SyntaxError: invalid syntax
+    <BLANKLINE>
+    <BLANKLINE>
+    Module: sample2.sample21.sampletests_i
+    <BLANKLINE>
+    Traceback (most recent call last):
+      File "testrunner-ex/sample2/sample21/sampletests_i.py", line 15, in ?
+        import zope.testing.huh
+    ImportError: No module named huh
+    <BLANKLINE>
+    <BLANKLINE>
+    Module: sample2.sample22.sampletests_i
+    <BLANKLINE>
+    AttributeError: 'module' object has no attribute 'test_suite'
+    <BLANKLINE>
+    <BLANKLINE>
+    Module: sample2.sample23.sampletests_i
+    <BLANKLINE>
+    Traceback (most recent call last):
+      File "testrunner-ex/sample2/sample23/sampletests_i.py", line 18, in ?
+        class Test(unittest.TestCase):
+      File "testrunner-ex/sample2/sample23/sampletests_i.py", line 23, in Test
+        raise TypeError('eek')
+    TypeError: eek
+    <BLANKLINE>
+    <BLANKLINE>
+    Running samplelayers.Layer1 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Ran 9 tests with 0 failures and 0 errors in 0.000 seconds.
+    Running samplelayers.Layer12 tests:
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Running samplelayers.Layer121 tests:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Set up samplelayers.Layer121 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Running samplelayers.Layer11 tests:
+      Tear down samplelayers.Layer121 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer11 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Running samplelayers.Layer112 tests:
+      Set up samplelayers.Layerx in 0.000 seconds.
+      Set up samplelayers.Layer112 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Running samplelayers.Layer111 tests:
+      Tear down samplelayers.Layer112 in 0.000 seconds.
+      Set up samplelayers.Layer111 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer111 in 0.000 seconds.
+      Tear down samplelayers.Layer11 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+      Tear down samplelayers.Layerx in 0.000 seconds.
+    Total: 213 tests, 0 failures, 0 errors
+    <BLANKLINE>
+    Test-modules with import problems:
+      sample2.sampletests_i
+      sample2.sample21.sampletests_i
+      sample2.sample22.sampletests_i
+      sample2.sample23.sampletests_i

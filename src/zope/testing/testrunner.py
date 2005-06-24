@@ -34,8 +34,13 @@ import unittest
 
 
 def run(defaults=None, args=None):
+    # Control reporting flags during run
+    old_reporting_flags = doctest.set_unittest_reportflags(0)
+    
     options = get_options(args, defaults)
     run_with_options(options)
+
+    doctest.set_unittest_reportflags(old_reporting_flags)
 
 def run_with_options(options):
 
@@ -64,6 +69,15 @@ def run_with_options(options):
     failures = []
     errors = []
     nlayers = 0
+    import_errors = tests_by_layer_name.pop(None, None)
+
+    if import_errors:
+        print "Test-module import failures:"
+        for error in import_errors:
+            print_traceback("Module: %s\n" % error.module, error.exc_info),
+        print
+            
+    
     if 'unit' in tests_by_layer_name:
         tests = tests_by_layer_name.pop('unit')
         if not options.non_unit:
@@ -118,6 +132,12 @@ def run_with_options(options):
         print "Total: %s tests, %s failures, %s errors" % (
             ran, len(failures), len(errors))
 
+    if import_errors:
+        print
+        print "Test-modules with import problems:"
+        for test in import_errors:
+            print "  " + test.module
+            
 
 def run_tests(options, tests, name, failures, errors):
     repeat = options.repeat or 1
@@ -274,18 +294,6 @@ class TestResult(unittest.TestResult):
         self.test_width = self.last_width = 0
 
 
-    def _print_traceback(self, msg, exc_info):
-        print
-        print msg
-
-        v = exc_info[1]
-        if isinstance(v, doctest.DocTestFailureException):
-            tb = v.args[0]
-        else:
-            tb = "".join(traceback.format_exception(*exc_info))
-
-        print tb
-
     def stopTest(self, test):
         if self.options.progress:
             sys.stdout.write(' ' * (self.last_width - self.test_width) + "\r")
@@ -311,6 +319,22 @@ class TestResult(unittest.TestResult):
             print "New thread(s):", new_threads
 
         sys.stdout.flush()
+
+
+    def _print_traceback(self, msg, exc_info):
+        print_traceback(msg, exc_info)
+
+def print_traceback(msg, exc_info):
+    print
+    print msg
+
+    v = exc_info[1]
+    if isinstance(v, doctest.DocTestFailureException):
+        tb = v.args[0]
+    else:
+        tb = "".join(traceback.format_exception(*exc_info))
+        
+    print tb
 
 def post_mortem(exc_info):
     err = exc_info[1]
@@ -363,7 +387,6 @@ def layer_from_name(layer_name):
     layer_module, module_layer_name = layer_names[:-1], layer_names[-1]
     return getattr(import_name('.'.join(layer_module)), module_layer_name)
 
-
 def order_by_bases(layers):
     """Order the layers from least to most specific (bottom to top)
     """
@@ -405,6 +428,8 @@ def tests_from_suite(suite, options, dlevel=1, dlayer='unit'):
         for possible_suite in suite:
             for r in tests_from_suite(possible_suite, options, level, layer):
                 yield r
+    elif isinstance(suite, StartUpFailure):
+        yield (suite, None)
     else:
         if level <= options.at_level:
             for pat in options.test:
@@ -420,32 +445,29 @@ def find_suites(options):
                 module_name = fpath[len(prefix):-3].replace(os.path.sep, '.')
                 try:
                     module = import_name(module_name)
-                    suite = getattr(module, options.suite_name)()
                 except:
                     suite = StartUpFailure(
-                        options,
-                        "Couldn't get suite for %s" % module_name,
-                        sys.exc_info()
+                        options, module_name,
+                        sys.exc_info()[:2]
+                        + (sys.exc_info()[2].tb_next.tb_next,),
                         )
-
+                else:
+                    try:
+                        suite = getattr(module, options.suite_name)()
+                    except:
+                        suite = StartUpFailure(
+                            options, module_name, sys.exc_info()[:2]+(None,))
+                
                 yield suite
                 break
 
-class StartUpFailure(unittest.TestCase):
+class StartUpFailure:
 
-    def __init__(self, options, message, exc_info):
+    def __init__(self, options, module, exc_info):
         if options.post_mortem:
             post_mortem(exc_info)
-        unittest.TestCase.__init__(self)
-        self.message = message
+        self.module = module
         self.exc_info = exc_info
-
-    def __str__(self):
-        return "Startup failure: %s" % self.message
-
-    def runTest(self):
-        raise self.exc_info[0], self.exc_info[1], self.exc_info[2]
-
 
 def find_test_files(options):
     found = {}
@@ -945,6 +967,7 @@ def test_suite():
         (re.compile(r'0[.]\d\d\d seconds'), '0.NNN seconds'),
         (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
+        (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
 
         # omit traceback entries for unittest.py or doctest.py from
         # output:
