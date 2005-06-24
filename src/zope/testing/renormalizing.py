@@ -13,13 +13,13 @@
 ##############################################################################
 r"""Regular expression pattern normalizing output checker
 
-The pattern-normalizing output checker extends the default output
-checker with an option to normalize expected an actual output.
+The pattern-normalizing output checker extends the default output checker with
+an option to normalize expected an actual output.
 
-You specify a sequence of patterns and replacements.  The replacements
-are applied to the expected and actual outputs before calling the
-default outputs checker.  Let's look at an example.  In this example,
-we have some times and addresses:
+You specify a sequence of patterns and replacements.  The replacements are
+applied to the expected and actual outputs before calling the default outputs
+checker.  Let's look at an example.  In this example, we have some times and
+addresses:
 
     >>> want = '''\
     ... <object object at 0xb7f14438>
@@ -51,15 +51,15 @@ we have some times and addresses:
     ...
     ... '''
 
-We may wish to consider these two strings to match, even though they
-differ in actual addresses and times.  The default output checker will
-consider them different:
+We may wish to consider these two strings to match, even though they differ in
+actual addresses and times.  The default output checker will consider them
+different:
 
     >>> doctest.OutputChecker().check_output(want, got, 0)
     False
 
-We'll use the RENormalizing to normalize both the
-wanted and gotten strings to ignore differences in times and addresses:
+We'll use the RENormalizing to normalize both the wanted and gotten strings to
+ignore differences in times and addresses:
 
     >>> import re
     >>> checker = RENormalizing([
@@ -70,7 +70,7 @@ wanted and gotten strings to ignore differences in times and addresses:
     >>> checker.check_output(want, got, 0)
     True
 
-Usual OutputChecker options work as exected:
+Usual OutputChecker options work as expected:
 
     >>> want_ellided = '''\
     ... <object object at 0xb7f14438>
@@ -144,12 +144,12 @@ When we get differencs, we output them with normalized text:
         + <BLANKLINE>
     <BLANKLINE>
 
-    If the wanted text is empty, however, we don't transform the
-    actual output. This is usful when writing tests.  We leave the
-    expected output empty, run the test, and use the actual output ad
-    expected, after reviewing it.
+    If the wanted text is empty, however, we don't transform the actual output.
+    This is usful when writing tests.  We leave the expected output empty, run
+    the test, and use the actual output as expected, after reviewing it.
 
     >>> source = '''\
+    ... >>> do_something()
     ... '''
 
     >>> example = doctest.Example(source, '\n')
