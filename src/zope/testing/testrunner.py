@@ -479,11 +479,15 @@ def find_test_files(options):
                     yield f
                     break
 
+identifier = re.compile('^[_a-zA-Z][_a-zA-Z0-9]+$').match
 def find_test_files_(options):
     tests_pattern = options.tests_pattern
     test_file_pattern = options.test_file_pattern
     for p in test_dirs(options, {}):
         for dirname, dirs, files in walk_with_symlinks(options, p):
+            if (dirname != p) and ('__init__.py' not in files):
+                continue
+            dirs[:] = filter(identifier, dirs)
             d = os.path.split(dirname)[1]
             if tests_pattern(d) and ('__init__.py' in files):
                 # tests directory
