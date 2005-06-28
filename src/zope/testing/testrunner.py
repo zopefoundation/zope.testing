@@ -32,13 +32,27 @@ import traceback
 import threading
 import unittest
 
+real_pdb_set_trace = pdb.set_trace
+
+class EndRun(Exception):
+    """Indicate that the existing run call should stop
+
+    Used to prevent additional test output after post-mortem debugging.
+    """
 
 def run(defaults=None, args=None):
     # Control reporting flags during run
     old_reporting_flags = doctest.set_unittest_reportflags(0)
+
+    # Make sure we start with real pdb.set_trace.  This is needed
+    # to make tests of the test runner work properly. :)
+    pdb.set_trace = real_pdb_set_trace
     
     options = get_options(args, defaults)
-    run_with_options(options)
+    try:
+        run_with_options(options)
+    except EndRun:
+        pass
 
     doctest.set_unittest_reportflags(old_reporting_flags)
 
@@ -152,7 +166,23 @@ def run_tests(options, tests, name, failures, errors):
             print '    ',
         result = TestResult(options, tests)
         t = time.time()
-        tests(result)
+
+
+        if options.post_mortem:
+            # post-mortem debugging
+            for test in tests:
+                try:
+                    test.debug()
+                except:
+                    result.addError(
+                        test,
+                        sys.exc_info()[:2] + (sys.exc_info()[2].tb_next, ),
+                        )
+                else:
+                    result.addSuccess(test)
+        else:
+            # normal
+            tests(result)
         t = time.time() - t
         if options.verbose == 1 or options.progress:
             print
@@ -281,6 +311,7 @@ class TestResult(unittest.TestResult):
 
     def addFailure(self, test, exc_info):
 
+
         if self.options.verbose > 2:
             print " (%.3f ms)" % (time.time() - self._start_time)
 
@@ -324,6 +355,16 @@ class TestResult(unittest.TestResult):
     def _print_traceback(self, msg, exc_info):
         print_traceback(msg, exc_info)
 
+doctest_template = """
+File "%s", line %s, in %s
+
+%s
+Want:
+%s
+Got:
+%s
+"""
+
 def print_traceback(msg, exc_info):
     print
     print msg
@@ -331,6 +372,15 @@ def print_traceback(msg, exc_info):
     v = exc_info[1]
     if isinstance(v, doctest.DocTestFailureException):
         tb = v.args[0]
+    elif isinstance(v, doctest.DocTestFailure):
+        tb = doctest_template % (
+            v.test.filename,
+            v.test.lineno + v.example.lineno + 1,
+            v.test.name,
+            v.example.source,
+            v.example.want,
+            v.got,
+            )
     else:
         tb = "".join(traceback.format_exception(*exc_info))
         
@@ -361,7 +411,7 @@ def post_mortem(exc_info):
     print "%s:" % (exc_info[0], )
     print exc_info[1]
     pdb.post_mortem(exc_info[2])
-    sys.exit()
+    raise EndRun
 
 def print_doctest_location(err):
     # This mimicks pdb's output, which gives way cool results in emacs :)
@@ -972,12 +1022,17 @@ def test_suite():
         (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
+        (re.compile('> [^\n]*(doc|unit)test[.]py\(\d+\)'),
+                       r'\1doctest.py(NNN)'),
+        (re.compile('[.]py\(\d+\)'), r'.py(NNN)'),
+        (re.compile('[.]py:\d+'), r'.py:NNN'),
+        (re.compile(' line \d+,', re.IGNORECASE), r' Line NNN,'),
 
         # omit traceback entries for unittest.py or doctest.py from
         # output:
-        (re.compile(r'\n +File "[^\n]+(doc|unit)test.py", [^\n]+\n[^\n]+\n'),
-         r'\n'),
-
+        (re.compile(r'^ +File "[^\n]+(doc|unit)test.py", [^\n]+\n[^\n]+\n',
+                    re.MULTILINE),
+         r''),
 
         ])
 
@@ -988,7 +1043,7 @@ def test_suite():
     def tearDown(test):
         sys.path, sys.argv = test.globs['saved-sys-info']
 
-    return doctest.DocFileSuite('testrunner.txt',
+    return doctest.DocFileSuite('testrunner.txt', 'testrunner-edge-cases.txt',
                                 setUp=setUp, tearDown=tearDown,
                                 checker=checker)
 
@@ -1000,6 +1055,10 @@ def main():
     run(default)
 
 if __name__ == '__main__':
+    # Hm, when run as a script, we need to import the testrunner under
+    # it's own name, so that there's the imported flavor has the right
+    # real_pdb_set_trace.
+    import zope.testing.testrunner
     main()
 
 # Test the testrunner
