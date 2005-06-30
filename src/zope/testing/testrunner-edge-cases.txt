@@ -30,17 +30,17 @@ Debugging
 
 Using pdb.set_trace in a function called by an ordinary test:
 
-    >>> sys.stdin = Input('n\np x\nc')
+    >>> if sys.version_info[:2] == (2, 3):
+    ...     sys.stdin = Input('n\np x\nc')
+    ... else:
+    ...     sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace2').split()
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
-    Running unit tests:
-    --Return--
-    > /usr/local/python/2.3.5/lib/python2.3/pdb.py(992)set_trace()->None
-    -> Pdb().set_trace()
-    (Pdb) n
-    > testrunner-ex/sample3/sampletests_d.py(42)f()
+    ... # doctest: +ELLIPSIS
+    Running unit tests:...
+    > testrunner-ex/sample3/sampletests_d.py(47)f()
     -> y = x
     (Pdb) p x
     1

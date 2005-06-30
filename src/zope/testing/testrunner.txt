@@ -1517,22 +1517,29 @@ runner will enter pdb at that point:
 
     >>> import sys
     >>> real_stdin = sys.stdin
-    >>> sys.stdin = Input('n\np x\nc')
+    >>> if sys.version_info[:2] == (2, 3):
+    ...     sys.stdin = Input('n\np x\nc')
+    ... else:
+    ...     sys.stdin = Input('p x\nc')
+
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace1').split()
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
-    Running unit tests:
-    --Return--
-    > /usr/local/python/2.3.5/lib/python2.3/pdb.py(992)set_trace()->None
-    -> Pdb().set_trace()
-    (Pdb) n
+    ... # doctest: +ELLIPSIS
+    Running unit tests:...
     > testrunner-ex/sample3/sampletests_d.py(27)test_set_trace1()
     -> y = x
     (Pdb) p x
     1
     (Pdb) c
-      Ran 1 tests with 0 failures and 0 errors in 0.002 seconds.
+      Ran 1 tests with 0 failures and 0 errors in 0.001 seconds.
+
+Note that, prior to Python 2.4, calling pdb.set_trace caused pdb to
+break in the pdb.set_trace function.  It was necessary to use 'next'
+or 'up' to get to the application code that called pdb.set_trace.  In
+Python 2.4, pdb.set_trace causes pdb to stop right after the call to
+pdb.set_trace. 
 
 You can also do post-mortem debugging, using the --post-mortem (-D)
 option:
