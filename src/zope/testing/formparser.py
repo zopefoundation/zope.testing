@@ -33,7 +33,7 @@ class FormParser(object):
         self._parser.handle_starttag = self._handle_starttag
         self._parser.handle_startendtag = self._handle_starttag
         self._buffer = []
-        self.current = None
+        self.current = None # current form
         self.forms = FormCollection()
 
     def parse(self):
@@ -92,9 +92,9 @@ class FormParser(object):
             value = d.get("value")
             size = intattr(d, "size")
             maxlength = intattr(d, "maxlength")
-            self.current[name] = Input(name, id, type, value,
-                                       checked, disabled, readonly,
-                                       src, size, maxlength)
+            self._add_field(
+                Input(name, id, type, value, checked,
+                      disabled, readonly, src, size, maxlength))
         elif tag == "button":
             pass
         elif tag == "textarea":
@@ -105,7 +105,7 @@ class FormParser(object):
                                   None, None, None)
             self.textarea.rows = intattr(d, "rows")
             self.textarea.cols = intattr(d, "cols")
-            self.current[name] = self.textarea
+            self._add_field(self.textarea)
             # The value will be set when the </textarea> is seen.
         elif tag == "base":
             href = d.get("href", "").strip()
@@ -117,7 +117,7 @@ class FormParser(object):
             multiple = "multiple" in d
             size = intattr(d, "size")
             self.select = Select(name, id, disabled, multiple, size)
-            self.current[name] = self.select
+            self._add_field(self.select)
         elif tag == "option":
             disabled = "disabled" in d
             selected = "selected" in d
@@ -125,6 +125,18 @@ class FormParser(object):
             label = d.get("label")
             option = Option(id, value, selected, label, disabled)
             self.select.options.append(option)
+
+    # Helpers:
+
+    def _add_field(self, field):
+        if field.name in self.current:
+            ob = self.current[field.name]
+            if isinstance(ob, list):
+                ob.append(field)
+            else:
+                self.current[field.name] = [ob, field]
+        else:
+            self.current[field.name] = field
 
 
 def kwattr(d, name, default=None):

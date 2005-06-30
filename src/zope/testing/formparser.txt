@@ -35,6 +35,8 @@ constructor arguments are the page data containing the form and
   ...     <textarea name="sometext" rows="5">Some text.</textarea>
   ...     <input type="Image" name="action" value="Do something."
   ...            src="else.png" />
+  ...     <input type="text" value="" name="multi" size="2" />
+  ...     <input type="text" value="" name="multi" size="3" />
   ...   </form>
   ... </body></html>
   ... '''
@@ -98,6 +100,17 @@ constructor.
   'http://www.example.com/base/sproing/sprung.html'
   >>> forms[1]["action"].src
   'http://www.example.com/base/else.png'
+
+Fields which are repeated are reported as lists of objects that
+represent each instance of the field::
+
+  >>> field = forms[1]["multi"]
+  >>> type(field)
+  <type 'list'>
+  >>> [o.value for o in field]
+  ['', '']
+  >>> [o.size for o in field]
+  [2, 3]
 
 The ``<textarea>`` element provides some additional attributes:
 
