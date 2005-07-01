@@ -270,7 +270,13 @@ def resume_tests(options, layer_name, failures, errors):
     subin, subout, suberr = os.popen3(args)
     for l in subout:
         sys.stdout.write(l)
-    ran, nfail, nerr = map(int, suberr.readline().strip().split())
+
+    line = suberr.readline()
+    try:
+        ran, nfail, nerr = map(int, line.strip().split())
+    except:
+        raise SubprocessError(line+suberr.read())
+        
     while nfail > 0:
         nfail -= 1
         failures.append((suberr.readline().strip(), None))
@@ -279,6 +285,10 @@ def resume_tests(options, layer_name, failures, errors):
         errors.append((suberr.readline().strip(), None))
     return ran
         
+
+class SubprocessError(Exception):
+    """An error occurred when running a subprocess
+    """
 
 class CanNotTearDown(Exception):
     "Couldn't tear down a test"
@@ -301,8 +311,6 @@ def tear_down_unneeded(needed, setup_layers, optional=False):
         else:
             print "in %.3f seconds." % (time.time() - t)
         del setup_layers[l]
-
-
 
 def setup_layer(layer, setup_layers):
     if layer not in setup_layers:
@@ -1140,13 +1148,11 @@ def main():
     run(default)
 
 if __name__ == '__main__':
-    # Hm, when run as a script, we need to import the testrunner under
-    # it's own name, so that there's the imported flavor has the right
-    # real_pdb_set_trace.  We also want to make sure we can import it.
-    # If we can't, we should try fixing the path and trying again
-    try:
-        import zope.testing.testrunner
-    except ImportError:
+
+    # if --resume_layer is in the arguments, we are being run from the
+    # test runner's own tests.  We need to adjust the path in hopes of
+    # not getting a different version installed in the system python.
+    if sys.argv[1] == '--resume-layer':
         sys.path.insert(0, 
             os.path.split(
                 os.path.split(
@@ -1155,10 +1161,12 @@ if __name__ == '__main__':
                         )[0]
                     )[0]
                 )[0]
-            ) # put at beginning to avoid one in site_packages
-        import zope.testing.testrunner
+            )
 
-
+    # Hm, when run as a script, we need to import the testrunner under
+    # it's own name, so that there's the imported flavor has the right
+    # real_pdb_set_trace.
+    import zope.testing.testrunner
     from zope.testing import doctest
     main()
 
