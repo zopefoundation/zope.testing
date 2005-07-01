@@ -262,9 +262,9 @@ def resume_tests(options, layer_name, failures, errors):
     args.extend(options.original_testrunner_args[1:])
 
     if sys.platform.startswith('win'):
-        args = ' '.join([
+        args = args[0] + ' ' + ' '.join([
             ('"' + a.replace('\\', '\\\\').replace('"', '\\"') + '"')
-            for a in args
+            for a in args[1:]
             ])
 
     subin, subout, suberr = os.popen3(args)
@@ -1147,7 +1147,7 @@ if __name__ == '__main__':
     try:
         import zope.testing.testrunner
     except ImportError:
-        sys.path.append(
+        sys.path.insert(0, 
             os.path.split(
                 os.path.split(
                     os.path.split(
@@ -1155,7 +1155,7 @@ if __name__ == '__main__':
                         )[0]
                     )[0]
                 )[0]
-            )
+            ) # put at beginning to avoid one in site_packages
         import zope.testing.testrunner
 
 
