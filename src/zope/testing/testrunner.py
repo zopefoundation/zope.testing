@@ -19,7 +19,6 @@ $Id$
 # Too bad: For now, we depend on zope.testing.  This is because
 # we want to use the latest, greatest doctest, which zope.testing
 # provides.  Then again, zope.testing is generally useful.
-from zope.testing import doctest
 import gc
 import logging
 import optparse
@@ -41,14 +40,32 @@ class EndRun(Exception):
     """
 
 def run(defaults=None, args=None):
+    if args is None:
+        args = sys.argv
+    
     # Control reporting flags during run
     old_reporting_flags = doctest.set_unittest_reportflags(0)
 
     # Make sure we start with real pdb.set_trace.  This is needed
     # to make tests of the test runner work properly. :)
     pdb.set_trace = real_pdb_set_trace
+
+    # Check to see if we are being run as a subprocess. If we are,
+    # then use the resume-layer and defaults passed in.
+    if len(args) > 1 and args[1] == '--resume-layer':
+        args.pop(1)
+        resume_layer = args.pop(1)
+        defaults = []
+        while args[1] == '--default':
+            args.pop(1)
+            defaults.append(args.pop(1))
+    else:
+        resume_layer = None
     
     options = get_options(args, defaults)
+    options.testrunner_defaults = defaults
+    options.resume_layer = resume_layer
+    
     try:
         run_with_options(options)
     except EndRun:
@@ -58,7 +75,10 @@ def run(defaults=None, args=None):
 
 def run_with_options(options):
 
-    if options.verbose:
+    if options.resume_layer:
+        original_stderr = sys.stderr
+        sys.stderr = sys.stdout
+    elif options.verbose:
         if options.all:
             print "Running tests at all levels"
         else:
@@ -78,7 +98,6 @@ def run_with_options(options):
 
     tests_by_layer_name = find_tests(options)
 
-
     ran = 0
     failures = []
     errors = []
@@ -94,7 +113,7 @@ def run_with_options(options):
     
     if 'unit' in tests_by_layer_name:
         tests = tests_by_layer_name.pop('unit')
-        if not options.non_unit:
+        if (not options.non_unit) and not options.resume_layer:
             if options.layer:
                 should_run = False
                 for pat in options.layer:
@@ -109,6 +128,11 @@ def run_with_options(options):
                 nlayers += 1
                 ran += run_tests(options, tests, 'unit', failures, errors)
 
+    if options.resume_layer:
+        resume = False
+    else:
+        resume = True
+
     setup_layers = {}
     for layer_name, layer, tests in ordered_layers(tests_by_layer_name):
         if options.layer:
@@ -121,36 +145,54 @@ def run_with_options(options):
             should_run = True
 
         if should_run:
+            if (not resume) and (layer_name == options.resume_layer):
+                resume = True
+            if not resume:
+                continue
             nlayers += 1
-            ran += run_layer(options, layer_name, layer, tests, setup_layers,
-                             failures, errors)
+            try:
+                ran += run_layer(options, layer_name, layer, tests,
+                                 setup_layers, failures, errors)
+            except CanNotTearDown:
+                setup_layers = None
+                ran += resume_tests(options, layer_name, failures, errors)
+                break
 
     if setup_layers:
         print "Tearing down left over layers:"
-        tear_down_unneeded((), setup_layers)
+        tear_down_unneeded((), setup_layers, True)
 
-    if options.verbose > 1:
-        if errors:
+    if options.resume_layer:
+        sys.stdout.close()
+        print >> original_stderr, ran, len(failures), len(errors)
+        for test, exc_info in failures:
+            print >> original_stderr, ' '.join(str(test).strip().split('\n'))
+        for test, exc_info in errors:
+            print >> original_stderr, ' '.join(str(test).strip().split('\n'))
+
+    else:
+        if options.verbose > 1:
+            if errors:
+                print
+                print "Tests with errors:"
+                for test, exc_info in errors:
+                    print "  ", test
+
+            if failures:
+                print
+                print "Tests with failures:"
+                for test, exc_info in failures:
+                    print "  ", test
+
+        if nlayers != 1:
+            print "Total: %s tests, %s failures, %s errors" % (
+                ran, len(failures), len(errors))
+
+        if import_errors:
             print
-            print "Tests with errors:"
-            for test, exc_info in errors:
-                print "  ", test
-
-        if failures:
-            print
-            print "Tests with failures:"
-            for test, exc_info in failures:
-                print "  ", test
-
-    if nlayers != 1:
-        print "Total: %s tests, %s failures, %s errors" % (
-            ran, len(failures), len(errors))
-
-    if import_errors:
-        print
-        print "Test-modules with import problems:"
-        for test in import_errors:
-            print "  " + test.module
+            print "Test-modules with import problems:"
+            for test in import_errors:
+                print "  " + test.module
             
 
 def run_tests(options, tests, name, failures, errors):
@@ -209,7 +251,39 @@ def run_layer(options, layer_name, layer, tests, setup_layers,
     setup_layer(layer, setup_layers)
     return run_tests(options, tests, layer_name, failures, errors)
 
-def tear_down_unneeded(needed, setup_layers):
+def resume_tests(options, layer_name, failures, errors):
+    args = [sys.executable,
+            options.original_testrunner_args[0],
+            '--resume-layer', layer_name,
+            ]
+    for d in options.testrunner_defaults:
+        args.extend(['--default', d])
+        
+    args.extend(options.original_testrunner_args[1:])
+
+    if sys.platform.startswith('win'):
+        args = ' '.join([
+            ('"' + a.replace('\\', '\\\\').replace('"', '\\"') + '"')
+            for a in args
+            ])
+
+    subin, subout, suberr = os.popen3(args)
+    for l in subout:
+        sys.stdout.write(l)
+    ran, nfail, nerr = map(int, suberr.readline().strip().split())
+    while nfail > 0:
+        nfail -= 1
+        failures.append((suberr.readline().strip(), None))
+    while nerr > 0:
+        nerr -= 1
+        errors.append((suberr.readline().strip(), None))
+    return ran
+        
+
+class CanNotTearDown(Exception):
+    "Couldn't tear down a test"
+
+def tear_down_unneeded(needed, setup_layers, optional=False):
     # Tear down any layers not needed for these tests. The unneeded
     # layers might interfere.
     unneeded = [l for l in setup_layers if l not in needed]
@@ -218,9 +292,16 @@ def tear_down_unneeded(needed, setup_layers):
     for l in unneeded:
         print "  Tear down %s" % name_from_layer(l),
         t = time.time()
-        l.tearDown()
+        try:
+            l.tearDown()
+        except NotImplementedError:
+            print "... not supported"
+            if not optional:
+                raise CanNotTearDown(l)
+        else:
+            print "in %.3f seconds." % (time.time() - t)
         del setup_layers[l]
-        print "in %.3f seconds." % (time.time() - t)
+
 
 
 def setup_layer(layer, setup_layers):
@@ -951,10 +1032,13 @@ def get_options(args=None, defaults=None):
         defaults = default_setup
 
     if args is None:
-        args = sys.argv[1:]
+        args = sys.argv
+    original_testrunner_args = args
+    args = args[1:]
     options, positional = parser.parse_args(args)
     merge_options(options, defaults)
-
+    options.original_testrunner_args = original_testrunner_args
+    
     if positional:
         module_filter = positional.pop()
         if module_filter != '.':
@@ -1039,6 +1123,7 @@ def test_suite():
     def setUp(test):
         test.globs['saved-sys-info'] = sys.path, sys.argv
         test.globs['this_directory'] = os.path.split(__file__)[0]
+        test.globs['testrunner_script'] = __file__
 
     def tearDown(test):
         sys.path, sys.argv = test.globs['saved-sys-info']
@@ -1057,9 +1142,29 @@ def main():
 if __name__ == '__main__':
     # Hm, when run as a script, we need to import the testrunner under
     # it's own name, so that there's the imported flavor has the right
-    # real_pdb_set_trace.
-    import zope.testing.testrunner
+    # real_pdb_set_trace.  We also want to make sure we can import it.
+    # If we can't, we should try fixing the path and trying again
+    try:
+        import zope.testing.testrunner
+    except ImportError:
+        sys.path.append(
+            os.path.split(
+                os.path.split(
+                    os.path.split(
+                        os.path.abspath(sys.argv[0])
+                        )[0]
+                    )[0]
+                )[0]
+            )
+        import zope.testing.testrunner
+
+
+    from zope.testing import doctest
     main()
 
 # Test the testrunner
 ###############################################################################
+
+# Delay import to give main an opportunity to fix up the path if
+# necessary
+from zope.testing import doctest

@@ -227,6 +227,26 @@ Or that we want to run all of the tests except for the unit tests:
       Tear down samplelayers.Layerx in 0.000 seconds.
     Total: 213 tests, 0 failures, 0 errors
 
+Passing arguments explicitly
+----------------------------
+
+In most of the examples here, we set up `sys.argv`.  In normal usage,
+the testrunner just uses `sys.argv`.  It is possible to pass athiments
+explicitly. 
+    
+    >>> testrunner.run(defaults, 'test --layer 111'.split())
+    Running samplelayers.Layer111 tests:
+      Set up samplelayers.Layerx in 0.000 seconds.
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer11 in 0.000 seconds.
+      Set up samplelayers.Layer111 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer111 in 0.000 seconds.
+      Tear down samplelayers.Layer11 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+      Tear down samplelayers.Layerx in 0.000 seconds.
+
 Verbose Output
 --------------
 
@@ -387,7 +407,7 @@ other ways we can select tests.  We can select tests by package:
 You can specify multiple packages:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -ssample2'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run(defaults) # doctest: +REPORT_NDIFF
     Running tests at level 1
     Running unit tests:
       Running:
@@ -1496,6 +1516,89 @@ reported:
       sample2.sample21.sampletests_i
       sample2.sample22.sampletests_i
       sample2.sample23.sampletests_i
+
+Layers that can't be torn down
+------------------------------
+
+If a layer can have a tearDown method that raises
+NotImplementedError.  If this is the case and there are no remaining
+tests to run, the test runner will just note that the tear down 
+couldn't be done:
+
+    >>> sys.argv = 'test -ssample2 --tests-pattern sampletests_ntd'.split()
+    >>> testrunner.run(defaults)
+    Running sample2.sampletests_ntd.Layer tests:
+      Set up sample2.sampletests_ntd.Layer in 0.000 seconds.
+      Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
+    Tearing down left over layers:
+      Tear down sample2.sampletests_ntd.Layer ... not supported
+
+If the tearDown method raises NotImplementedError and there are remaining
+tests to run, the test runner will restart itself as a new process,
+resuming tests where it left off:
+
+    >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntd']
+    >>> testrunner.run(defaults)
+    Running sample3.sampletests_ntd.Layer tests:
+      Set up sample3.sampletests_ntd.Layer in 0.000 seconds.
+      Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
+    Running sample2.sampletests_ntd.Layer tests:
+      Tear down sample3.sampletests_ntd.Layer ... not supported
+    Running sample2.sampletests_ntd.Layer tests:
+      Set up sample2.sampletests_ntd.Layer in 0.000 seconds.
+      Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
+    Running sample1.sampletests_ntd.Layer tests:
+      Tear down sample2.sampletests_ntd.Layer ... not supported
+    Running sample1.sampletests_ntd.Layer tests:
+      Set up sample1.sampletests_ntd.Layer in 0.000 seconds.
+    <BLANKLINE>
+    <BLANKLINE>
+    Error in test test_error1 (sample1.sampletests_ntd.TestSomething)
+    Traceback (most recent call last):
+      File ".../unittest.py", line 260, in run
+        testMethod()
+      File "testrunner-ex/sample1/sampletests_ntd.py", line 42, in test_error1
+        raise TypeError("Can we see errors")
+    TypeError: Can we see errors
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    Error in test test_error2 (sample1.sampletests_ntd.TestSomething)
+    Traceback (most recent call last):
+      File ".../unittest.py", line 260, in run
+        testMethod()
+      File "testrunner-ex/sample1/sampletests_ntd.py", line 45, in test_error2
+        raise TypeError("I hope so")
+    TypeError: I hope so
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test test_fail1 (sample1.sampletests_ntd.TestSomething)
+    Traceback (most recent call last):
+      File ".../unittest.py", line 260, in run
+        testMethod()
+      File "testrunner-ex/sample1/sampletests_ntd.py", line 48, in test_fail1
+        self.assertEqual(1, 2)
+      File ".../unittest.py", line 332, in failUnlessEqual
+        raise self.failureException, \
+    AssertionError: 1 != 2
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test test_fail2 (sample1.sampletests_ntd.TestSomething)
+    Traceback (most recent call last):
+      File ".../unittest.py", line 260, in run
+        testMethod()
+      File "testrunner-ex/sample1/sampletests_ntd.py", line 51, in test_fail2
+        self.assertEqual(1, 3)
+      File ".../unittest.py", line 332, in failUnlessEqual
+        raise self.failureException, \
+    AssertionError: 1 != 3
+    <BLANKLINE>
+      Ran 6 tests with 2 failures and 2 errors in 0.002 seconds.
+    Tearing down left over layers:
+      Tear down sample1.sampletests_ntd.Layer ... not supported
+    Total: 8 tests, 2 failures, 2 errors
 
 Debugging
 ---------
