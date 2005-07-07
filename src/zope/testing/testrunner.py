@@ -642,6 +642,8 @@ def find_test_files_(options):
 
 
 def walk_with_symlinks(options, dir):
+    # TODO -- really should have test of this that uses symlinks
+    #         this is hard on a number of levels ...
     for dirpath, dirs, files in os.walk(dir):
         dirs.sort()
         files.sort()
@@ -650,8 +652,8 @@ def walk_with_symlinks(options, dir):
         for d in dirs:
             p = os.path.join(dirpath, d)
             if os.path.islink(p):
-                for dirpath, dirs, files in walk_with_symlinks(options, p):
-                    yield (dirpath, dirs, files)
+                for sdirpath, sdirs, sfiles in walk_with_symlinks(options, p):
+                    yield (sdirpath, sdirs, sfiles)
 
 compiled_sufixes = '.pyc', '.pyo'
 def remove_stale_bytecode(options):
