@@ -46,10 +46,6 @@ def run(defaults=None, args=None):
     # Control reporting flags during run
     old_reporting_flags = doctest.set_unittest_reportflags(0)
 
-    # Make sure we start with real pdb.set_trace.  This is needed
-    # to make tests of the test runner work properly. :)
-    pdb.set_trace = real_pdb_set_trace
-
     # Check to see if we are being run as a subprocess. If we are,
     # then use the resume-layer and defaults passed in.
     if len(args) > 1 and args[1] == '--resume-layer':
@@ -59,12 +55,17 @@ def run(defaults=None, args=None):
         while args[1] == '--default':
             args.pop(1)
             defaults.append(args.pop(1))
+
     else:
         resume_layer = None
     
     options = get_options(args, defaults)
     options.testrunner_defaults = defaults
     options.resume_layer = resume_layer
+
+    # Make sure we start with real pdb.set_trace.  This is needed
+    # to make tests of the test runner work properly. :)
+    pdb.set_trace = real_pdb_set_trace
     
     try:
         run_with_options(options)
@@ -394,7 +395,15 @@ class TestResult(unittest.TestResult):
         self._print_traceback("Error in test %s" % test, exc_info)
 
         if self.options.post_mortem:
-            post_mortem(exc_info)
+            if self.options.resume_layer:
+                print
+                print '*'*70
+                print ("Can't post-mortem debug when running a layer"
+                       " as a subprocess!")
+                print '*'*70
+                print
+            else:
+                post_mortem(exc_info)
 
         self.test_width = self.last_width = 0
 
@@ -1154,7 +1163,7 @@ if __name__ == '__main__':
     # if --resume_layer is in the arguments, we are being run from the
     # test runner's own tests.  We need to adjust the path in hopes of
     # not getting a different version installed in the system python.
-    if sys.argv[1] == '--resume-layer':
+    if len(sys.argv) > 1 and sys.argv[1] == '--resume-layer':
         sys.path.insert(0, 
             os.path.split(
                 os.path.split(
