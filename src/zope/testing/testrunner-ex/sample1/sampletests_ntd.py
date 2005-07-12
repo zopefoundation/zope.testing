@@ -35,21 +35,6 @@ class TestSomething(unittest.TestCase):
     def test_something(self):
         pass
 
-    def test_something_else(self):
-        pass
-
-    def test_error1(self):
-        raise TypeError("Can we see errors")
-
-    def test_error2(self):
-        raise TypeError("I hope so")
-
-    def test_fail1(self):
-        self.assertEqual(1, 2)
-
-    def test_fail2(self):
-        self.assertEqual(1, 3)
-
 
 def test_suite():
     suite = unittest.TestSuite()

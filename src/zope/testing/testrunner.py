@@ -540,6 +540,7 @@ def order_by_bases(layers):
     """
     named_layers = [(name_from_layer(layer), layer) for layer in layers]
     named_layers.sort()
+    named_layers.reverse()
     gathered = []
     for name, layer in named_layers:
         gather_layers(layer, gathered)
