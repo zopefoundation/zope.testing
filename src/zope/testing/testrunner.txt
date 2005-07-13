@@ -1634,7 +1634,7 @@ A layer can have a tearDown method that raises NotImplementedError.
 If this is the case and there are no remaining tests to run, the test
 runner will just note that the tear down couldn't be done:
 
-    >>> sys.argv = 'test -ssample2 --tests-pattern sampletests_ntd'.split()
+    >>> sys.argv = 'test -ssample2 --tests-pattern sampletests_ntd$'.split()
     >>> testrunner.run(defaults)
     Running sample2.sampletests_ntd.Layer tests:
       Set up sample2.sampletests_ntd.Layer in 0.000 seconds.
@@ -1646,7 +1646,7 @@ If the tearDown method raises NotImplementedError and there are remaining
 layers to run, the test runner will restart itself as a new process,
 resuming tests where it left off:
 
-    >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntd']
+    >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntd$']
     >>> testrunner.run(defaults)
     Running sample1.sampletests_ntd.Layer tests:
       Set up sample1.sampletests_ntd.Layer in N.NNN seconds.
@@ -1703,7 +1703,7 @@ statistice were updated as usual.
 
 Note that debugging doesn't work when running tests in a subprocess:
 
-    >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntd',
+    >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntd$',
     ...             '-D', ]
     >>> testrunner.run(defaults)
     Running sample1.sampletests_ntd.Layer tests:
@@ -1774,3 +1774,87 @@ Note that debugging doesn't work when running tests in a subprocess:
     Tearing down left over layers:
       Tear down sample3.sampletests_ntd.Layer ... not supported
     Total: 0 tests, 0 failures, 4 errors
+
+Similarly, pdb.set_trace doesn't work when running tests in a layer
+that is run as a subprocess:
+
+    >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntds']
+    >>> testrunner.run(defaults)
+    Running sample1.sampletests_ntds.Layer tests:
+      Set up sample1.sampletests_ntds.Layer in 0.000 seconds.
+      Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
+    Running sample2.sampletests_ntds.Layer tests:
+      Tear down sample1.sampletests_ntds.Layer ... not supported
+    Running sample2.sampletests_ntds.Layer tests:
+      Set up sample2.sampletests_ntds.Layer in 0.000 seconds.
+    --Return--
+    > testrunner-ex/sample2/sampletests_ntds.py(37)test_something()->None
+    -> import pdb; pdb.set_trace()
+    (Pdb) c
+    <BLANKLINE>
+    **********************************************************************
+    Can't use pdb.set_trace when running a layer as a subprocess!
+    **********************************************************************
+    <BLANKLINE>
+    --Return--
+    > testrunner-ex/sample2/sampletests_ntds.py(40)test_something2()->None
+    -> import pdb; pdb.set_trace()
+    (Pdb) c
+    <BLANKLINE>
+    **********************************************************************
+    Can't use pdb.set_trace when running a layer as a subprocess!
+    **********************************************************************
+    <BLANKLINE>
+    --Return--
+    > testrunner-ex/sample2/sampletests_ntds.py(43)test_something3()->None
+    -> import pdb; pdb.set_trace()
+    (Pdb) c
+    <BLANKLINE>
+    **********************************************************************
+    Can't use pdb.set_trace when running a layer as a subprocess!
+    **********************************************************************
+    <BLANKLINE>
+    --Return--
+    > testrunner-ex/sample2/sampletests_ntds.py(46)test_something4()->None
+    -> import pdb; pdb.set_trace()
+    (Pdb) c
+    <BLANKLINE>
+    **********************************************************************
+    Can't use pdb.set_trace when running a layer as a subprocess!
+    **********************************************************************
+    <BLANKLINE>
+    --Return--
+    > testrunner-ex/sample2/sampletests_ntds.py(52)f()->None
+    -> import pdb; pdb.set_trace()
+    (Pdb) c
+    <BLANKLINE>
+    **********************************************************************
+    Can't use pdb.set_trace when running a layer as a subprocess!
+    **********************************************************************
+    <BLANKLINE>
+    --Return--
+    > doctest.py(351)set_trace()->None
+    -> pdb.Pdb.set_trace(self)
+    (Pdb) c
+    <BLANKLINE>
+    **********************************************************************
+    Can't use pdb.set_trace when running a layer as a subprocess!
+    **********************************************************************
+    <BLANKLINE>
+    --Return--
+    > doctest.py(351)set_trace()->None
+    -> pdb.Pdb.set_trace(self)
+    (Pdb) c
+    <BLANKLINE>
+    **********************************************************************
+    Can't use pdb.set_trace when running a layer as a subprocess!
+    **********************************************************************
+    <BLANKLINE>
+      Ran 7 tests with 0 failures and 0 errors in 0.008 seconds.
+    Tearing down left over layers:
+      Tear down sample2.sampletests_ntds.Layer ... not supported
+    Total: 8 tests, 0 failures, 0 errors
+
+If you want to use pdb from a test in a layer that is run as a
+subprocess, then rerun the test runner selecting *just* that layer so
+that it's not run as a subprocess.

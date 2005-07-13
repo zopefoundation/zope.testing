@@ -52,10 +52,11 @@ def run(defaults=None, args=None):
         args.pop(1)
         resume_layer = args.pop(1)
         defaults = []
-        while args[1] == '--default':
+        while len(args) > 1 and args[1] == '--default':
             args.pop(1)
             defaults.append(args.pop(1))
 
+        sys.stdin = FakeInputContinueGenerator()
     else:
         resume_layer = None
     
@@ -462,6 +463,18 @@ Want:
 Got:
 %s
 """
+
+class FakeInputContinueGenerator:
+
+    def readline(self):
+        print  'c\n'
+        print '*'*70
+        print ("Can't use pdb.set_trace when running a layer"
+               " as a subprocess!")
+        print '*'*70
+        print
+        return 'c\n'
+
 
 def print_traceback(msg, exc_info):
     print
@@ -1119,6 +1132,7 @@ def test_suite():
 
     import renormalizing
     checker = renormalizing.RENormalizing([
+        (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
         (re.compile('\\\\'), '/'),   # hopefully, we'll make windows happy
         (re.compile('/r'), '\\\\r'), # undo damage from previous
         (re.compile(r'\r'), '\\\\r\n'),
@@ -1137,6 +1151,8 @@ def test_suite():
         (re.compile(r'^ +File "[^\n]+(doc|unit)test.py", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
+        (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
+        (re.compile('import pdb; pdb'), 'Pdb()'), # Py 2.3
 
         ])
 
