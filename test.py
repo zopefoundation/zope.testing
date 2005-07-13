@@ -31,4 +31,4 @@ defaults = [
     '--tests-pattern', '^tests$',
     ]
 
-testrunner.run(defaults)
+sys.exit(testrunner.run(defaults))
