@@ -152,11 +152,15 @@ Now, if we run the tests, without any other options:
       Tear down samplelayers.Layer12 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
     Total: 405 tests, 0 failures, 0 errors
+    False
 
 we see the normal testrunner output, which summarizes the tests run for
 each layer.  For each layer, we see what layers had to be torn down or
 set up to run the layer and we see the number of tests run, with
 results.
+
+The test runner returns a boolean indicating whether there were
+errors.  In this example, there were no errors, so it returned False.
 
 (Of course, the times shown in these examples are just examples.
 Times will vary depending on system speed.)
@@ -182,6 +186,7 @@ We can select which layers to run using the --layer option:
       Tear down samplelayers.Layer11 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
     Total: 226 tests, 0 failures, 0 errors
+    False
 
 We can also specify that we want to run only the unit tests:
 
@@ -189,6 +194,7 @@ We can also specify that we want to run only the unit tests:
     >>> testrunner.run(defaults)
     Running unit tests:
       Ran 192 tests with 0 failures and 0 errors in 0.033 seconds.
+    False
 
 Or that we want to run all of the tests except for the unit tests:
 
@@ -226,6 +232,7 @@ Or that we want to run all of the tests except for the unit tests:
       Tear down samplelayers.Layer12 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
     Total: 213 tests, 0 failures, 0 errors
+    False
 
 Passing arguments explicitly
 ----------------------------
@@ -246,6 +253,7 @@ explicitly.
       Tear down samplelayers.Layerx in N.NNN seconds.
       Tear down samplelayers.Layer11 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
+    False
 
 Verbose Output
 --------------
@@ -270,6 +278,7 @@ test:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 If there are more than 50 tests, the dots are printed in groups of
 50:
@@ -284,6 +293,7 @@ If there are more than 50 tests, the dots are printed in groups of
         ..................................................
         ..........................................
       Ran 192 tests with 0 failures and 0 errors in 0.035 seconds.
+    False
 
 If the --verbose (-v) option is used twice, then the name and location of
 each test is printed as it is run:
@@ -327,6 +337,7 @@ each test is printed as it is run:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 if the --verbose (-v) option is used three times, then individual
 test-execution times are printed:
@@ -370,6 +381,7 @@ test-execution times are printed:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 Test Selection
 --------------
@@ -403,6 +415,7 @@ other ways we can select tests.  We can select tests by package:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 You can specify multiple packages:
 
@@ -516,6 +529,7 @@ You can specify multiple packages:
         test_z1 (sample2.sampletests.testone)
         testrunner-ex/sample2/sampletests/../../sampletests.txt
       Ran 128 tests with 0 failures and 0 errors in 0.025 seconds.
+    False
 
 We can select by test module name:
 
@@ -551,6 +565,7 @@ We can select by test module name:
         test_z1 (sample1.sampletests.test_one)
         testrunner-ex/sample1/sampletests/../../sampletests.txt
       Ran 32 tests with 0 failures and 0 errors in 0.008 seconds.
+    False
 
 and by test within the module:
 
@@ -568,6 +583,7 @@ and by test within the module:
         test_x0 (sample1.sampletests.test_one)
         test_y0 (sample1.sampletests.test_one)
       Ran 8 tests with 0 failures and 0 errors in 0.003 seconds.
+    False
 
 
     >>> sys.argv = 'test -u  -vv -ssample1 -ttxt'.split()
@@ -581,6 +597,7 @@ and by test within the module:
         testrunner-ex/sample1/sampletests/../../sampletests.txt
         testrunner-ex/sample1/sampletests/../../sampletests.txt
       Ran 20 tests with 0 failures and 0 errors in 0.004 seconds.
+    False
 
 Sometimes, there are tests that you don't want to run by default.
 For example, you might have tests that take a long time.  Tests can
@@ -632,6 +649,7 @@ level.  For example, with the following options:
         test_y1 (sampletests.test_one.TestB)
         test_y0 (sampletests.test_one)
       Ran 36 tests with 0 failures and 0 errors in 0.009 seconds.
+    False
 
 
 We get run 36 tests.  If we specify a level of 2, we get some
@@ -681,6 +699,7 @@ additional tests:
         test_y1 (sampletests.test_one.TestB)
         test_y0 (sampletests.test_one)
       Ran 38 tests with 0 failures and 0 errors in 0.009 seconds.
+    False
 
 We can use the --all option to run tests at all levels:
 
@@ -729,6 +748,7 @@ We can use the --all option to run tests at all levels:
         test_y1 (sampletests.test_one.TestB)
         test_y0 (sampletests.test_one)
       Ran 39 tests with 0 failures and 0 errors in 0.009 seconds.
+    False
 
 Test Progress
 -------------
@@ -777,6 +797,7 @@ levels of verbosity.
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 (Note that, in the examples above and below, we show "\r" followed by
 new lines where carriage returns would appear in actual output.)
@@ -823,6 +844,7 @@ Using a single level of verbosity has only a small effect:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 
 If a second or third level of verbosity are added, we get additional
@@ -866,6 +888,7 @@ information.
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 Note that, in this example, we used a test-selection pattern starting
 with '!' to exclude tests containing the string "txt".
@@ -902,6 +925,7 @@ with '!' to exclude tests containing the string "txt".
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
 
 In this example, we also excluded tests with "NotMuch" in their names.
 
@@ -1011,9 +1035,11 @@ Let's look at tests that have errors and failures:
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
     Total: 413 tests, 3 failures, 1 errors
+    True
 
 We see that we get an error report and a traceback for the failing
-test.
+test.  In addition, the test runner returned True, indicating that
+there was an error.
 
 If we ask for single verbosity, the dotted output will be interrupted:
 
@@ -1094,6 +1120,7 @@ If we ask for single verbosity, the dotted output will be interrupted:
         ..................................................
     <BLANKLINE>
       Ran 200 tests with 3 failures and 1 errors in 0.040 seconds.
+    True
 
 Similarly for progress output:
 
@@ -1217,6 +1244,7 @@ Similarly for progress output:
         56/56 (100.0%)\r
     <BLANKLINE>
       Ran 56 tests with 3 failures and 1 errors in 0.054 seconds.
+    True
 
 For greater levels of verbosity, we summarize the errors at the end of
 the test
@@ -1349,6 +1377,7 @@ the test
        eek (sample2.sampletests_e)
        testrunner-ex/sample2/e.txt
        test (sample2.sampletests_f.Test)
+    True
 
 Suppressing multiple doctest errors
 -----------------------------------
@@ -1403,6 +1432,7 @@ examples in the same test to fail.  Each failure is reported:
         NameError: name 'x' is not defined
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    True
 
 This can be a bid confusing, especially when there are enough tests
 that they scroll off a screen.  Often you just want to see the first
@@ -1432,6 +1462,7 @@ me the first failed example in a doctest" :)
         NameError: name 'y' is not defined
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.001 seconds.
+    True
 
 
 Testing-Module Import Errors
@@ -1515,6 +1546,7 @@ reported:
       sample2.sample21.sampletests_i
       sample2.sample22.sampletests_i
       sample2.sample23.sampletests_i
+    True
 
 
 Debugging
@@ -1554,6 +1586,7 @@ runner will enter pdb at that point:
     1
     (Pdb) c
       Ran 1 tests with 0 failures and 0 errors in 0.001 seconds.
+    False
 
 Note that, prior to Python 2.4, calling pdb.set_trace caused pdb to
 break in the pdb.set_trace function.  It was necessary to use 'next'
@@ -1587,6 +1620,7 @@ option:
     (Pdb) p x
     1
     (Pdb) c
+    True
 
 Note that the test runner exits after post-mortem debugging (as
 indicated by the SystemExit above.
@@ -1626,6 +1660,7 @@ converted to errors and can be debugged the same way:
     (Pdb) p y
     2
     (Pdb) c
+    True
 
 Layers that can't be torn down
 ------------------------------
@@ -1641,6 +1676,7 @@ runner will just note that the tear down couldn't be done:
       Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
     Tearing down left over layers:
       Tear down sample2.sampletests_ntd.Layer ... not supported
+    False
 
 If the tearDown method raises NotImplementedError and there are remaining
 layers to run, the test runner will restart itself as a new process,
@@ -1696,6 +1732,7 @@ resuming tests where it left off:
     Tearing down left over layers:
       Tear down sample3.sampletests_ntd.Layer ... not supported
     Total: 8 tests, 2 failures, 2 errors
+    True
 
 in the example above, some of the tests run as a subprocess had errors
 and failures. They were displayed as usual and the failure and error
@@ -1774,6 +1811,7 @@ Note that debugging doesn't work when running tests in a subprocess:
     Tearing down left over layers:
       Tear down sample3.sampletests_ntd.Layer ... not supported
     Total: 0 tests, 0 failures, 4 errors
+    True
 
 Similarly, pdb.set_trace doesn't work when running tests in a layer
 that is run as a subprocess:
@@ -1854,6 +1892,7 @@ that is run as a subprocess:
     Tearing down left over layers:
       Tear down sample2.sampletests_ntds.Layer ... not supported
     Total: 8 tests, 0 failures, 0 errors
+    False
 
 If you want to use pdb from a test in a layer that is run as a
 subprocess, then rerun the test runner selecting *just* that layer so

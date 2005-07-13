@@ -69,11 +69,13 @@ def run(defaults=None, args=None):
     pdb.set_trace = real_pdb_set_trace
     
     try:
-        run_with_options(options)
+        failed = run_with_options(options)
     except EndRun:
-        pass
+        failed = True
 
     doctest.set_unittest_reportflags(old_reporting_flags)
+
+    return failed
 
 def run_with_options(options):
 
@@ -195,7 +197,9 @@ def run_with_options(options):
             print "Test-modules with import problems:"
             for test in import_errors:
                 print "  " + test.module
-            
+
+
+    return bool(import_errors or failures or errors)
 
 def run_tests(options, tests, name, failures, errors):
     repeat = options.repeat or 1
