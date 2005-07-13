@@ -170,6 +170,10 @@ class FormCollection(list):
 class Form(dict):
     """A specific form within a page."""
 
+    # This object should provide some method to prepare a dictionary
+    # that can be passed directly as the value of the `form` argument
+    # to the `http()` function of the Zope functional test.
+
     def __init__(self, name, id, method, action, enctype):
         super(Form, self).__init__()
         self.name = name
