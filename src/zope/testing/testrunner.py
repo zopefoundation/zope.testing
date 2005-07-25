@@ -219,15 +219,20 @@ def run_tests(options, tests, name, failures, errors):
         if options.post_mortem:
             # post-mortem debugging
             for test in tests:
+                result.startTest(test)
                 try:
-                    test.debug()
-                except:
-                    result.addError(
-                        test,
-                        sys.exc_info()[:2] + (sys.exc_info()[2].tb_next, ),
-                        )
-                else:
-                    result.addSuccess(test)
+                    try:
+                        test.debug()
+                    except:
+                        result.addError(
+                            test,
+                            sys.exc_info()[:2] + (sys.exc_info()[2].tb_next, ),
+                            )
+                    else:
+                        result.addSuccess(test)
+                finally:
+                    result.stopTest(test)
+                    
         else:
             # normal
             tests(result)

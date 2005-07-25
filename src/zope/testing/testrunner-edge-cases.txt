@@ -365,3 +365,25 @@ Post-mortem debugging of a docfile doctest failure:
     1
     (Pdb) c
     True
+
+Post-mortem debugging with tripple verbosity
+
+    >>> sys.argv = 'test --layer samplelayers.Layer1$ -vvv -D'.split()
+    >>> testrunner.run(defaults)
+    Running tests at level 1
+    Running samplelayers.Layer1 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Running:
+        test_x1 (sampletestsf.TestA1) (0.000 ms)
+        test_y0 (sampletestsf.TestA1) (0.000 ms)
+        test_z0 (sampletestsf.TestA1) (0.000 ms)
+        test_x0 (sampletestsf.TestB1) (0.000 ms)
+        test_y1 (sampletestsf.TestB1) (0.000 ms)
+        test_z0 (sampletestsf.TestB1) (0.000 ms)
+        test_1 (sampletestsf.TestNotMuch1) (0.000 ms)
+        test_2 (sampletestsf.TestNotMuch1) (0.000 ms)
+        test_3 (sampletestsf.TestNotMuch1) (0.000 ms)
+      Ran 9 tests with 0 failures and 0 errors in 0.001 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False

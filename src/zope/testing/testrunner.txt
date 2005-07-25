@@ -1745,12 +1745,12 @@ Note that debugging doesn't work when running tests in a subprocess:
     >>> testrunner.run(defaults)
     Running sample1.sampletests_ntd.Layer tests:
       Set up sample1.sampletests_ntd.Layer in N.NNN seconds.
-      Ran 0 tests with 0 failures and 0 errors in N.NNN seconds.
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
     Running sample2.sampletests_ntd.Layer tests:
       Tear down sample1.sampletests_ntd.Layer ... not supported
     Running sample2.sampletests_ntd.Layer tests:
       Set up sample2.sampletests_ntd.Layer in N.NNN seconds.
-      Ran 0 tests with 0 failures and 0 errors in N.NNN seconds.
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
     Running sample3.sampletests_ntd.Layer tests:
       Tear down sample2.sampletests_ntd.Layer ... not supported
     Running sample3.sampletests_ntd.Layer tests:
@@ -1807,10 +1807,10 @@ Note that debugging doesn't work when running tests in a subprocess:
     Can't post-mortem debug when running a layer as a subprocess!
     **********************************************************************
     <BLANKLINE>
-      Ran 0 tests with 0 failures and 4 errors in N.NNN seconds.
+      Ran 6 tests with 0 failures and 4 errors in N.NNN seconds.
     Tearing down left over layers:
       Tear down sample3.sampletests_ntd.Layer ... not supported
-    Total: 0 tests, 0 failures, 4 errors
+    Total: 8 tests, 0 failures, 4 errors
     True
 
 Similarly, pdb.set_trace doesn't work when running tests in a layer
