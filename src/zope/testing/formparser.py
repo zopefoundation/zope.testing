@@ -5,6 +5,9 @@ information from HTML forms returned by the publisher.
 
 See *formparser.txt* for documentation.
 
+This isn't intended to simulate a browser session; that's provided by
+the `zope.testbrowser` package.
+
 """
 __docformat__ = "reStructuredText"
 
@@ -173,6 +176,9 @@ class Form(dict):
     # This object should provide some method to prepare a dictionary
     # that can be passed directly as the value of the `form` argument
     # to the `http()` function of the Zope functional test.
+    #
+    # This is probably a low priority given the availability of the
+    # `zope.testbrowser` package.
 
     def __init__(self, name, id, method, action, enctype):
         super(Form, self).__init__()
