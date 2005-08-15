@@ -949,7 +949,7 @@ analysis.add_option(
     '--coverage', action="store", dest='coverage',
     help="""\
 Perform code-coverage analysis, saving trace data to the directory
-with the given anme.  A code coverage summary is printed to standard
+with the given name.  A code coverage summary is printed to standard
 out.
 """)
 
