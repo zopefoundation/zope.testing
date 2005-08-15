@@ -1927,7 +1927,7 @@ will hold the coverage reports.
     >>> os.path.exists('coverage_dir')
     True
     >>> os.listdir('coverage_dir')
-    ['<doctest testrunner-ex.sample1.sampletests.test122.cover']
+    [...'<doctest...]
 
 (We should clean up after ouselves.)
 
