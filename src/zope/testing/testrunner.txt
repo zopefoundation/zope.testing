@@ -83,7 +83,7 @@ Typically, a test script does 2 things:
 - Adds the directory containing the zope package to the Python
   path:
 
-    >>> import os, sys
+    >>> import os.path, sys
     >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
     >>> sys.path.append(directory_with_tests)
 
@@ -1897,3 +1897,31 @@ that is run as a subprocess:
 If you want to use pdb from a test in a layer that is run as a
 subprocess, then rerun the test runner selecting *just* that layer so
 that it's not run as a subprocess.
+
+Code Coverage
+-------------
+
+If the --coverage option is used, test coverage reports will be generated.  The
+directory name given as the parameter will be used to hold the reports.
+
+    >>> from zope.testing import testrunner
+    >>> sys.argv = 'test --coverage=coverage_dir'.split()
+    >>> testrunner.run(defaults)
+    Running unit tests:
+    ...
+    lines   cov%   module   (path)
+    ...   ...%   zope.testing.testrunner   (src/zope/testing/testrunner.py)
+    ...
+
+The directory specified with the --coverage option will have been created and
+will hold the coverage reports.
+
+    >>> os.path.exists('coverage_dir')
+    True
+    >>> os.listdir('coverage_dir')
+    ['<doctest testrunner-ex.sample1.sampletests.test122.cover']
+
+(We should clean up after ouselves.)
+
+    >>> import shutil
+    >>> shutil.rmtree('coverage_dir')

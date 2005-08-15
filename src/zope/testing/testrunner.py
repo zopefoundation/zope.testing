@@ -235,7 +235,26 @@ def run_tests(options, tests, name, failures, errors):
                     
         else:
             # normal
-            tests(result)
+            if options.coverage:
+                coverdir = os.path.join(os.getcwd(), options.coverage)
+                import trace, tempfile, cPickle
+                ignoremods = ["os", "posixpath", "stat"]
+                tracer = trace.Trace(ignoredirs=[sys.prefix, sys.exec_prefix],
+                                     ignoremods=ignoremods, trace=False, 
+                                     count=True)
+
+                tracer.runctx('tests(result)', globals=globals(), 
+                              locals=vars())
+
+                r = tracer.results()
+                f = tempfile.NamedTemporaryFile()
+                cPickle.dump(r, f)
+                f.close()
+                print f.name
+                r.write_results(show_missing=False, summary=True, 
+                                coverdir=coverdir)
+            else:
+                tests(result)
         t = time.time() - t
         if options.verbose == 1 or options.progress:
             print
@@ -1175,7 +1194,9 @@ def test_suite():
 
     return doctest.DocFileSuite('testrunner.txt', 'testrunner-edge-cases.txt',
                                 setUp=setUp, tearDown=tearDown,
-                                checker=checker)
+                                optionflags=doctest.ELLIPSIS
+                                            +doctest.NORMALIZE_WHITESPACE,
+                                checker=checker, )
 
 def main():
     default = [
