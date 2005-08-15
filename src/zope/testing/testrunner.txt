@@ -1927,7 +1927,7 @@ will hold the coverage reports.
     >>> os.path.exists('coverage_dir')
     True
     >>> os.listdir('coverage_dir')
-    [...'<doctest...]
+    [...]
 
 (We should clean up after ouselves.)
 
