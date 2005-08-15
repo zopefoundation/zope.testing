@@ -247,8 +247,7 @@ def run_tests(options, tests, name, failures, errors):
                               locals=vars())
 
                 r = tracer.results()
-                r.write_results(show_missing=False, summary=True, 
-                                coverdir=coverdir)
+                r.write_results(summary=True, coverdir=coverdir)
             else:
                 tests(result)
         t = time.time() - t

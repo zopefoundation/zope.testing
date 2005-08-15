@@ -1904,13 +1904,22 @@ Code Coverage
 If the --coverage option is used, test coverage reports will be generated.  The
 directory name given as the parameter will be used to hold the reports.
 
+    >>> # XXX the trace module reports errors to stderr, we don't care about
+    >>> original_stderr = sys.stderr
+    >>> sys.stderr = sys.stdout
+
     >>> from zope.testing import testrunner
     >>> sys.argv = 'test --coverage=coverage_dir'.split()
+
     >>> testrunner.run(defaults)
     Running unit tests:
+    ...
     lines   cov%   module   (path)
     ...   ...%   zope.testing.testrunner   (src/zope/testing/testrunner.py)
     ...
+
+    >>> # XXX clean up stderr
+    >>> sys.stderr = original_stderr
 
 The directory specified with the --coverage option will have been created and
 will hold the coverage reports.
