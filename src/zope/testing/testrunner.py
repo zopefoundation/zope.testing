@@ -1149,11 +1149,11 @@ def test_suite():
         (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
-        (re.compile('> [^\n]*(doc|unit)test[.]py\(\d+\)'),
+        (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
                        r'\1doctest.py(NNN)'),
-        (re.compile('[.]py\(\d+\)'), r'.py(NNN)'),
-        (re.compile('[.]py:\d+'), r'.py:NNN'),
-        (re.compile(' line \d+,', re.IGNORECASE), r' Line NNN,'),
+        (re.compile(r'[.]py\(\d+\)'), r'.py(NNN)'),
+        (re.compile(r'[.]py:\d+'), r'.py:NNN'),
+        (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
 
         # omit traceback entries for unittest.py or doctest.py from
         # output:
