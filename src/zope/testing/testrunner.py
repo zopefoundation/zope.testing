@@ -30,8 +30,16 @@ import time
 import traceback
 import threading
 import unittest
+import trace
 
 real_pdb_set_trace = pdb.set_trace
+
+class IgnoreDocTests(trace.Ignore):
+    def names(self, filename, modulename):
+        if filename.startswith('<doctest'):
+            self._ignore[modulename] = True
+            return True
+        return trace.Ignore.names(self, filename, modulename)
 
 class EndRun(Exception):
     """Indicate that the existing run call should stop
@@ -42,7 +50,7 @@ class EndRun(Exception):
 def run(defaults=None, args=None):
     if args is None:
         args = sys.argv
-    
+
     # Control reporting flags during run
     old_reporting_flags = doctest.set_unittest_reportflags(0)
 
@@ -59,7 +67,7 @@ def run(defaults=None, args=None):
         sys.stdin = FakeInputContinueGenerator()
     else:
         resume_layer = None
-    
+
     options = get_options(args, defaults)
     options.testrunner_defaults = defaults
     options.resume_layer = resume_layer
@@ -67,7 +75,7 @@ def run(defaults=None, args=None):
     # Make sure we start with real pdb.set_trace.  This is needed
     # to make tests of the test runner work properly. :)
     pdb.set_trace = real_pdb_set_trace
-    
+
     try:
         failed = run_with_options(options)
     except EndRun:
@@ -113,8 +121,8 @@ def run_with_options(options):
         for error in import_errors:
             print_traceback("Module: %s\n" % error.module, error.exc_info),
         print
-            
-    
+
+
     if 'unit' in tests_by_layer_name:
         tests = tests_by_layer_name.pop('unit')
         if (not options.non_unit) and not options.resume_layer:
@@ -232,18 +240,18 @@ def run_tests(options, tests, name, failures, errors):
                         result.addSuccess(test)
                 finally:
                     result.stopTest(test)
-                    
+
         else:
             # normal
             if options.coverage:
                 coverdir = os.path.join(os.getcwd(), options.coverage)
-                import trace, tempfile, cPickle
                 ignoremods = ["os", "posixpath", "stat"]
                 tracer = trace.Trace(ignoredirs=[sys.prefix, sys.exec_prefix],
-                                     ignoremods=ignoremods, trace=False, 
+                                     ignoremods=ignoremods, trace=False,
                                      count=True)
+                tracer.ignore = IgnoreDocTests()
 
-                tracer.runctx('tests(result)', globals=globals(), 
+                tracer.runctx('tests(result)', globals=globals(),
                               locals=vars())
 
                 r = tracer.results()
@@ -283,7 +291,7 @@ def resume_tests(options, layer_name, failures, errors):
             ]
     for d in options.testrunner_defaults:
         args.extend(['--default', d])
-        
+
     args.extend(options.original_testrunner_args[1:])
 
     if sys.platform.startswith('win'):
@@ -301,7 +309,7 @@ def resume_tests(options, layer_name, failures, errors):
         ran, nfail, nerr = map(int, line.strip().split())
     except:
         raise SubprocessError(line+suberr.read())
-        
+
     while nfail > 0:
         nfail -= 1
         failures.append((suberr.readline().strip(), None))
@@ -309,7 +317,7 @@ def resume_tests(options, layer_name, failures, errors):
         nerr -= 1
         errors.append((suberr.readline().strip(), None))
     return ran
-        
+
 
 class SubprocessError(Exception):
     """An error occurred when running a subprocess
@@ -517,7 +525,7 @@ def print_traceback(msg, exc_info):
             )
     else:
         tb = "".join(traceback.format_exception(*exc_info))
-        
+
     print tb
 
 def post_mortem(exc_info):
@@ -642,7 +650,7 @@ def find_suites(options):
                     except:
                         suite = StartUpFailure(
                             options, module_name, sys.exc_info()[:2]+(None,))
-                
+
                 yield suite
                 break
 
@@ -1094,7 +1102,7 @@ def get_options(args=None, defaults=None):
     options, positional = parser.parse_args(args)
     merge_options(options, defaults)
     options.original_testrunner_args = original_testrunner_args
-    
+
     if positional:
         module_filter = positional.pop()
         if module_filter != '.':
@@ -1206,7 +1214,7 @@ if __name__ == '__main__':
     # test runner's own tests.  We need to adjust the path in hopes of
     # not getting a different version installed in the system python.
     if len(sys.argv) > 1 and sys.argv[1] == '--resume-layer':
-        sys.path.insert(0, 
+        sys.path.insert(0,
             os.path.split(
                 os.path.split(
                     os.path.split(
