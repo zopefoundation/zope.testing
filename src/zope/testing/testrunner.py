@@ -34,12 +34,37 @@ import trace
 
 real_pdb_set_trace = pdb.set_trace
 
-class IgnoreDocTests(trace.Ignore):
+class MyIgnore(trace.Ignore):
     def names(self, filename, modulename):
+        if modulename in self._ignore:
+            return self._ignore[modulename]
+
         if filename.startswith('<doctest'):
             self._ignore[modulename] = True
-            return True
+
         return trace.Ignore.names(self, filename, modulename)
+
+
+class MyTrace(trace.Trace):
+    def __init__(self, *args, **kws):
+        trace.Trace.__init__(self, *args, **kws)
+        self.ignore = MyIgnore(kws['ignoremods'], kws['ignoredirs'])
+        self.started = False
+
+    def start(self):
+        assert not self.started, "can't start if already started"
+        if not self.donothing:
+            sys.settrace(self.globaltrace)
+            threading.settrace(self.globaltrace)
+        self.started = True
+
+    def stop(self):
+        assert self.started, "can't stop if not started"
+        if not self.donothing:
+            sys.settrace(None)
+            threading.settrace(None)
+        self.starte = False
+
 
 class EndRun(Exception):
     """Indicate that the existing run call should stop
@@ -76,10 +101,27 @@ def run(defaults=None, args=None):
     # to make tests of the test runner work properly. :)
     pdb.set_trace = real_pdb_set_trace
 
+    if options.coverage:
+        tracer = MyTrace(ignoredirs=[sys.prefix, sys.exec_prefix],
+                         ignoremods=["os", "posixpath", "stat"],
+                         trace=False, count=True)
+        tracer.start()
+    else:
+        tracer = None
+
     try:
-        failed = run_with_options(options)
-    except EndRun:
-        failed = True
+        try:
+            failed = run_with_options(options)
+        except EndRun:
+            failed = True
+    finally:
+        if tracer:
+            tracer.stop()
+                                 
+    if tracer:
+        coverdir = os.path.join(os.getcwd(), options.coverage)
+        r = tracer.results()
+        r.write_results(summary=True, coverdir=coverdir)
 
     doctest.set_unittest_reportflags(old_reporting_flags)
 
@@ -243,21 +285,8 @@ def run_tests(options, tests, name, failures, errors):
 
         else:
             # normal
-            if options.coverage:
-                coverdir = os.path.join(os.getcwd(), options.coverage)
-                ignoremods = ["os", "posixpath", "stat"]
-                tracer = trace.Trace(ignoredirs=[sys.prefix, sys.exec_prefix],
-                                     ignoremods=ignoremods, trace=False,
-                                     count=True)
-                tracer.ignore = IgnoreDocTests()
+            tests(result)
 
-                tracer.runctx('tests(result)', globals=globals(),
-                              locals=vars())
-
-                r = tracer.results()
-                r.write_results(summary=True, coverdir=coverdir)
-            else:
-                tests(result)
         t = time.time() - t
         if options.verbose == 1 or options.progress:
             print
@@ -270,7 +299,6 @@ def run_tests(options, tests, name, failures, errors):
         ran += result.testsRun
 
     return ran
-
 
 def run_layer(options, layer_name, layer, tests, setup_layers,
               failures, errors):
