@@ -20,17 +20,21 @@ $Id$
 # we want to use the latest, greatest doctest, which zope.testing
 # provides.  Then again, zope.testing is generally useful.
 import gc
+import glob
 import logging
 import optparse
 import os
 import pdb
 import re
 import sys
-import time
-import traceback
+import tempfile
 import threading
-import unittest
+import time
 import trace
+import traceback
+import unittest
+import hotshot
+import hotshot.stats
 
 real_pdb_set_trace = pdb.set_trace
 
@@ -101,6 +105,12 @@ def run(defaults=None, args=None):
     # to make tests of the test runner work properly. :)
     pdb.set_trace = real_pdb_set_trace
 
+    if options.profile and sys.version_info[:3] <= (2,4,1) and __debug__:
+        print ('Because of a bug in Python < 2.4.1, profiling '
+               'during tests requires the -O option be passed to '
+               'Python (not the test runner).')
+        sys.exit()
+
     if options.coverage:
         tracer = MyTrace(ignoredirs=[sys.prefix, sys.exec_prefix],
                          ignoremods=["os", "posixpath", "stat"],
@@ -110,14 +120,41 @@ def run(defaults=None, args=None):
         tracer = None
 
     try:
+        if options.profile:
+            prof_prefix = 'tests_profile'
+            prof_suffix = '.prof'
+            prof_glob = prof_prefix + '*' + prof_suffix
+            dummy, file_path = tempfile.mkstemp(prof_suffix, prof_prefix, '.')
+            prof = hotshot.Profile(file_path)
+            prof.start()
+
         try:
-            failed = run_with_options(options)
-        except EndRun:
-            failed = True
+            try:
+                failed = run_with_options(options)
+            except EndRun:
+                failed = True
+        finally:
+            if tracer:
+                tracer.stop()
+            if options.profile:                         
+                prof.stop()
+                prof.close()
+
+        if options.profile:
+            stats = None
+            for file_name in glob.glob(prof_glob):
+                loaded = hotshot.stats.load(file_name)
+                if stats is None:
+                    stats = loaded
+                else:
+                    stats.add(loaded)
+            stats.sort_stats('cumulative', 'calls')
+            stats.print_stats(50)
     finally:
-        if tracer:
-            tracer.stop()
-                                 
+        if options.profile:
+            for file_name in glob.glob(prof_glob):
+                os.unlink(file_name)
+
     if tracer:
         coverdir = os.path.join(os.getcwd(), options.coverage)
         r = tracer.results()
@@ -996,11 +1033,18 @@ built with the --with-pydebug option to configure.
 """)
 
 analysis.add_option(
-    '--coverage', action="store", dest='coverage',
+    '--coverage', action="store", type='string', dest='coverage',
     help="""\
 Perform code-coverage analysis, saving trace data to the directory
 with the given name.  A code coverage summary is printed to standard
 out.
+""")
+
+analysis.add_option(
+    '--profile', action="store_true", dest='profile',
+    help="""\
+Run the tests under hotshot and display the top 50 stats, sorted by
+cumulative time and number of calls.
 """)
 
 def do_pychecker(*args):
@@ -1223,11 +1267,20 @@ def test_suite():
     def tearDown(test):
         sys.path, sys.argv = test.globs['saved-sys-info']
 
-    return doctest.DocFileSuite('testrunner.txt', 'testrunner-edge-cases.txt',
-                                setUp=setUp, tearDown=tearDown,
-                                optionflags=doctest.ELLIPSIS
-                                            +doctest.NORMALIZE_WHITESPACE,
-                                checker=checker, )
+    suite = doctest.DocFileSuite(
+        'testrunner.txt', 'testrunner-edge-cases.txt',
+        setUp=setUp, tearDown=tearDown,
+        optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+        checker=checker)
+
+    if not __debug__:
+        suite = unittest.TestSuite([suite, doctest.DocFileSuite(
+            'profiling.txt',
+            setUp=setUp, tearDown=tearDown,
+            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+            checker=checker)])
+
+    return suite
 
 def main():
     default = [

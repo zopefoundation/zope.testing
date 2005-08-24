@@ -1,0 +1,34 @@
+Profiling
+=========
+
+The testrunner includes the ability to profile the test execution with hotshot
+via the --profile option.
+
+    >>> import os.path, sys
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
+    >>> sys.path.append(directory_with_tests)
+
+    >>> defaults = [
+    ...     '--path', directory_with_tests,
+    ...     '--tests-pattern', '^sampletestsf?$',
+    ...     ]
+
+    >>> sys.argv = 'test --profile'.split()
+
+When the tests are run, we get profiling output.
+
+    >>> from zope.testing import testrunner
+    >>> testrunner.run(defaults)
+    Running unit tests:
+    ...
+    Running samplelayers.Layer1 tests:
+    ...
+    Running samplelayers.Layer11 tests:
+    ...
+    Total: ... tests, 0 failures, 0 errors
+    ...
+       Ordered by: cumulative time, call count
+       List reduced from ... to 50 due to restriction <50>
+    <BLANKLINE>
+       ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    ...
