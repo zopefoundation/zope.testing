@@ -13,7 +13,7 @@ via the --profile option.
     ...     '--tests-pattern', '^sampletestsf?$',
     ...     ]
 
-    >>> sys.argv = 'test --profile'.split()
+    >>> sys.argv = [testrunner_script, '--profile']
 
 When the tests are run, we get profiling output.
 
@@ -27,8 +27,12 @@ When the tests are run, we get profiling output.
     ...
     Total: ... tests, 0 failures, 0 errors
     ...
-       Ordered by: cumulative time, call count
-       List reduced from ... to 50 due to restriction <50>
-    <BLANKLINE>
-       ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-    ...
+       ncalls  tottime  percall  cumtime  percall filename:lineno(function)...
+
+Profiling also works across layers.
+
+    >>> sys.argv = [testrunner_script, '-ssample2', '--profile', '--tests-pattern', 'sampletests_ntd']
+    >>> testrunner.run(defaults)
+    Running...
+      Tear down ... not supported...
+       ncalls  tottime  percall  cumtime  percall filename:lineno(function)...

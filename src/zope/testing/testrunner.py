@@ -119,41 +119,45 @@ def run(defaults=None, args=None):
     else:
         tracer = None
 
-    try:
-        if options.profile:
-            prof_prefix = 'tests_profile'
-            prof_suffix = '.prof'
-            prof_glob = prof_prefix + '*' + prof_suffix
-            dummy, file_path = tempfile.mkstemp(prof_suffix, prof_prefix, '.')
-            prof = hotshot.Profile(file_path)
-            prof.start()
+    if options.profile:
+        prof_prefix = 'tests_profile'
+        prof_suffix = '.prof'
+        prof_glob = prof_prefix + '*' + prof_suffix
 
-        try:
-            try:
-                failed = run_with_options(options)
-            except EndRun:
-                failed = True
-        finally:
-            if tracer:
-                tracer.stop()
-            if options.profile:                         
-                prof.stop()
-                prof.close()
-
-        if options.profile:
-            stats = None
-            for file_name in glob.glob(prof_glob):
-                loaded = hotshot.stats.load(file_name)
-                if stats is None:
-                    stats = loaded
-                else:
-                    stats.add(loaded)
-            stats.sort_stats('cumulative', 'calls')
-            stats.print_stats(50)
-    finally:
-        if options.profile:
+        # if we are going to be profiling, and this isn't a subprocess,
+        # clean up any stale results files
+        if not options.resume_layer:
             for file_name in glob.glob(prof_glob):
                 os.unlink(file_name)
+        
+        # set up the output file
+        dummy, file_path = tempfile.mkstemp(prof_suffix, prof_prefix, '.')
+        prof = hotshot.Profile(file_path)
+        prof.start()
+
+    try:
+        try:
+            failed = run_with_options(options)
+        except EndRun:
+            failed = True
+    finally:
+        if tracer:
+            tracer.stop()
+        if options.profile:                         
+            prof.stop()
+            prof.close()
+
+    if options.profile and not options.resume_layer:
+        stats = None
+        for file_name in glob.glob(prof_glob):
+            loaded = hotshot.stats.load(file_name)
+            if stats is None:
+                stats = loaded
+            else:
+                stats.add(loaded)
+        stats.sort_stats('cumulative', 'calls')
+#        stats.sort_stats('time', 'calls')
+        stats.print_stats(50)
 
     if tracer:
         coverdir = os.path.join(os.getcwd(), options.coverage)
@@ -364,6 +368,10 @@ def resume_tests(options, layer_name, failures, errors):
             ('"' + a.replace('\\', '\\\\').replace('"', '\\"') + '"')
             for a in args[1:]
             ])
+
+    # this is because of a bug in Python (http://www.python.org/sf/900092)
+    if options.profile and sys.version_info[:3] <= (2,4,1):
+        args.insert(1, '-O')
 
     subin, subout, suberr = os.popen3(args)
     for l in subout:
