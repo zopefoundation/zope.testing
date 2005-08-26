@@ -120,7 +120,7 @@ def run(defaults=None, args=None):
         tracer = None
 
     if options.profile:
-        prof_prefix = 'tests_profile'
+        prof_prefix = 'tests_profile.'
         prof_suffix = '.prof'
         prof_glob = prof_prefix + '*' + prof_suffix
 
@@ -156,7 +156,6 @@ def run(defaults=None, args=None):
             else:
                 stats.add(loaded)
         stats.sort_stats('cumulative', 'calls')
-#        stats.sort_stats('time', 'calls')
         stats.print_stats(50)
 
     if tracer:
