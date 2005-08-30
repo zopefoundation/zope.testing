@@ -167,7 +167,7 @@ class FormCollection(list):
         for form in self:
             if form.name == name:
                 return form
-        raise AttributeError, name
+        raise AttributeError(name)
 
 
 class Form(dict):

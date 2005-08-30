@@ -25,7 +25,7 @@ class FakeModule:
         try:
             return self.__dict[name]
         except KeyError:
-            raise AttributeError, name
+            raise AttributeError(name)
 
 def setUp(test, name='README.txt'):
     dict = test.globs
