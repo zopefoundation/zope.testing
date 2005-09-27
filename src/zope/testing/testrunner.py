@@ -744,7 +744,7 @@ def find_test_files(options):
                     yield f
                     break
 
-identifier = re.compile('^[_a-zA-Z][_a-zA-Z0-9]+$').match
+identifier = re.compile(r'[_a-zA-Z]\w*$').match
 def find_test_files_(options):
     tests_pattern = options.tests_pattern
     test_file_pattern = options.test_file_pattern
