@@ -1313,7 +1313,7 @@ if __name__ == '__main__':
             )
 
     # Hm, when run as a script, we need to import the testrunner under
-    # it's own name, so that there's the imported flavor has the right
+    # its own name, so that there's the imported flavor has the right
     # real_pdb_set_trace.
     import zope.testing.testrunner
     from zope.testing import doctest
