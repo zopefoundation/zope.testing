@@ -129,7 +129,7 @@ def run(defaults=None, args=None):
         if not options.resume_layer:
             for file_name in glob.glob(prof_glob):
                 os.unlink(file_name)
-        
+
         # set up the output file
         dummy, file_path = tempfile.mkstemp(prof_suffix, prof_prefix, '.')
         prof = hotshot.Profile(file_path)
@@ -143,7 +143,7 @@ def run(defaults=None, args=None):
     finally:
         if tracer:
             tracer.stop()
-        if options.profile:                         
+        if options.profile:
             prof.stop()
             prof.close()
 
@@ -1128,7 +1128,7 @@ other.add_option(
 Normally, the test runner scans the test paths and the test
 directories looking for and deleting pyc or pyo files without
 corresponding py files.  This is to prevent spurious test failures due
-to finding compiled moudules where source modules have been deleted.
+to finding compiled modules where source modules have been deleted.
 This scan can be time consuming.  Using this option disables this
 scan.  If you know you haven't removed any modules since last running
 the tests, can make the test run go much faster.
