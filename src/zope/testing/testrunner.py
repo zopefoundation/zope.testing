@@ -69,12 +69,56 @@ class MyTrace(trace.Trace):
             threading.settrace(None)
         self.starte = False
 
-
 class EndRun(Exception):
     """Indicate that the existing run call should stop
 
     Used to prevent additional test output after post-mortem debugging.
     """
+
+def strip_py_ext(options, path):
+    """Return path without its .py (or .pyc or .pyo) extension, or None.
+
+    If options.usecompiled is false:
+        If path ends with ".py", the path without the extension is returned.
+        Else None is returned.
+
+    If options.usecompiled is true:
+        If Python is running with -O, a .pyo extension is also accepted.
+        If Python is running without -O, a .pyc extension is also accepted.
+    """
+    if path.endswith(".py"):
+        return path[:-3]
+    if options.usecompiled:
+        if __debug__:
+            # Python is running without -O.
+            ext = ".pyc"
+        else:
+            # Python is running with -O.
+            ext = ".pyo"
+        if path.endswith(ext):
+            return path[:-len(ext)]
+    return None
+
+def contains_init_py(options, fnamelist):
+    """Return true iff fnamelist contains a suitable spelling of __init__.py.
+
+    If options.usecompiled is false, this is so iff "__init__.py" is in
+    the list.
+
+    If options.usecompiled is true, then "__init__.pyo" is also acceptable
+    if Python is running with -O, and "__init__.pyc" is also acceptable if
+    Python is running without -O.
+    """
+    if "__init__.py" in fnamelist:
+        return True
+    if options.usecompiled:
+        if __debug__:
+            # Python is running without -O.
+            return "__init__.pyc" in fnamelist
+        else:
+            # Python is running with -O.
+            return "__init__.pyo" in fnamelist
+    return False
 
 def run(defaults=None, args=None):
     if args is None:
@@ -707,7 +751,10 @@ def find_suites(options):
         for prefix in options.prefix:
             if fpath.startswith(prefix):
                 # strip prefix, strip .py suffix and convert separator to dots
-                module_name = fpath[len(prefix):-3].replace(os.path.sep, '.')
+                noprefix = fpath[len(prefix):]
+                noext = strip_py_ext(options, noprefix)
+                assert noext is not None
+                module_name = noext.replace(os.path.sep, '.')
                 try:
                     module = import_name(module_name)
                 except:
@@ -737,35 +784,60 @@ class StartUpFailure:
 def find_test_files(options):
     found = {}
     for f in find_test_files_(options):
+        if f in found:
+            continue
         for filter in options.module:
             if filter(f):
-                if f not in found:
-                    found[f] = 1
-                    yield f
-                    break
+                found[f] = 1
+                yield f
+                break
 
 identifier = re.compile(r'[_a-zA-Z]\w*$').match
 def find_test_files_(options):
     tests_pattern = options.tests_pattern
     test_file_pattern = options.test_file_pattern
+
+    # If options.usecompiled, we can accept .pyc or .pyo files instead
+    # of .py files.  We'd rather use a .py file if one exists.  `root2ext`
+    # maps a test file path, sans extension, to the path with the best
+    # extension found (.py if it exists, else .pyc or .pyo).
+    # Note that "py" < "pyc" < "pyo", so if more than one extension is
+    # found, the lexicographically smaller one is best.
+
+    # Found a new test file, in directory `dirname`.  `noext` is the
+    # file name without an extension, and `withext` is the file name
+    # with its extension.
+    def update_root2ext(dirname, noext, withext):
+        key = os.path.join(dirname, noext)
+        new = os.path.join(dirname, withext)
+        if key in root2ext:
+            root2ext[key] = min(root2ext[key], new)
+        else:
+            root2ext[key] = new
+
     for p in test_dirs(options, {}):
         for dirname, dirs, files in walk_with_symlinks(options, p):
-            if (dirname != p) and ('__init__.py' not in files):
-                continue
+            if dirname != p and not contains_init_py(options, files):
+                continue    # not a plausible test directory
+            root2ext = {}
             dirs[:] = filter(identifier, dirs)
             d = os.path.split(dirname)[1]
-            if tests_pattern(d) and ('__init__.py' in files):
+            if tests_pattern(d) and contains_init_py(options, files):
                 # tests directory
                 for file in files:
-                    if file.endswith('.py') and test_file_pattern(file[:-3]):
-                        f = os.path.join(dirname, file)
-                        yield f
+                    noext = strip_py_ext(options, file)
+                    if noext and test_file_pattern(noext):
+                        update_root2ext(dirname, noext, file)
 
             for file in files:
-                if file.endswith('.py') and tests_pattern(file[:-3]):
-                    f = os.path.join(dirname, file)
-                    yield f
+                noext = strip_py_ext(options, file)
+                if noext and tests_pattern(noext):
+                    update_root2ext(dirname, noext, file)
 
+            winners = root2ext.values()
+            winners.sort()
+            for file in winners:
+                yield file
 
 def walk_with_symlinks(options, dir):
     # TODO -- really should have test of this that uses symlinks
@@ -1134,6 +1206,19 @@ scan.  If you know you haven't removed any modules since last running
 the tests, can make the test run go much faster.
 """)
 
+other.add_option(
+    '--usecompiled', action="store_true", dest='usecompiled',
+    help="""\
+Normally, a package must contain an __init__.py file, and only .py files
+can contain test code.  When this option is specified, compiled Python
+files (.pyc and .pyo) can be used instead:  a directory containing
+__init__.pyc or __init__.pyo is also considered to be a package, and if
+file XYZ.py contains tests but is absent while XYZ.pyc or XYZ.pyo exists
+then the compiled files will be used.  This is necessary when running
+tests against a tree where the .py files have been removed after
+compilation to .pyc/.pyo.  Use of this option implies --keepbytecode.
+""")
+
 parser.add_option_group(other)
 
 ######################################################################
@@ -1217,6 +1302,9 @@ def get_options(args=None, defaults=None):
         options.layer = map(compile_filter, options.layer)
 
     options.layer = options.layer and dict([(l, 1) for l in options.layer])
+
+    if options.usecompiled:
+        options.keepbytecode = options.usecompiled
 
     return options
 

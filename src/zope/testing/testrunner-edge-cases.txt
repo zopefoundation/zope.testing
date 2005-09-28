@@ -144,7 +144,7 @@ Post-mortem debugging function called from ordinary test:
     <BLANKLINE>
     Error in test test_post_mortem2 (sample3.sampletests_d.TestSomething)
     Traceback (most recent call last):
-      File "testrunner-ex/sample3/sampletests_d.py", 
+      File "testrunner-ex/sample3/sampletests_d.py",
            line 37, in test_post_mortem2
         g()
       File "testrunner-ex/sample3/sampletests_d.py", line 46, in g
@@ -184,7 +184,7 @@ Post-mortem debugging docstring-based doctest:
         exc_info)
       File "zope/testing/doctest.py", line 1737, in report_unexpected_exception
         raise UnexpectedException(test, example, exc_info)
-    UnexpectedException: 
+    UnexpectedException:
        from testrunner-ex/sample3/sampletests_d.py:61 (2 examples)>
     <BLANKLINE>
     exceptions.ValueError:
@@ -310,7 +310,7 @@ Post-mortem debugging of a docstring doctest failure:
     <BLANKLINE>
     Error in test post_mortem_failure2 (sample3.sampletests_d)
     <BLANKLINE>
-    File "testrunner-ex/sample3/sampletests_d.py", 
+    File "testrunner-ex/sample3/sampletests_d.py",
                    line 81, in sample3.sampletests_d.post_mortem_failure2
     <BLANKLINE>
     x
@@ -366,7 +366,7 @@ Post-mortem debugging of a docfile doctest failure:
     (Pdb) c
     True
 
-Post-mortem debugging with tripple verbosity
+Post-mortem debugging with triple verbosity
 
     >>> sys.argv = 'test --layer samplelayers.Layer1$ -vvv -D'.split()
     >>> testrunner.run(defaults)
