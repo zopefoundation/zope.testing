@@ -1983,7 +1983,6 @@ doesn't believe any test files, or even packages, exist.  Note that we pass
 delete the compiled Python files too:
 
     >>> for root, dirs, files in os.walk(dst):
-    ...    dirs[:] = [d for d in dirs if d == "package"] # prune cruft
     ...    for f in files:
     ...        if f.endswith(".py"):
     ...            os.remove(os.path.join(root, f))
