@@ -30,7 +30,18 @@ class FakeModule:
 def setUp(test, name='README.txt'):
     dict = test.globs
     dict['__name__'] = name
-    sys.modules[name] = FakeModule(dict)
+    module = FakeModule(dict)
+    sys.modules[name] = module
+    if '.' in name:
+        name = name.split('.')
+        parent = sys.modules['.'.join(name[:-1])]
+        setattr(parent, name[-1], module)
 
-def tearDown(test, name='README.txt'):
+def tearDown(test, name=None):
+    if name is None:
+        name = test.globs['__name__']
     del sys.modules[name]
+    if '.' in name:
+        name = name.split('.')
+        parent = sys.modules['.'.join(name[:-1])]
+        delattr(parent, name[-1])
