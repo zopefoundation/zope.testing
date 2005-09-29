@@ -1469,7 +1469,19 @@ Testing-Module Import Errors
 ----------------------------
 
 If there are errors when importing a test module, these errors are
-reported:
+reported.  In order to illustrate a module with a syntax error, we create
+one now:  this module used to be checked in to the project, but then it was
+included in distributions of projects using zope.testing too, and distutils
+complained about the syntax error when it compiled Python files during
+installation of such projects.  So first we create a module with bad syntax:
+
+    >>> badsyntax_path = os.path.join(directory_with_tests,
+    ...                               "sample2", "sampletests_i.py")
+    >>> f = open(badsyntax_path, "w")
+    >>> print >> f, "importx unittest"  # syntax error
+    >>> f.close()
+
+Then run the tests:
 
     >>> sys.argv = ('test --tests-pattern ^sampletests(f|_i)?$ --layer 1 '
     ...            ).split()
@@ -1479,7 +1491,7 @@ reported:
     <BLANKLINE>
     Module: sample2.sampletests_i
     <BLANKLINE>
-      File "testrunner-ex/sample2/sampletests_i.py", line 15
+      File "testrunner-ex/sample2/sampletests_i.py", line 1
         importx unittest
                        ^
     SyntaxError: invalid syntax
@@ -1548,6 +1560,9 @@ reported:
       sample2.sample23.sampletests_i
     True
 
+And remove the file with bad syntax:
+
+    >>> os.remove(badsyntax_path)
 
 Debugging
 ---------
