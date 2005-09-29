@@ -33,8 +33,13 @@ import time
 import trace
 import traceback
 import unittest
-import hotshot
-import hotshot.stats
+
+# some Linux distributions don't include the profiler, which hotshot uses
+try:
+    import hotshot
+    import hotshot.stats
+except ImportError:
+    hotshot = None
 
 real_pdb_set_trace = pdb.set_trace
 
@@ -149,7 +154,13 @@ def run(defaults=None, args=None):
     # to make tests of the test runner work properly. :)
     pdb.set_trace = real_pdb_set_trace
 
-    if options.profile and sys.version_info[:3] <= (2,4,1) and __debug__:
+    if hotshot is None and options.profile:
+        print ('The Python you\'re using doesn\'t seem to have the profiler '
+               'so you can\'t use the --profile switch.')
+        sys.exit()
+
+    if (hotshot is not None and options.profile
+    and sys.version_info[:3] <= (2,4,1) and __debug__):
         print ('Because of a bug in Python < 2.4.1, profiling '
                'during tests requires the -O option be passed to '
                'Python (not the test runner).')
@@ -163,7 +174,7 @@ def run(defaults=None, args=None):
     else:
         tracer = None
 
-    if options.profile:
+    if hotshot is not None and options.profile:
         prof_prefix = 'tests_profile.'
         prof_suffix = '.prof'
         prof_glob = prof_prefix + '*' + prof_suffix
@@ -187,11 +198,11 @@ def run(defaults=None, args=None):
     finally:
         if tracer:
             tracer.stop()
-        if options.profile:
+        if hotshot is not None and options.profile:
             prof.stop()
             prof.close()
 
-    if options.profile and not options.resume_layer:
+    if hotshot is not None and options.profile and not options.resume_layer:
         stats = None
         for file_name in glob.glob(prof_glob):
             loaded = hotshot.stats.load(file_name)
@@ -413,7 +424,8 @@ def resume_tests(options, layer_name, failures, errors):
             ])
 
     # this is because of a bug in Python (http://www.python.org/sf/900092)
-    if options.profile and sys.version_info[:3] <= (2,4,1):
+    if (hotshot is not None and options.profile
+    and sys.version_info[:3] <= (2,4,1)):
         args.insert(1, '-O')
 
     subin, subout, suberr = os.popen3(args)
@@ -1369,11 +1381,18 @@ def test_suite():
         checker=checker)
 
     if not __debug__:
-        suite = unittest.TestSuite([suite, doctest.DocFileSuite(
-            'profiling.txt',
-            setUp=setUp, tearDown=tearDown,
-            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
-            checker=checker)])
+        # some Linux distributions don't include the profiling module (which
+        # hotshot depends on)
+        try:
+            import hotshot.stats
+        except ImportError:
+            pass
+        else:
+            suite = unittest.TestSuite([suite, doctest.DocFileSuite(
+                'profiling.txt',
+                setUp=setUp, tearDown=tearDown,
+                optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+                checker=checker)])
 
     return suite
 
