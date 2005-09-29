@@ -1380,7 +1380,9 @@ def test_suite():
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker)
 
-    if not __debug__:
+    # Python <= 2.4.1 had a bug that prevented hotshot from runnint in
+    # non-optimize mode
+    if sys.version_info[:3] > (2,4,1) or __debug__:
         # some Linux distributions don't include the profiling module (which
         # hotshot depends on)
         try:
