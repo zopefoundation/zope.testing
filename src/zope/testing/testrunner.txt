@@ -1954,10 +1954,10 @@ this.  Because we're going to delete its .py files, we want to work
 in a copy of that:
 
     >>> NEWNAME = "unlikely_package_name"
-    >>> src = os.path.join(this_directory, 'testrunner-ex', 'usecompiled')
+    >>> src = os.path.join(directory_with_tests, 'usecompiled')
     >>> os.path.isdir(src)
     True
-    >>> dst = os.path.join(this_directory, 'testrunner-ex', NEWNAME)
+    >>> dst = os.path.join(directory_with_tests, NEWNAME)
     >>> os.path.isdir(dst)
     False
 
