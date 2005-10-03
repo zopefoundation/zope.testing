@@ -186,7 +186,7 @@ def run(defaults=None, args=None):
                 os.unlink(file_name)
 
         # set up the output file
-        dummy, file_path = tempfile.mkstemp(prof_suffix, prof_prefix, '.')
+        oshandle, file_path = tempfile.mkstemp(prof_suffix, prof_prefix, '.')
         prof = hotshot.Profile(file_path)
         prof.start()
 
@@ -201,6 +201,10 @@ def run(defaults=None, args=None):
         if hotshot is not None and options.profile:
             prof.stop()
             prof.close()
+            # We must explicitly close the handle mkstemp returned, else
+            # on Windows this dies the next around just above due to an
+            # attempt to unlink a still-open file.
+            os.close(oshandle)
 
     if hotshot is not None and options.profile and not options.resume_layer:
         stats = None
