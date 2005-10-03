@@ -421,16 +421,16 @@ def resume_tests(options, layer_name, failures, errors):
 
     args.extend(options.original_testrunner_args[1:])
 
+    # this is because of a bug in Python (http://www.python.org/sf/900092)
+    if (hotshot is not None and options.profile
+    and sys.version_info[:3] <= (2,4,1)):
+        args.insert(1, '-O')
+
     if sys.platform.startswith('win'):
         args = args[0] + ' ' + ' '.join([
             ('"' + a.replace('\\', '\\\\').replace('"', '\\"') + '"')
             for a in args[1:]
             ])
-
-    # this is because of a bug in Python (http://www.python.org/sf/900092)
-    if (hotshot is not None and options.profile
-    and sys.version_info[:3] <= (2,4,1)):
-        args.insert(1, '-O')
 
     subin, subout, suberr = os.popen3(args)
     for l in subout:
