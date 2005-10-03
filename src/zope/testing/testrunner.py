@@ -201,8 +201,8 @@ def run(defaults=None, args=None):
         if hotshot is not None and options.profile:
             prof.stop()
             prof.close()
-            # We must explicitly close the handle mkstemp returned, else
-            # on Windows this dies the next around just above due to an
+            # We must explicitly close the handle mkstemp returned, else on
+            # Windows this dies the next time around just above due to an
             # attempt to unlink a still-open file.
             os.close(oshandle)
 
