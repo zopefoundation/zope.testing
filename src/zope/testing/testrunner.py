@@ -1379,7 +1379,18 @@ def test_suite():
         sys.path, sys.argv = test.globs['saved-sys-info']
 
     suite = doctest.DocFileSuite(
-        'testrunner.txt', 'testrunner-edge-cases.txt',
+        'testrunner-arguments.txt',
+        'testrunner-coverage.txt',
+        'testrunner-debugging.txt',
+        'testrunner-edge-cases.txt',
+        'testrunner-errors.txt',
+        'testrunner-layers-ntd.txt',
+        'testrunner-layers.txt',
+        'testrunner-progress.txt',
+        'testrunner-simple.txt',
+        'testrunner-test-selection.txt',
+        'testrunner-verbose.txt',
+        'testrunner-wo-source.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker)

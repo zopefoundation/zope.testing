@@ -1,0 +1,190 @@
+Test Runner
+===========
+
+Test Progress
+-------------
+
+If the --progress (-p) option is used, progress information is printed and
+a carriage return (rather than a new-line) is printed between
+detail lines.  Let's look at the effect of --progress (-p) at different
+levels of verbosity.
+
+    >>> import os.path, sys
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
+    >>> sys.path.append(directory_with_tests)
+    >>> from zope.testing import testrunner
+    >>> defaults = [
+    ...     '--path', directory_with_tests,
+    ...     '--tests-pattern', '^sampletestsf?$',
+    ...     ]
+
+    >>> sys.argv = 'test --layer 122 -p'.split()
+    >>> testrunner.run(defaults)
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Running:
+        1/34 (2.9%)\r
+        2/34 (5.9%)\r
+        3/34 (8.8%)\r
+        4/34 (11.8%)\r
+        5/34 (14.7%)\r
+        6/34 (17.6%)\r
+        7/34 (20.6%)\r
+        8/34 (23.5%)\r
+        9/34 (26.5%)\r
+        10/34 (29.4%)\r
+        11/34 (32.4%)\r
+        12/34 (35.3%)\r
+        17/34 (50.0%)\r
+        18/34 (52.9%)\r
+        19/34 (55.9%)\r
+        20/34 (58.8%)\r
+        21/34 (61.8%)\r
+        22/34 (64.7%)\r
+        23/34 (67.6%)\r
+        24/34 (70.6%)\r
+        25/34 (73.5%)\r
+        26/34 (76.5%)\r
+        27/34 (79.4%)\r
+        28/34 (82.4%)\r
+        29/34 (85.3%)\r
+        34/34 (100.0%)\r
+    <BLANKLINE>
+      Ran 34 tests with 0 failures and 0 errors in 0.010 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
+(Note that, in the examples above and below, we show "\r" followed by
+new lines where carriage returns would appear in actual output.)
+
+Using a single level of verbosity has only a small effect:
+
+    >>> sys.argv = 'test --layer 122 -pv'.split()
+    >>> testrunner.run(defaults)
+    Running tests at level 1
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Running:
+        1/34 (2.9%)\r
+        2/34 (5.9%)\r
+        3/34 (8.8%)\r
+        4/34 (11.8%)\r
+        5/34 (14.7%)\r
+        6/34 (17.6%)\r
+        7/34 (20.6%)\r
+        8/34 (23.5%)\r
+        9/34 (26.5%)\r
+        10/34 (29.4%)\r
+        11/34 (32.4%)\r
+        12/34 (35.3%)\r
+        17/34 (50.0%)\r
+        18/34 (52.9%)\r
+        19/34 (55.9%)\r
+        20/34 (58.8%)\r
+        21/34 (61.8%)\r
+        22/34 (64.7%)\r
+        23/34 (67.6%)\r
+        24/34 (70.6%)\r
+        25/34 (73.5%)\r
+        26/34 (76.5%)\r
+        27/34 (79.4%)\r
+        28/34 (82.4%)\r
+        29/34 (85.3%)\r
+        34/34 (100.0%)\r
+    <BLANKLINE>
+      Ran 34 tests with 0 failures and 0 errors in 0.009 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
+
+If a second or third level of verbosity are added, we get additional
+information.
+
+    >>> sys.argv = 'test --layer 122 -pvv -t !txt'.split()
+    >>> testrunner.run(defaults)
+    Running tests at level 1
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Running:
+        1/24 (4.2%) test_x1 (sample1.sampletests.test122.TestA)\r
+        2/24 (8.3%) test_y0 (sample1.sampletests.test122.TestA)\r
+        3/24 (12.5%) test_z0 (sample1.sampletests.test122.TestA)\r
+        4/24 (16.7%) test_x0 (sample1.sampletests.test122.TestB)\r
+        5/24 (20.8%) test_y1 (sample1.sampletests.test122.TestB)\r
+        6/24 (25.0%) test_z0 (sample1.sampletests.test122.TestB)\r
+        7/24 (29.2%) test_1 (sample1.sampletests.test122.TestNotMuch)\r
+        8/24 (33.3%) test_2 (sample1.sampletests.test122.TestNotMuch)\r
+        9/24 (37.5%) test_3 (sample1.sampletests.test122.TestNotMuch)\r
+        10/24 (41.7%) test_x0 (sample1.sampletests.test122)          \r
+        11/24 (45.8%) test_y0 (sample1.sampletests.test122)\r
+        12/24 (50.0%) test_z1 (sample1.sampletests.test122)\r
+        13/24 (54.2%) test_x1 (sampletests.test122.TestA)  \r
+        14/24 (58.3%) test_y0 (sampletests.test122.TestA)\r
+        15/24 (62.5%) test_z0 (sampletests.test122.TestA)\r
+        16/24 (66.7%) test_x0 (sampletests.test122.TestB)\r
+        17/24 (70.8%) test_y1 (sampletests.test122.TestB)\r
+        18/24 (75.0%) test_z0 (sampletests.test122.TestB)\r
+        19/24 (79.2%) test_1 (sampletests.test122.TestNotMuch)\r
+        20/24 (83.3%) test_2 (sampletests.test122.TestNotMuch)\r
+        21/24 (87.5%) test_3 (sampletests.test122.TestNotMuch)\r
+        22/24 (91.7%) test_x0 (sampletests.test122)           \r
+        23/24 (95.8%) test_y0 (sampletests.test122)\r
+        24/24 (100.0%) test_z1 (sampletests.test122)\r
+    <BLANKLINE>
+      Ran 24 tests with 0 failures and 0 errors in 0.006 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
+Note that, in this example, we used a test-selection pattern starting
+with '!' to exclude tests containing the string "txt".
+
+    >>> sys.argv = 'test --layer 122 -pvvv -t!(txt|NotMuch)'.split()
+    >>> testrunner.run(defaults)
+    Running tests at level 1
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Running:
+        1/18 (5.6%) test_x1 (sample1.sampletests.test122.TestA) (0.000 ms)\r
+        2/18 (11.1%) test_y0 (sample1.sampletests.test122.TestA) (0.000 ms)\r
+        3/18 (16.7%) test_z0 (sample1.sampletests.test122.TestA) (0.000 ms)\r
+        4/18 (22.2%) test_x0 (sample1.sampletests.test122.TestB) (0.000 ms)\r
+        5/18 (27.8%) test_y1 (sample1.sampletests.test122.TestB) (0.000 ms)\r
+        6/18 (33.3%) test_z0 (sample1.sampletests.test122.TestB) (0.000 ms)\r
+        7/18 (38.9%) test_x0 (sample1.sampletests.test122) (0.001 ms)      \r
+        8/18 (44.4%) test_y0 (sample1.sampletests.test122) (0.001 ms)\r
+        9/18 (50.0%) test_z1 (sample1.sampletests.test122) (0.001 ms)\r
+        10/18 (55.6%) test_x1 (sampletests.test122.TestA) (0.000 ms) \r
+        11/18 (61.1%) test_y0 (sampletests.test122.TestA) (0.000 ms)\r
+        12/18 (66.7%) test_z0 (sampletests.test122.TestA) (0.000 ms)\r
+        13/18 (72.2%) test_x0 (sampletests.test122.TestB) (0.000 ms)\r
+        14/18 (77.8%) test_y1 (sampletests.test122.TestB) (0.000 ms)\r
+        15/18 (83.3%) test_z0 (sampletests.test122.TestB) (0.000 ms)\r
+        16/18 (88.9%) test_x0 (sampletests.test122) (0.001 ms)      \r
+        17/18 (94.4%) test_y0 (sampletests.test122) (0.001 ms)\r
+        18/18 (100.0%) test_z1 (sampletests.test122) (0.001 ms)\r
+    <BLANKLINE>
+      Ran 18 tests with 0 failures and 0 errors in 0.006 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
+In this example, we also excluded tests with "NotMuch" in their names.
