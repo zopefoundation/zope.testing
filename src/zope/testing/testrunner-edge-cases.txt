@@ -4,16 +4,43 @@ testrunner Edge Cases
 This document has some edge-case examples to test various aspects of
 the test runner.
 
+Separating Python path and test directories
+-------------------------------------------
+
+The --path option defines a directory to be searched for tests *and* a
+directory to be added to Python's search path.  The --test-path option
+can be used when you want to set a test search path without also
+affecting the Python path:
+
     >>> import os, sys
     >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
-    >>> sys.path.append(directory_with_tests)
 
     >>> from zope.testing import testrunner
 
     >>> defaults = [
-    ...     '--path', directory_with_tests,
+    ...     '--test-path', directory_with_tests,
     ...     '--tests-pattern', '^sampletestsf?$',
     ...     ]
+    >>> sys.argv = ['test']
+    >>> testrunner.run(defaults)
+    ... # doctest: +ELLIPSIS
+    Test-module import failures:
+    <BLANKLINE>
+    Module: sampletestsf
+    <BLANKLINE>
+    ImportError: No module named sampletestsf
+    ...
+
+    >>> sys.path.append(directory_with_tests)
+    >>> sys.argv = ['test']
+    >>> testrunner.run(defaults)
+    ... # doctest: +ELLIPSIS
+    Running unit tests:
+      Ran 192 tests with 0 failures and 0 errors in 0.028 seconds.
+    Running samplelayers.Layer1 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Ran 9 tests with 0 failures and 0 errors in 0.000 seconds.
+    ...
 
 Debugging
 ---------

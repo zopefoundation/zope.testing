@@ -873,7 +873,7 @@ compiled_sufixes = '.pyc', '.pyo'
 def remove_stale_bytecode(options):
     if options.keepbytecode:
         return
-    for p in options.path:
+    for p in options.test_path:
         for dirname, dirs, files in walk_with_symlinks(options, p):
             for file in files:
                 if file[-4:] in compiled_sufixes and file[:-1] not in files:
@@ -896,7 +896,7 @@ def test_dirs(options, seen):
                         yield p
                         break
     else:
-        for dpath in options.path:
+        for dpath in options.test_path:
             yield dpath
 
 
@@ -1171,7 +1171,23 @@ be used multiple times to specify multiple search paths.  The path is
 usually specified by the test-runner script itself, rather than by
 users of the script, although it can be overridden by users.  Only
 tests found in the path will be run.
+
+This option also specifies directories to be searched for tests.
+See the search_directory.
 """)
+
+setup.add_option(
+    '--test-path', action="append", dest='test_path',
+    help="""\
+Specify a path to be searched for tests, but not added to the Python
+search path.  This option can be used multiple times to specify
+multiple search paths.  The path is usually specified by the
+test-runner script itself, rather than by users of the script,
+although it can be overridden by users.  Only tests found in the path
+will be run.
+""")
+
+
 
 setup.add_option(
     '--tests-pattern', action="store", dest='tests_pattern',
@@ -1307,8 +1323,10 @@ def get_options(args=None, defaults=None):
     if options.package:
         options.package = [p.replace('/', '.').replace('\\', '.')
                            for p in options.package]
-    options.path = map(os.path.abspath, options.path)
-    options.prefix = [p + os.path.sep for p in options.path]
+    options.path = map(os.path.abspath, options.path or ())
+    options.test_path = map(os.path.abspath, options.test_path or ())
+    options.test_path += options.path
+    options.prefix = [p + os.path.sep for p in options.test_path]
     if options.all:
         options.at_level = sys.maxint
 
@@ -1371,12 +1389,18 @@ def test_suite():
         ])
 
     def setUp(test):
-        test.globs['saved-sys-info'] = sys.path, sys.argv
+        test.globs['saved-sys-info'] = (
+            sys.path[:],
+            sys.argv[:],
+            sys.modules.copy()
+            )
         test.globs['this_directory'] = os.path.split(__file__)[0]
         test.globs['testrunner_script'] = __file__
 
     def tearDown(test):
-        sys.path, sys.argv = test.globs['saved-sys-info']
+        sys.path[:], sys.argv[:] = test.globs['saved-sys-info'][:2]
+        sys.modules.clear()
+        sys.modules.update(test.globs['saved-sys-info'][2])
 
     suite = doctest.DocFileSuite(
         'testrunner-arguments.txt',
