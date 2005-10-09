@@ -762,6 +762,7 @@ def tests_from_suite(suite, options, dlevel=1, dlayer='unit'):
                     yield (suite, layer)
                     break
 
+
 def find_suites(options):
     for fpath in find_test_files(options):
         for prefix in options.prefix:
@@ -782,12 +783,33 @@ def find_suites(options):
                 else:
                     try:
                         suite = getattr(module, options.suite_name)()
+                        if isinstance(suite, unittest.TestSuite):
+                            check_suite(suite, module_name)
+                        else:
+                            raise TypeError(
+                                "Invalid test_suite, %r, in %s"
+                                % (suite, module_name)
+                                )
                     except:
                         suite = StartUpFailure(
                             options, module_name, sys.exc_info()[:2]+(None,))
+                    
 
                 yield suite
                 break
+
+def check_suite(suite, module_name):
+    for x in suite:
+        if isinstance(x, unittest.TestSuite):
+            check_suite(x, module_name)
+        elif not isinstance(x, unittest.TestCase):
+            raise TypeError(
+                "Invalid test, %r,\nin test_suite from %s"
+                % (x, module_name)
+                )
+            
+    
+
 
 class StartUpFailure:
 

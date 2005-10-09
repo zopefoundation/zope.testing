@@ -42,8 +42,8 @@ affecting the Python path:
       Ran 9 tests with 0 failures and 0 errors in 0.000 seconds.
     ...
 
-Debugging
----------
+Debugging Edge Cases
+--------------------
 
     >>> class Input:
     ...     def __init__(self, src):
@@ -414,3 +414,42 @@ Post-mortem debugging with triple verbosity
     Tearing down left over layers:
       Tear down samplelayers.Layer1 in 0.000 seconds.
     False
+
+Test Suites with None for suites or tests
+-----------------------------------------
+
+    >>> sys.argv = ['test', 
+    ...             '--tests-pattern', '^sampletests_none_suite$',
+    ...     ]
+    >>> testrunner.run(defaults)
+    Test-module import failures:
+    <BLANKLINE>
+    Module: sample1.sampletests_none_suite
+    <BLANKLINE>
+    TypeError: Invalid test_suite, None, in sample1.sampletests_none_suite
+    <BLANKLINE>
+    <BLANKLINE>
+    Total: 0 tests, 0 failures, 0 errors
+    <BLANKLINE>
+    Test-modules with import problems:
+      sample1.sampletests_none_suite
+    True
+
+
+    >>> sys.argv = ['test', 
+    ...             '--tests-pattern', '^sampletests_none_test$',
+    ...     ]
+    >>> testrunner.run(defaults)
+    Test-module import failures:
+    <BLANKLINE>
+    Module: sample1.sampletests_none_test
+    <BLANKLINE>
+    TypeError: Invalid test, None,
+    in test_suite from sample1.sampletests_none_test
+    <BLANKLINE>
+    <BLANKLINE>
+    Total: 0 tests, 0 failures, 0 errors
+    <BLANKLINE>
+    Test-modules with import problems:
+      sample1.sampletests_none_test
+    True
