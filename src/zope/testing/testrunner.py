@@ -1437,6 +1437,7 @@ def test_suite():
         'testrunner-test-selection.txt',
         'testrunner-verbose.txt',
         'testrunner-wo-source.txt',
+        'testrunner-repeat.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker)

@@ -81,4 +81,5 @@ Chapters:
 - `Layers that can't be torn down <testrunner-layers-ntd.txt>`_
 - `Code Coverage <testrunner-coverage.txt>`_
 - `Running Without Source Code <testrunner-wo-source.txt>`_
+- `Repeating Tests <testrunner-looping.txt>`_
 - `Edge Cases <testrunner-edge-cases.txt>`_
