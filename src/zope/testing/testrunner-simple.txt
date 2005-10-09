@@ -14,11 +14,7 @@ user-supplied command-line options are provided.
 Typically, a test script does 2 things:
 
 - Adds the directory containing the zope package to the Python
-  path:
-
-    >>> import os.path, sys
-    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
-    >>> sys.path.append(directory_with_tests)
+  path.
 
 - Calls the test runner with default arguments and arguments supplied
   to the script.
@@ -26,10 +22,12 @@ Typically, a test script does 2 things:
   Normally, it just passes default/setup arguments.  The test runner
   uses `sys.argv` to get the user's input.
 
-This directory contains a number of sample packages with tests.
-Let's run the tests found here. First though, we'll set up our default
-options:
+This testrunner_ex subdirectory contains a number of sample packages
+with tests.  Let's run the tests found here. First though, we'll set
+up our default options:
 
+    >>> import os.path
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
     >>> defaults = [
     ...     '--path', directory_with_tests,
     ...     '--tests-pattern', '^sampletestsf?$',
@@ -49,6 +47,7 @@ tests-pattern
 Now, if we run the tests, without any other options:
 
     >>> from zope.testing import testrunner
+    >>> import sys
     >>> sys.argv = ['test']
     >>> testrunner.run(defaults)
     Running unit tests:

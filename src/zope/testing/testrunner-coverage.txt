@@ -9,8 +9,6 @@ directory name given as the parameter will be used to hold the reports.
 
     >>> import os.path, sys
     >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
-    >>> sys.path.append(directory_with_tests)
-    >>> from zope.testing import testrunner
     >>> defaults = [
     ...     '--path', directory_with_tests,
     ...     '--tests-pattern', '^sampletestsf?$',
@@ -18,6 +16,7 @@ directory name given as the parameter will be used to hold the reports.
 
     >>> sys.argv = 'test --coverage=coverage_dir'.split()
 
+    >>> from zope.testing import testrunner
     >>> testrunner.run(defaults)
     Running unit tests:
     ...

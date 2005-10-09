@@ -37,7 +37,6 @@ can't be deleted later.
 Now run the tests in the copy:
 
 
-    >>> sys.path.append(directory_with_tests)
     >>> from zope.testing import testrunner
 
     >>> mydefaults = [

@@ -10,14 +10,13 @@ other ways we can select tests.  We can select tests by package:
 
     >>> import os.path, sys
     >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
-    >>> sys.path.append(directory_with_tests)
-    >>> from zope.testing import testrunner
     >>> defaults = [
     ...     '--path', directory_with_tests,
     ...     '--tests-pattern', '^sampletestsf?$',
     ...     ]
 
     >>> sys.argv = 'test --layer 122 -ssample1 -vv'.split()
+    >>> from zope.testing import testrunner
     >>> testrunner.run(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:

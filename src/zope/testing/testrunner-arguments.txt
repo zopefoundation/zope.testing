@@ -8,14 +8,13 @@ In most of the examples here, we set up `sys.argv`.  In normal usage,
 the testrunner just uses `sys.argv`.  It is possible to pass athiments
 explicitly.
 
-    >>> import os.path, sys
+    >>> import os.path
     >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
-    >>> sys.path.append(directory_with_tests)
-    >>> from zope.testing import testrunner
     >>> defaults = [
     ...     '--path', directory_with_tests,
     ...     '--tests-pattern', '^sampletestsf?$',
     ...     ]
+    >>> from zope.testing import testrunner
     >>> testrunner.run(defaults, 'test --layer 111'.split())
     Running samplelayers.Layer111 tests:
       Set up samplelayers.Layerx in N.NNN seconds.
