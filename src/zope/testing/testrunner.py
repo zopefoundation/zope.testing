@@ -238,7 +238,25 @@ def run_with_options(options):
             print "Running tests at level %d" % options.at_level
 
 
-    # XXX add tracing later
+    old_threshold = gc.get_threshold()
+    if options.gc:
+        if len(options.gc) > 3:
+            print >> sys.stderr, "Too many --gc options"
+            sys.exit(1)
+        if options.gc[0]:
+            print ("Cyclic garbage collection threshold set to: %s" %
+                   `tuple(options.gc)`)
+        else:
+            print "Cyclic garbage collection is disabled."
+            
+        gc.set_threshold(*options.gc)
+
+    old_flags = gc.get_debug()
+    if options.gc_option:
+        new_flags = 0
+        for op in options.gc_option:
+            new_flags |= getattr(gc, op)
+        gc.set_debug(new_flags)
 
     # Add directories to the path
     for path in options.path:
@@ -347,6 +365,11 @@ def run_with_options(options):
             for test in import_errors:
                 print "  " + test.module
 
+    if options.gc_option:
+        gc.set_debug(old_flags)
+        
+    if options.gc:
+        gc.set_threshold(*old_threshold)
 
     return bool(import_errors or failures or errors)
 
@@ -1106,22 +1129,27 @@ analysis.add_option(
     )
 
 
-def gc_callback(option, opt, GC_THRESHOLD, *args):
-    import gc
-    if GC_THRESHOLD == 0:
-        gc.disable()
-        print "gc disabled"
-    else:
-        gc.set_threshold(GC_THRESHOLD)
-        print "gc threshold:", gc.get_threshold()
-
 analysis.add_option(
-    '--gc', action="callback", callback=gc_callback, dest='gc', type="int",
+    '--gc', '-g', action="append", dest='gc', type="int",
     help="""\
-Set the garbage collector generation0 threshold.  This can be used
+Set the garbage collector generation threshold.  This can be used
 to stress memory and gc correctness.  Some crashes are only
 reproducible when the threshold is set to 1 (agressive garbage
 collection).  Do "--gc 0" to disable garbage collection altogether.
+
+The --gc option can be used up to 3 times to specify up to 3 of the 3
+Python gc_threshold settings.
+
+""")
+
+analysis.add_option(
+    '--gc-option', '-G', action="append", dest='gc_option', type="choice",
+    choices=['DEBUG_STATS', 'DEBUG_COLLECTABLE', 'DEBUG_UNCOLLECTABLE',
+             'DEBUG_INSTANCES', 'DEBUG_OBJECTS', 'DEBUG_SAVEALL',
+             'DEBUG_LEAK'],
+    help="""\
+Set a Python gc-module debug flag.  This option can be used more than
+once to set multiple flags.
 """)
 
 analysis.add_option(
@@ -1414,13 +1442,15 @@ def test_suite():
         test.globs['saved-sys-info'] = (
             sys.path[:],
             sys.argv[:],
-            sys.modules.copy()
+            sys.modules.copy(),
+            gc.get_threshold()
             )
         test.globs['this_directory'] = os.path.split(__file__)[0]
         test.globs['testrunner_script'] = __file__
 
     def tearDown(test):
         sys.path[:], sys.argv[:] = test.globs['saved-sys-info'][:2]
+        gc.set_threshold(*test.globs['saved-sys-info'][3])
         sys.modules.clear()
         sys.modules.update(test.globs['saved-sys-info'][2])
 
@@ -1438,6 +1468,7 @@ def test_suite():
         'testrunner-verbose.txt',
         'testrunner-wo-source.txt',
         'testrunner-repeat.txt',
+        'testrunner-gc.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker)

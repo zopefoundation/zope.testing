@@ -82,4 +82,5 @@ Chapters:
 - `Code Coverage <testrunner-coverage.txt>`_
 - `Running Without Source Code <testrunner-wo-source.txt>`_
 - `Repeating Tests <testrunner-looping.txt>`_
+- `Garbage Collection Control and Statistics <testrunner-gc.txt>`_
 - `Edge Cases <testrunner-edge-cases.txt>`_
