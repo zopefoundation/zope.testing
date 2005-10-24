@@ -1093,7 +1093,14 @@ Reporting options control basic aspects of test-runner output
 reporting.add_option(
     '--verbose', '-v', action="count", dest='verbose',
     help="""\
+Make output more verbose.
 Increment the verbosity level.
+""")
+
+reporting.add_option(
+    '--quiet', '-q', action="store_true", dest='quiet',
+    help="""\
+Make the output minimal, overriding any verbosity options.
 """)
 
 reporting.add_option(
@@ -1389,6 +1396,9 @@ def get_options(args=None, defaults=None):
 
     if options.usecompiled:
         options.keepbytecode = options.usecompiled
+
+    if options.quiet:
+        options.verbose = 0
 
     return options
 

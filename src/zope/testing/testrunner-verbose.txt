@@ -135,3 +135,20 @@ test-execution times are printed:
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
     False
+
+Quiet output
+------------
+
+The --quiet (-q) option cancels all verbose options.  It's useful when
+the default verbosity is non-zero:
+
+    >>> defaults = [
+    ...     '--path', directory_with_tests,
+    ...     '--tests-pattern', '^sampletestsf?$',
+    ...     '-v'
+    ...     ]
+    >>> sys.argv = 'test -q -u'.split()
+    >>> testrunner.run(defaults)
+    Running unit tests:
+      Ran 192 tests with 0 failures and 0 errors in 0.034 seconds.
+    False
