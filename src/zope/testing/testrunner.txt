@@ -84,4 +84,5 @@ Chapters:
 - `Repeating Tests <testrunner-looping.txt>`_
 - `Garbage Collection Control and Statistics <testrunner-gc.txt>`_
 - `Debugging Memory Leaks <testrunner-leaks.txt>`_
+- `Knitting in extra package directories <testrunner-knit.txt>`_
 - `Edge Cases <testrunner-edge-cases.txt>`_

@@ -860,7 +860,7 @@ def tests_from_suite(suite, options, dlevel=1, dlayer='unit'):
 
 
 def find_suites(options):
-    for fpath in find_test_files(options):
+    for fpath, package in find_test_files(options):
         for prefix in options.prefix:
             if fpath.startswith(prefix):
                 # strip prefix, strip .py suffix and convert separator to dots
@@ -868,6 +868,9 @@ def find_suites(options):
                 noext = strip_py_ext(options, noprefix)
                 assert noext is not None
                 module_name = noext.replace(os.path.sep, '.')
+                if package:
+                    module_name = package + '.' + module_name
+                    
                 try:
                     module = import_name(module_name)
                 except:
@@ -917,13 +920,13 @@ class StartUpFailure:
 
 def find_test_files(options):
     found = {}
-    for f in find_test_files_(options):
+    for f, package in find_test_files_(options):
         if f in found:
             continue
         for filter in options.module:
             if filter(f):
                 found[f] = 1
-                yield f
+                yield f, package
                 break
 
 identifier = re.compile(r'[_a-zA-Z]\w*$').match
@@ -949,7 +952,7 @@ def find_test_files_(options):
         else:
             root2ext[key] = new
 
-    for p in test_dirs(options, {}):
+    for (p, package) in test_dirs(options, {}):
         for dirname, dirs, files in walk_with_symlinks(options, p):
             if dirname != p and not contains_init_py(options, files):
                 continue    # not a plausible test directory
@@ -971,7 +974,7 @@ def find_test_files_(options):
             winners = root2ext.values()
             winners.sort()
             for file in winners:
-                yield file
+                yield file, package
 
 def walk_with_symlinks(options, dir):
     # TODO -- really should have test of this that uses symlinks
@@ -991,7 +994,7 @@ compiled_sufixes = '.pyc', '.pyo'
 def remove_stale_bytecode(options):
     if options.keepbytecode:
         return
-    for p in options.test_path:
+    for (p, _) in options.test_path:
         for dirname, dirs, files in walk_with_symlinks(options, p):
             for file in files:
                 if file[-4:] in compiled_sufixes and file[:-1] not in files:
@@ -1011,7 +1014,7 @@ def test_dirs(options, seen):
                 for prefix in options.prefix:
                     if p.startswith(prefix):
                         seen[p] = 1
-                        yield p
+                        yield p, ''
                         break
     else:
         for dpath in options.test_path:
@@ -1408,15 +1411,34 @@ although it can be overridden by users.  Only tests found in the path
 will be run.
 """)
 
+setup.add_option(
+    '--package-path', action="append", dest='package_path', nargs=2,
+    help="""\
+Specify a path to be searched for tests, but not added to the Python
+search path.  Also specify a package for files found in this path.
+This is used to deal with directories that are stiched into packages
+that are not otherwise searched for tests.
 
+This option takes 2 arguments.  The first is a path name. The second is
+the package name.
+
+This option can be used multiple times to specify
+multiple search paths.  The path is usually specified by the
+test-runner script itself, rather than by users of the script,
+although it can be overridden by users.  Only tests found in the path
+will be run.
+""")
 
 setup.add_option(
     '--tests-pattern', action="store", dest='tests_pattern',
     help="""\
-Specify the pattern for identifying tests modules. Tests modules are
-packages containing test modules or modules containing tests.  When
-searching for tests, the test runner looks for modules or packages
-with this name.
+The test runner looks for modules containing tests.  It uses this
+pattern to identify these modules.  The modules may be either packages
+or python files.
+
+If a test module is a package, it uses the value given by the
+test-file-pattern to identify python files within the package
+containing tests.
 """)
 
 setup.add_option(
@@ -1429,9 +1451,8 @@ module's test suite.
 setup.add_option(
     '--test-file-pattern', action="store", dest='test_file_pattern',
     help="""\
-Specify the name of tests modules. Tests modules are packages
-containing test files or modules containing tests.  When searching for
-tests, the test runner looks for modules or packages with this name.
+Specify a pattern for identifying python files within a tests package.
+See the documentation for the --tests-pattern option.
 """)
 
 setup.add_option(
@@ -1549,7 +1570,15 @@ def get_options(args=None, defaults=None):
     options.path = map(os.path.abspath, options.path or ())
     options.test_path = map(os.path.abspath, options.test_path or ())
     options.test_path += options.path
-    options.prefix = [p + os.path.sep for p in options.test_path]
+
+    options.test_path = ([(path, '') for path in options.test_path]
+                         +
+                         [(os.path.abspath(path), package)
+                          for (path, package) in options.package_path or ()
+                          ])
+    
+
+    options.prefix = [p + os.path.sep for (p, _) in options.test_path]
     if options.all:
         options.at_level = sys.maxint
 
@@ -1665,6 +1694,7 @@ def test_suite():
         'testrunner-wo-source.txt',
         'testrunner-repeat.txt',
         'testrunner-gc.txt',
+        'testrunner-knit.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker)
