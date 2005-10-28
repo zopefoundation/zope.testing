@@ -453,3 +453,25 @@ Test Suites with None for suites or tests
     Test-modules with import problems:
       sample1.sampletests_none_test
     True
+
+You must use --repeat with --report-refcounts
+---------------------------------------------
+
+It is an error to specify --report-refcounts (-r) without specifying a
+repeat count greater than 1
+
+    >>> sys.argv = 'test -r'.split() 
+    >>> testrunner.run(defaults)
+            You must use the --repeat (-N) option to specify a repeat
+            count greater than 1 when using the --report_refcounts (-r)
+            option.
+    <BLANKLINE>
+    True
+
+    >>> sys.argv = 'test -r -N1'.split() 
+    >>> testrunner.run(defaults)
+            You must use the --repeat (-N) option to specify a repeat
+            count greater than 1 when using the --report_refcounts (-r)
+            option.
+    <BLANKLINE>
+    True

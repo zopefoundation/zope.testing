@@ -32,6 +32,7 @@ import threading
 import time
 import trace
 import traceback
+import types
 import unittest
 
 # some Linux distributions don't include the profiler, which hotshot uses
@@ -147,6 +148,9 @@ def run(defaults=None, args=None):
         resume_layer = None
 
     options = get_options(args, defaults)
+    if options.fail:
+        return True
+    
     options.testrunner_defaults = defaults
     options.resume_layer = resume_layer
 
@@ -241,7 +245,7 @@ def run_with_options(options):
     old_threshold = gc.get_threshold()
     if options.gc:
         if len(options.gc) > 3:
-            print >> sys.stderr, "Too many --gc options"
+            print "Too many --gc options"
             sys.exit(1)
         if options.gc[0]:
             print ("Cyclic garbage collection threshold set to: %s" %
@@ -257,6 +261,29 @@ def run_with_options(options):
         for op in options.gc_option:
             new_flags |= getattr(gc, op)
         gc.set_debug(new_flags)
+
+    old_reporting_flags = doctest.set_unittest_reportflags(0)
+    reporting_flags = 0
+    if options.ndiff:
+        reporting_flags = doctest.REPORT_NDIFF
+    if options.udiff:
+        if reporting_flags:
+            print "Can only give one of --ndiff, --udiff, or --cdiff"
+            sys.exit(1)
+        reporting_flags = doctest.REPORT_UDIFF
+    if options.cdiff:
+        if reporting_flags:
+            print "Can only give one of --ndiff, --udiff, or --cdiff"
+            sys.exit(1)
+        reporting_flags = doctest.REPORT_CDIFF
+    if options.report_only_first_failure:
+        reporting_flags |= doctest.REPORT_ONLY_FIRST_FAILURE
+        
+    if reporting_flags:
+        doctest.set_unittest_reportflags(reporting_flags)
+    else:
+        doctest.set_unittest_reportflags(old_reporting_flags)
+
 
     # Add directories to the path
     for path in options.path:
@@ -365,6 +392,8 @@ def run_with_options(options):
             for test in import_errors:
                 print "  " + test.module
 
+    doctest.set_unittest_reportflags(old_reporting_flags)
+
     if options.gc_option:
         gc.set_debug(old_flags)
         
@@ -375,8 +404,19 @@ def run_with_options(options):
 
 def run_tests(options, tests, name, failures, errors):
     repeat = options.repeat or 1
+    repeat_range = iter(range(repeat))
     ran = 0
-    for i in range(repeat):
+
+    gc.collect()
+    lgarbage = len(gc.garbage)
+
+    sumrc = 0
+    if options.report_refcounts:
+        if options.verbose:
+            track = TrackRefs()
+        rc = sys.gettotalrefcount()
+        
+    for i in repeat_range:
         if repeat > 1:
             print "Iteration", i+1
 
@@ -385,8 +425,8 @@ def run_tests(options, tests, name, failures, errors):
         if options.verbose == 1 and not options.progress:
             print '    ',
         result = TestResult(options, tests)
+        
         t = time.time()
-
 
         if options.post_mortem:
             # post-mortem debugging
@@ -418,7 +458,40 @@ def run_tests(options, tests, name, failures, errors):
             "  Ran %s tests with %s failures and %s errors in %.3f seconds." %
             (result.testsRun, len(result.failures), len(result.errors), t)
             )
-        ran += result.testsRun
+        ran = result.testsRun
+
+        gc.collect()
+        if len(gc.garbage) > lgarbage:
+            print ("Tests generated new (%d) garbage:"
+                   % len(gc.garbage)-lgarbage)
+            print gc.garbage[lgarbage:]
+            lgarbage = len(gc.garbage)
+
+        if options.report_refcounts:
+
+            # If we are being tested, we don't want stdout itself to
+            # foul up the numbers. :)
+            try:
+                sys.stdout.getvalue()
+            except AttributeError:
+                pass
+            
+            prev = rc
+            rc = sys.gettotalrefcount()
+            if options.verbose:
+                track.update()
+                if i:
+                    print (" "
+                           " sum detail refcount=%-8d"
+                           " sys refcount=%-8d"
+                           " change=%-6d"
+                           % (track.n, rc, rc - prev))
+                    if options.verbose:
+                        track.output()
+                else:
+                    track.delta = None
+            elif i:
+                print "  sys refcount=%-8d change=%-6d" % (rc, rc - prev)
 
     return ran
 
@@ -983,6 +1056,92 @@ class NullHandler(logging.Handler):
         pass
 
 
+class TrackRefs(object):
+    """Object to track reference counts across test runs."""
+
+    def __init__(self):
+        self.type2count = {}
+        self.type2all = {}
+        self.delta = None
+        self.n = 0
+        self.update()
+        self.delta = None
+
+    def update(self):
+        gc.collect()
+        obs = sys.getobjects(0)
+        type2count = {}
+        type2all = {}
+        n = 0
+        for o in obs:
+            if type(o) is str and o == '<dummy key>':
+                # avoid dictionary madness
+                continue
+
+            all = sys.getrefcount(o) - 3
+            n += all
+
+            t = type(o)
+            if t is types.InstanceType:
+                t = o.__class__
+
+            if t in type2count:
+                type2count[t] += 1
+                type2all[t] += all
+            else:
+                type2count[t] = 1
+                type2all[t] = all
+
+
+        ct = [(
+               type_or_class_title(t),
+               type2count[t] - self.type2count.get(t, 0),
+               type2all[t] - self.type2all.get(t, 0),
+               )
+              for t in type2count.iterkeys()]
+        ct += [(
+                type_or_class_title(t),
+                - self.type2count[t],
+                - self.type2all[t],
+                )
+               for t in self.type2count.iterkeys()
+               if t not in type2count]
+        ct.sort()
+        self.delta = ct
+        self.type2count = type2count
+        self.type2all = type2all
+        self.n = n
+
+
+    def output(self):
+        printed = False
+        s1 = s2 = 0
+        for t, delta1, delta2 in self.delta:
+            if delta1 or delta2:
+                if not printed:
+                    print (
+                        '    Leak details, changes in instances and refcounts'
+                        ' by type/class:')
+                    print "    %-55s %6s %6s" % ('type/class', 'insts', 'refs')
+                    print "    %-55s %6s %6s" % ('-' * 55, '-----', '----')
+                    printed = True
+                print "    %-55s %6d %6d" % (t, delta1, delta2)
+                s1 += delta1
+                s2 += delta2
+
+        if printed:
+            print "    %-55s %6s %6s" % ('-' * 55, '-----', '----')
+            print "    %-55s %6s %6s" % ('total', s1, s2)
+
+
+        self.delta = None
+
+def type_or_class_title(t):
+    module = getattr(t, '__module__', '__builtin__')
+    if module == '__builtin__':
+        return t.__name__
+    return "%s.%s" % (module, t.__name__)
+
 
 ###############################################################################
 # Command-line UI
@@ -1109,15 +1268,29 @@ reporting.add_option(
 Output progress status
 """)
 
-def report_only_first_failure(*args):
-    old = doctest.set_unittest_reportflags(0)
-    doctest.set_unittest_reportflags(old | doctest.REPORT_ONLY_FIRST_FAILURE)
-
 reporting.add_option(
-    '-1', action="callback", callback=report_only_first_failure,
+    '-1', action="store_true", dest='report_only_first_failure',
     help="""\
 Report only the first failure in a doctest. (Examples after the
 failure are still executed, in case they do any cleanup.)
+""")
+
+reporting.add_option(
+    '--ndiff', action="store_true", dest="ndiff",
+    help="""\
+When there is a doctest failure, show it as a diff using the ndiff.py utility.
+""")
+
+reporting.add_option(
+    '--udiff', action="store_true", dest="udiff",
+    help="""\
+When there is a doctest failure, show it as a unified diff.
+""")
+
+reporting.add_option(
+    '--cdiff', action="store_true", dest="cdiff",
+    help="""\
+When there is a doctest failure, show it as a context diff.
 """)
 
 parser.add_option_group(reporting)
@@ -1160,24 +1333,15 @@ once to set multiple flags.
 """)
 
 analysis.add_option(
-    '--repeat', action="store", type="int", dest='repeat',
+    '--repeat', '-N', action="store", type="int", dest='repeat',
     help="""\
 Repeat the testst the given number of times.  This option is used to
 make sure that tests leave thier environment in the state they found
-it and, with the --refcount option to look for memory leaks.
-""")
-
-def refcount_available(*args):
-    if not hasattr(sys, "gettotalrefcount"):
-        raise optparse.OptionValueError("""\
-The Python you are running was not configured with --with-pydebug.
-This is required to use the --refount option.
+it and, with the --report-refcounts option to look for memory leaks.
 """)
 
 analysis.add_option(
-    '--refcount',
-    action="callback", callback=refcount_available,
-    dest='refcount',
+    '--report-refcounts', '-r', action="store_true", dest='report_refcounts',
     help="""\
 After each run of the tests, output a report summarizing changes in
 refcounts by object type.  This option that requires that Python was
@@ -1356,6 +1520,8 @@ def get_options(args=None, defaults=None):
     merge_options(options, defaults)
     options.original_testrunner_args = original_testrunner_args
 
+    options.fail = False
+
     if positional:
         module_filter = positional.pop()
         if module_filter != '.':
@@ -1399,6 +1565,25 @@ def get_options(args=None, defaults=None):
 
     if options.quiet:
         options.verbose = 0
+
+    if options.report_refcounts and options.repeat < 2:
+        print """\
+        You must use the --repeat (-N) option to specify a repeat
+        count greater than 1 when using the --report_refcounts (-r)
+        option.
+        """
+        options.fail = True
+        return options
+
+
+    if options.report_refcounts and not hasattr(sys, "gettotalrefcount"):
+        print """\
+        The Python you are running was not configured
+        with --with-pydebug. This is required to use
+        the --report-refcounts option.
+        """
+        options.fail = True
+        return options
 
     return options
 
@@ -1453,7 +1638,7 @@ def test_suite():
             sys.path[:],
             sys.argv[:],
             sys.modules.copy(),
-            gc.get_threshold()
+            gc.get_threshold(),
             )
         test.globs['this_directory'] = os.path.split(__file__)[0]
         test.globs['testrunner_script'] = __file__
@@ -1464,7 +1649,8 @@ def test_suite():
         sys.modules.clear()
         sys.modules.update(test.globs['saved-sys-info'][2])
 
-    suite = doctest.DocFileSuite(
+    suites = [
+        doctest.DocFileSuite(
         'testrunner-arguments.txt',
         'testrunner-coverage.txt',
         'testrunner-debugging.txt',
@@ -1482,6 +1668,7 @@ def test_suite():
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker)
+        ]
 
     # Python <= 2.4.1 had a bug that prevented hotshot from runnint in
     # non-optimize mode
@@ -1493,13 +1680,46 @@ def test_suite():
         except ImportError:
             pass
         else:
-            suite = unittest.TestSuite([suite, doctest.DocFileSuite(
-                'profiling.txt',
-                setUp=setUp, tearDown=tearDown,
-                optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
-                checker=checker)])
+            suites.append(
+                doctest.DocFileSuite(
+                    'profiling.txt',
+                    setUp=setUp, tearDown=tearDown,
+                    optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+                    checker=checker,
+                    )
+                )
+            
+    if hasattr(sys, 'gettotalrefcount'):
+        suites.append(
+            doctest.DocFileSuite(
+            'testrunner-leaks.txt',
+            setUp=setUp, tearDown=tearDown,
+            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+            checker = renormalizing.RENormalizing([
+              (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
+              (re.compile(r'sys refcount=\d+ +change=\d+'),
+               'sys refcount=NNNNNN change=NN'),
+              (re.compile(r'sum detail refcount=\d+ +'),
+               'sum detail refcount=NNNNNN '),
+              (re.compile(r'total +\d+ +\d+'),
+               'total               NNNN    NNNN'),
+              (re.compile(r"^ +(int|type) +-?\d+ +-?\d+ *\n", re.M),
+               ''),
+              ]),
+            
+            )
+        )
+    else:
+        suites.append(
+            doctest.DocFileSuite(
+            'testrunner-leaks-err.txt',
+            setUp=setUp, tearDown=tearDown,
+            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+            checker=checker,
+            )
+        )            
 
-    return suite
+    return unittest.TestSuite(suites)
 
 def main():
     default = [
@@ -1529,6 +1749,7 @@ if __name__ == '__main__':
     # real_pdb_set_trace.
     import zope.testing.testrunner
     from zope.testing import doctest
+    
     main()
 
 # Test the testrunner

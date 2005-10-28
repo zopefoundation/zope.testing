@@ -514,13 +514,13 @@ examples in the same test to fail.  Each failure is reported:
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
     True
 
-This can be a bid confusing, especially when there are enough tests
+This can be a bit confusing, especially when there are enough tests
 that they scroll off a screen.  Often you just want to see the first
 failure.  This can be accomplished with the -1 option (for "just show
 me the first failed example in a doctest" :)
 
     >>> sys.argv = 'test --tests-pattern ^sampletests_1$ -1'.split()
-    >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
+    >>> testrunner.run(defaults) # doctest:
     Running unit tests:
     <BLANKLINE>
     <BLANKLINE>
@@ -543,6 +543,126 @@ me the first failed example in a doctest" :)
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.001 seconds.
     True
+
+Getting diff output for doctest failures
+----------------------------------------
+
+If a doctest has large expected and actual output, it can be hard to
+see differences when expected and actual output differ.  The --ndiff,
+--udiff, and --cdiff options can be used to get diff output pf various
+kinds.
+
+    >>> sys.argv = 'test --tests-pattern ^pledge$'.split()
+    >>> _ = testrunner.run(defaults)
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test pledge (pledge)
+    Failed doctest test for pledge.pledge
+      File "testrunner-ex/pledge.py", line 24, in pledge
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/pledge.py", line 26, in pledge.pledge
+    Failed example:
+        print pledge_template % ('and earthling', 'planet'),
+    Expected:
+        I give my pledge, as an earthling,
+        to save, and faithfully, to defend from waste,
+        the natural resources of my planet.
+        It's soils, minerals, forests, waters, and wildlife.
+    Got:
+        I give my pledge, as and earthling,
+        to save, and faithfully, to defend from waste,
+        the natural resources of my planet.
+        It's soils, minerals, forests, waters, and wildlife.
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+
+Here, the actual output uses the word "and" rather than the word "an",
+but it's a bit hard to pick this out.  Wr can use the various diff
+outputs to see this better. We could modify the test to ask for diff
+output, but it's easier to use one of the diff options.
+
+The --ndiff option requests a diff using Python's ndiff utility. This
+is the only method that marks differences within lines as well as
+across lines. For example, if a line of expected output contains digit
+1 where actual output contains letter l, a line is inserted with a
+caret marking the mismatching column positions.
+
+    >>> sys.argv = 'test --tests-pattern ^pledge$ --ndiff'.split()
+    >>> _ = testrunner.run(defaults)
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test pledge (pledge)
+    Failed doctest test for pledge.pledge
+      File "testrunner-ex/pledge.py", line 24, in pledge
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/pledge.py", line 26, in pledge.pledge
+    Failed example:
+        print pledge_template % ('and earthling', 'planet'),
+    Differences (ndiff with -expected +actual):
+        - I give my pledge, as an earthling,
+        + I give my pledge, as and earthling,
+        ?                        +
+          to save, and faithfully, to defend from waste,
+          the natural resources of my planet.
+          It's soils, minerals, forests, waters, and wildlife.
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.003 seconds.
+
+The -udiff option requests a standard "unified" diff:
+
+    >>> sys.argv = 'test --tests-pattern ^pledge$ --udiff'.split()
+    >>> _ = testrunner.run(defaults)
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test pledge (pledge)
+    Failed doctest test for pledge.pledge
+      File "testrunner-ex/pledge.py", line 24, in pledge
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/pledge.py", line 26, in pledge.pledge
+    Failed example:
+        print pledge_template % ('and earthling', 'planet'),
+    Differences (unified diff with -expected +actual):
+        @@ -1,3 +1,3 @@
+        -I give my pledge, as an earthling,
+        +I give my pledge, as and earthling,
+         to save, and faithfully, to defend from waste,
+         the natural resources of my planet.
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+
+The -cdiff option requests a standard "context" diff:
+
+    >>> sys.argv = 'test --tests-pattern ^pledge$ --cdiff'.split()
+    >>> _ = testrunner.run(defaults)
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test pledge (pledge)
+    Failed doctest test for pledge.pledge
+      File "testrunner-ex/pledge.py", line 24, in pledge
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/pledge.py", line 26, in pledge.pledge
+    Failed example:
+        print pledge_template % ('and earthling', 'planet'),
+    Differences (context diff with expected followed by actual):
+        ***************
+        *** 1,3 ****
+        ! I give my pledge, as an earthling,
+          to save, and faithfully, to defend from waste,
+          the natural resources of my planet.
+        --- 1,3 ----
+        ! I give my pledge, as and earthling,
+          to save, and faithfully, to defend from waste,
+          the natural resources of my planet.
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
 
 
 Testing-Module Import Errors

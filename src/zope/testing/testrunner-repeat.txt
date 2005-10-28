@@ -41,7 +41,7 @@ themselves.
       Tear down samplelayers.Layerx in 0.000 seconds.
       Tear down samplelayers.Layer11 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
-    Total: 678 tests, 0 failures, 0 errors
+    Total: 226 tests, 0 failures, 0 errors
     False
 
 The tests are repeated by layer.  Layers are set up and torn down only
