@@ -130,6 +130,11 @@ def run(defaults=None, args=None):
     if args is None:
         args = sys.argv
 
+    # Set the default logging policy.
+    # XXX There are no tests for this logging behavior.
+    # It's not at all clear that the test runner should be doing this.
+    configure_logging()
+
     # Control reporting flags during run
     old_reporting_flags = doctest.set_unittest_reportflags(0)
 
@@ -291,8 +296,6 @@ def run_with_options(options):
             sys.path.append(path)
 
     remove_stale_bytecode(options)
-
-    configure_logging()
 
     tests_by_layer_name = find_tests(options)
 
