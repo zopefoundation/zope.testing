@@ -864,8 +864,8 @@ def tests_from_suite(suite, options, dlevel=1, dlayer='unit'):
 
 def find_suites(options):
     for fpath, package in find_test_files(options):
-        for prefix in options.prefix:
-            if fpath.startswith(prefix):
+        for (prefix, prefix_package) in options.prefix:
+            if fpath.startswith(prefix) and package == prefix_package:
                 # strip prefix, strip .py suffix and convert separator to dots
                 noprefix = fpath[len(prefix):]
                 noext = strip_py_ext(options, noprefix)
@@ -1014,10 +1014,10 @@ def test_dirs(options, seen):
                 p = os.path.abspath(p)
                 if p in seen:
                     continue
-                for prefix in options.prefix:
-                    if p.startswith(prefix):
+                for (prefix, package) in options.prefix:
+                    if p.startswith(prefix) or p == prefix[:-1]:
                         seen[p] = 1
-                        yield p, ''
+                        yield p, package
                         break
     else:
         for dpath in options.test_path:
@@ -1581,7 +1581,8 @@ def get_options(args=None, defaults=None):
                           ])
     
 
-    options.prefix = [p + os.path.sep for (p, _) in options.test_path]
+    options.prefix = [(path + os.path.sep, package)
+                      for (path, package) in options.test_path]
     if options.all:
         options.at_level = sys.maxint
 

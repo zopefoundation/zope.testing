@@ -59,7 +59,8 @@ package name and file path.
         test_z1 (sampletests.test111)
         testrunner-ex/sampletests/../sampletestsl.txt
         test_extra_test_in_products (sample4.products.sampletests.Test)
-      Ran 35 tests with 0 failures and 0 errors in 0.008 seconds.
+        test_another_test_in_products (sample4.products.more.sampletests.Test)
+      Ran 36 tests with 0 failures and 0 errors in 0.008 seconds.
     Tearing down left over layers:
       Tear down samplelayers.Layer111 in 0.000 seconds.
       Tear down samplelayers.Layerx in 0.000 seconds.
@@ -67,4 +68,41 @@ package name and file path.
       Tear down samplelayers.Layer1 in 0.000 seconds.
 
 In the example, the last test, test_extra_test_in_products, came from
-the products directory.
+the products directory.  As usual, we can select the knit-in packages
+or individual packages within knit-in packages:
+
+    >>> sys.argv = 'test --package sample4.products -vv'.split()
+    >>> _ = testrunner.run(defaults)
+    Running tests at level 1
+    Running samplelayers.Layer111 tests:
+      Set up samplelayers.Layerx in 0.000 seconds.
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer11 in 0.000 seconds.
+      Set up samplelayers.Layer111 in 0.000 seconds.
+      Running:
+        test_extra_test_in_products (sample4.products.sampletests.Test)
+        test_another_test_in_products (sample4.products.more.sampletests.Test)
+      Ran 2 tests with 0 failures and 0 errors in 0.000 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer111 in 0.000 seconds.
+      Tear down samplelayers.Layerx in 0.000 seconds.
+      Tear down samplelayers.Layer11 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+
+    >>> sys.argv = 'test --package sample4.products.more -vv'.split()
+    >>> _ = testrunner.run(defaults)
+    Running tests at level 1
+    Running samplelayers.Layer111 tests:
+      Set up samplelayers.Layerx in 0.000 seconds.
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer11 in 0.000 seconds.
+      Set up samplelayers.Layer111 in 0.000 seconds.
+      Running:
+        test_another_test_in_products (sample4.products.more.sampletests.Test)
+      Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer111 in 0.000 seconds.
+      Tear down samplelayers.Layerx in 0.000 seconds.
+      Tear down samplelayers.Layer11 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+
