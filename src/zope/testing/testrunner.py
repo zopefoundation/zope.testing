@@ -1590,7 +1590,7 @@ def get_options(args=None, defaults=None):
     options.fail = False
 
     if positional:
-        module_filter = positional.pop()
+        module_filter = positional.pop(0)
         if module_filter != '.':
             if options.module:
                 options.module.append(module_filter)
@@ -1598,11 +1598,14 @@ def get_options(args=None, defaults=None):
                 options.module = [module_filter]
 
         if positional:
-            test_filter = [positional]
+            test_filter = positional.pop(0)
             if options.test:
                 options.test.append(test_filter)
             else:
                 options.test = [test_filter]
+
+            if positional:
+                parser.error("Too mant positional arguments")
 
     options.ignore_dir = dict([(d,1) for d in options.ignore_dir])
     options.test_file_pattern = re.compile(options.test_file_pattern).search
