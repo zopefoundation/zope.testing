@@ -591,9 +591,9 @@ def dependencies(bases, result):
         result[base] = 1
         dependencies(base.__bases__, result)
 
-
-
 class TestResult(unittest.TestResult):
+
+    max_width = 80
 
     def __init__(self, options, tests):
         unittest.TestResult.__init__(self)
@@ -604,6 +604,36 @@ class TestResult(unittest.TestResult):
                 count += test.countTestCases()
             self.count = count
         self.last_width = 0
+
+        if options.progress:
+            try:
+                # Note that doing this every time is more test friendly.
+                import curses
+                curses.setupterm()
+            except (ImportError, TypeError):
+                pass
+            else:
+                self.max_width = curses.tigetnum('cols')
+
+    def getShortDescription(self, test, room):
+        room -= 1
+        s = str(test)
+        if len(s) > room:
+            pos = s.find(" (")
+            if pos >= 0:
+                w = room - (pos + 5)
+                if w < 1:
+                    # first portion (test method name) is too long
+                    s = s[:room-3] + "..."
+                else:
+                    pre = s[:pos+2]
+                    post = s[-w:]
+                    s = "%s...%s" % (pre, post)
+            else:
+                w = room - 4
+                s = '... ' + s[-w:]
+                
+        return ' ' + s[:room]
 
     def startTest(self, test):
         unittest.TestResult.startTest(self, test)
@@ -620,6 +650,11 @@ class TestResult(unittest.TestResult):
                 )
             sys.stdout.write(s)
             self.test_width += len(s)
+            if options.verbose == 1:
+                room = self.max_width - self.test_width - 1
+                s = self.getShortDescription(test, room)
+                sys.stdout.write(s)
+                self.test_width += len(s)
 
         elif options.verbose == 1:
             for i in range(count):
