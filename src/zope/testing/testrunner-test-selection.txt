@@ -47,7 +47,7 @@ other ways we can select tests.  We can select tests by package:
 You can specify multiple packages:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -ssample2'.split()
-    >>> testrunner.run(defaults) # doctest: +REPORT_NDIFF
+    >>> testrunner.run(defaults) 
     Running tests at level 1
     Running unit tests:
       Running:
@@ -158,7 +158,7 @@ You can specify multiple packages:
       Ran 128 tests with 0 failures and 0 errors in 0.025 seconds.
     False
 
-We can select by test module name:
+We can select by test module name using the --moduke (-m) option:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m_one -mtest1'.split()
     >>> testrunner.run(defaults)
@@ -194,7 +194,7 @@ We can select by test module name:
       Ran 32 tests with 0 failures and 0 errors in 0.008 seconds.
     False
 
-and by test within the module:
+and by test within the module using the --test (-t) option:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m_one -mtest1 -tx0 -ty0'.split()
     >>> testrunner.run(defaults)
@@ -226,7 +226,58 @@ and by test within the module:
       Ran 20 tests with 0 failures and 0 errors in 0.004 seconds.
     False
 
-Sometimes, there are tests that you don't want to run by default.
+The --moduke and --test options take regular expressions.  If the
+regular expressions specified begin with '!', then tests that don't
+match the regular expression are selected:
+
+    >>> sys.argv = 'test -u  -vv -ssample1 -m!sample1[.]sample1'.split()
+    >>> _ = testrunner.run(defaults) 
+    Running tests at level 1
+    Running unit tests:
+      Running:
+        test_x1 (sample1.sampletestsf.TestA)
+        test_y0 (sample1.sampletestsf.TestA)
+        test_z0 (sample1.sampletestsf.TestA)
+        test_x0 (sample1.sampletestsf.TestB)
+        test_y1 (sample1.sampletestsf.TestB)
+        test_z0 (sample1.sampletestsf.TestB)
+        test_1 (sample1.sampletestsf.TestNotMuch)
+        test_2 (sample1.sampletestsf.TestNotMuch)
+        test_3 (sample1.sampletestsf.TestNotMuch)
+        test_x0 (sample1.sampletestsf)
+        test_y0 (sample1.sampletestsf)
+        test_z1 (sample1.sampletestsf)
+        testrunner-ex/sample1/../sampletests.txt
+        test_x1 (sample1.sampletests.test1.TestA)
+        test_y0 (sample1.sampletests.test1.TestA)
+        test_z0 (sample1.sampletests.test1.TestA)
+        test_x0 (sample1.sampletests.test1.TestB)
+        test_y1 (sample1.sampletests.test1.TestB)
+        test_z0 (sample1.sampletests.test1.TestB)
+        test_1 (sample1.sampletests.test1.TestNotMuch)
+        test_2 (sample1.sampletests.test1.TestNotMuch)
+        test_3 (sample1.sampletests.test1.TestNotMuch)
+        test_x0 (sample1.sampletests.test1)
+        test_y0 (sample1.sampletests.test1)
+        test_z1 (sample1.sampletests.test1)
+        testrunner-ex/sample1/sampletests/../../sampletests.txt
+        test_x1 (sample1.sampletests.test_one.TestA)
+        test_y0 (sample1.sampletests.test_one.TestA)
+        test_z0 (sample1.sampletests.test_one.TestA)
+        test_x0 (sample1.sampletests.test_one.TestB)
+        test_y1 (sample1.sampletests.test_one.TestB)
+        test_z0 (sample1.sampletests.test_one.TestB)
+        test_1 (sample1.sampletests.test_one.TestNotMuch)
+        test_2 (sample1.sampletests.test_one.TestNotMuch)
+        test_3 (sample1.sampletests.test_one.TestNotMuch)
+        test_x0 (sample1.sampletests.test_one)
+        test_y0 (sample1.sampletests.test_one)
+        test_z1 (sample1.sampletests.test_one)
+        testrunner-ex/sample1/sampletests/../../sampletests.txt
+      Ran 48 tests with 0 failures and 0 errors in 0.017 seconds.
+
+
+Sometimes, ere are tests that you don't want to run by default.
 For example, you might have tests that take a long time.  Tests can
 have a level attribute.  If no level is specified, a level of 1 is
 assumed and, by default, only tests at level one are run.  to run

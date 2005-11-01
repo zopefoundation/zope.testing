@@ -913,6 +913,12 @@ def find_suites(options):
                 module_name = noext.replace(os.path.sep, '.')
                 if package:
                     module_name = package + '.' + module_name
+
+                for filter in options.module:
+                    if filter(module_name):
+                        break
+                else:
+                    continue
                     
                 try:
                     module = import_name(module_name)
@@ -964,13 +970,9 @@ class StartUpFailure:
 def find_test_files(options):
     found = {}
     for f, package in find_test_files_(options):
-        if f in found:
-            continue
-        for filter in options.module:
-            if filter(f):
-                found[f] = 1
-                yield f, package
-                break
+        if f not in found:
+            found[f] = 1
+            yield f, package
 
 identifier = re.compile(r'[_a-zA-Z]\w*$').match
 def find_test_files_(options):
@@ -1225,10 +1227,11 @@ searching.add_option(
     help="""\
 Specify a test-module filter as a regular expression.  This is a
 case-sensitive regular expression, used in search (not match) mode, to
-limit which test modules are searched for tests.  In an extension of
-Python regexp notation, a leading "!" is stripped and causes the sense
-of the remaining regexp to be negated (so "!bc" matches any string
-that does not match "bc", and vice versa).  The option can be
+limit which test modules are searched for tests.  The regular
+expressions are checked against dotted module names.  In an extension
+of Python regexp notation, a leading "!" is stripped and causes the
+sense of the remaining regexp to be negated (so "!bc" matches any
+string that does not match "bc", and vice versa).  The option can be
 specified multiple test-module filters.  Test modules matching any of
 the test filters are searched.  If no test-module filter is specified,
 then all test moduless are used.
