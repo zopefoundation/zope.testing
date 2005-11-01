@@ -609,11 +609,16 @@ class TestResult(unittest.TestResult):
             try:
                 # Note that doing this every time is more test friendly.
                 import curses
-                curses.setupterm()
-            except (ImportError, TypeError):
-                pass
+            except ImportError:
+                # avoid repimporting a broken module in python 2.3
+                sys.modules['curses'] = None
             else:
-                self.max_width = curses.tigetnum('cols')
+                try:
+                    curses.setupterm()
+                except TypeError:
+                    pass
+                else:
+                    self.max_width = curses.tigetnum('cols')
 
     def getShortDescription(self, test, room):
         room -= 1
