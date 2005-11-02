@@ -454,6 +454,7 @@ def run_tests(options, tests, name, failures, errors):
 
         t = time.time() - t
         if options.verbose == 1 or options.progress:
+            result.stopTests()
             print
         failures.extend(result.failures)
         errors.extend(result.errors)
@@ -649,6 +650,9 @@ class TestResult(unittest.TestResult):
         self.test_width = 0
 
         if options.progress:
+            if self.last_width:
+                sys.stdout.write('\r' + (' ' * self.last_width) + '\r')
+
             s = "    %d/%d (%.1f%%)" % (
                 self.testsRun, self.count,
                 (self.testsRun) * 100.0 / self.count
@@ -726,9 +730,12 @@ class TestResult(unittest.TestResult):
         self.test_width = self.last_width = 0
 
 
+    def stopTests(self):
+        if self.options.progress and self.last_width:
+            sys.stdout.write('\r' + (' ' * self.last_width) + '\r')
+
     def stopTest(self, test):
         if self.options.progress:
-            sys.stdout.write(' ' * (self.last_width - self.test_width) + "\r")
             self.last_width = self.test_width
         elif self.options.verbose > 1:
             print

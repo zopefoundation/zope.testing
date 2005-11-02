@@ -233,9 +233,10 @@ Similarly for progress output:
             x = y + 1
         NameError: global name 'y' is not defined
     <BLANKLINE>
-    \r
         2/56 (3.6%)\r
+                   \r
         3/56 (5.4%)\r
+                   \r
         4/56 (7.1%)
     <BLANKLINE>
     Error in test test3 (sample2.sampletests_e.Test)
@@ -248,9 +249,10 @@ Similarly for progress output:
         x = y + 1
     NameError: global name 'y' is not defined
     <BLANKLINE>
-    \r
         5/56 (8.9%)\r
+                   \r
         6/56 (10.7%)\r
+                    \r
         7/56 (12.5%)
     <BLANKLINE>
     Failure in test testrunner-ex/sample2/e.txt
@@ -271,7 +273,6 @@ Similarly for progress output:
             return x
         NameError: global name 'x' is not defined
     <BLANKLINE>
-    \r
         8/56 (14.3%)
     <BLANKLINE>
     Failure in test test (sample2.sampletests_f.Test)
@@ -282,46 +283,84 @@ Similarly for progress output:
         raise self.failureException, \
     AssertionError: 1 != 0
     <BLANKLINE>
-    \r
         9/56 (16.1%)\r
+                    \r
         10/56 (17.9%)\r
+                     \r
         11/56 (19.6%)\r
+                     \r
         12/56 (21.4%)\r
+                     \r
         13/56 (23.2%)\r
+                     \r
         14/56 (25.0%)\r
+                     \r
         15/56 (26.8%)\r
+                     \r
         16/56 (28.6%)\r
+                     \r
         17/56 (30.4%)\r
+                     \r
         18/56 (32.1%)\r
+                     \r
         19/56 (33.9%)\r
+                     \r
         20/56 (35.7%)\r
+                     \r
         24/56 (42.9%)\r
+                     \r
         25/56 (44.6%)\r
+                     \r
         26/56 (46.4%)\r
+                     \r
         27/56 (48.2%)\r
+                     \r
         28/56 (50.0%)\r
+                     \r
         29/56 (51.8%)\r
+                     \r
         30/56 (53.6%)\r
+                     \r
         31/56 (55.4%)\r
+                     \r
         32/56 (57.1%)\r
+                     \r
         33/56 (58.9%)\r
+                     \r
         34/56 (60.7%)\r
+                     \r
         35/56 (62.5%)\r
+                     \r
         36/56 (64.3%)\r
+                     \r
         40/56 (71.4%)\r
+                     \r
         41/56 (73.2%)\r
+                     \r
         42/56 (75.0%)\r
+                     \r
         43/56 (76.8%)\r
+                     \r
         44/56 (78.6%)\r
+                     \r
         45/56 (80.4%)\r
+                     \r
         46/56 (82.1%)\r
+                     \r
         47/56 (83.9%)\r
+                     \r
         48/56 (85.7%)\r
+                     \r
         49/56 (87.5%)\r
+                     \r
         50/56 (89.3%)\r
+                     \r
         51/56 (91.1%)\r
+                     \r
         52/56 (92.9%)\r
+                     \r
         56/56 (100.0%)\r
+                      \r
     <BLANKLINE>
       Ran 56 tests with 3 failures and 1 errors in 0.054 seconds.
     True
