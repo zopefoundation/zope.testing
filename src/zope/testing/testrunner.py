@@ -168,8 +168,9 @@ def run(defaults=None, args=None):
                'so you can\'t use the --profile switch.')
         sys.exit()
 
-    if (hotshot is not None and options.profile
-    and sys.version_info[:3] <= (2,4,1) and __debug__):
+    if (options.profile
+        and sys.version_info[:3] <= (2,4,1)
+        and __debug__):
         print ('Because of a bug in Python < 2.4.1, profiling '
                'during tests requires the -O option be passed to '
                'Python (not the test runner).')
@@ -183,7 +184,7 @@ def run(defaults=None, args=None):
     else:
         tracer = None
 
-    if hotshot is not None and options.profile:
+    if options.profile:
         prof_prefix = 'tests_profile.'
         prof_suffix = '.prof'
         prof_glob = prof_prefix + '*' + prof_suffix
@@ -207,7 +208,7 @@ def run(defaults=None, args=None):
     finally:
         if tracer:
             tracer.stop()
-        if hotshot is not None and options.profile:
+        if options.profile:
             prof.stop()
             prof.close()
             # We must explicitly close the handle mkstemp returned, else on
@@ -215,7 +216,7 @@ def run(defaults=None, args=None):
             # attempt to unlink a still-open file.
             os.close(oshandle)
 
-    if hotshot is not None and options.profile and not options.resume_layer:
+    if options.profile and not options.resume_layer:
         stats = None
         for file_name in glob.glob(prof_glob):
             loaded = hotshot.stats.load(file_name)
@@ -223,6 +224,7 @@ def run(defaults=None, args=None):
                 stats = loaded
             else:
                 stats.add(loaded)
+
         stats.sort_stats('cumulative', 'calls')
         stats.print_stats(50)
 
@@ -1769,10 +1771,13 @@ def test_suite():
         else:
             suites.append(
                 doctest.DocFileSuite(
-                    'profiling.txt',
+                    'testrunner-profiling.txt',
                     setUp=setUp, tearDown=tearDown,
                     optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
-                    checker=checker,
+                    checker = renormalizing.RENormalizing([
+                        (re.compile('tests_profile[.]\S*[.]prof'),
+                         'tests_profile.*.prof'),
+                        ]),
                     )
                 )
             

@@ -31,8 +31,24 @@ When the tests are run, we get profiling output.
 
 Profiling also works across layers.
 
-    >>> sys.argv = [testrunner_script, '-ssample2', '--profile', '--tests-pattern', 'sampletests_ntd']
+    >>> sys.argv = [testrunner_script, '-ssample2', '--profile', 
+    ...             '--tests-pattern', 'sampletests_ntd']
     >>> testrunner.run(defaults)
     Running...
       Tear down ... not supported...
        ncalls  tottime  percall  cumtime  percall filename:lineno(function)...
+
+The testrunner creates temnporary files containing hotshot profiler
+data:
+
+    >>> import glob
+    >>> files = list(glob.glob('tests_profile.*.prof'))
+    >>> files.sort()
+    >>> files
+    ['tests_profile.cZj2jt.prof', 'tests_profile.yHD-so.prof']
+
+It deletes these when rerun.  We'll delete these ourselves:
+
+    >>> import os
+    >>> for f in files:
+    ...     os.unlink(f)
