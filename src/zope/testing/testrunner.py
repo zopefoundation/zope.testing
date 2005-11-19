@@ -155,7 +155,7 @@ def run(defaults=None, args=None):
     options = get_options(args, defaults)
     if options.fail:
         return True
-    
+
     options.testrunner_defaults = defaults
     options.resume_layer = resume_layer
 
@@ -259,7 +259,7 @@ def run_with_options(options):
                    `tuple(options.gc)`)
         else:
             print "Cyclic garbage collection is disabled."
-            
+
         gc.set_threshold(*options.gc)
 
     old_flags = gc.get_debug()
@@ -285,7 +285,7 @@ def run_with_options(options):
         reporting_flags = doctest.REPORT_CDIFF
     if options.report_only_first_failure:
         reporting_flags |= doctest.REPORT_ONLY_FIRST_FAILURE
-        
+
     if reporting_flags:
         doctest.set_unittest_reportflags(reporting_flags)
     else:
@@ -401,7 +401,7 @@ def run_with_options(options):
 
     if options.gc_option:
         gc.set_debug(old_flags)
-        
+
     if options.gc:
         gc.set_threshold(*old_threshold)
 
@@ -420,7 +420,7 @@ def run_tests(options, tests, name, failures, errors):
         if options.verbose:
             track = TrackRefs()
         rc = sys.gettotalrefcount()
-        
+
     for i in repeat_range:
         if repeat > 1:
             print "Iteration", i+1
@@ -430,7 +430,7 @@ def run_tests(options, tests, name, failures, errors):
         if options.verbose == 1 and not options.progress:
             print '    ',
         result = TestResult(options, tests)
-        
+
         t = time.time()
 
         if options.post_mortem:
@@ -481,7 +481,7 @@ def run_tests(options, tests, name, failures, errors):
                 sys.stdout.getvalue()
             except AttributeError:
                 pass
-            
+
             prev = rc
             rc = sys.gettotalrefcount()
             if options.verbose:
@@ -640,7 +640,7 @@ class TestResult(unittest.TestResult):
             else:
                 w = room - 4
                 s = '... ' + s[-w:]
-                
+
         return ' ' + s[:room]
 
     def startTest(self, test):
@@ -928,7 +928,7 @@ def find_suites(options):
                         break
                 else:
                     continue
-                    
+
                 try:
                     module = import_name(module_name)
                 except:
@@ -950,7 +950,7 @@ def find_suites(options):
                     except:
                         suite = StartUpFailure(
                             options, module_name, sys.exc_info()[:2]+(None,))
-                    
+
 
                 yield suite
                 break
@@ -964,8 +964,8 @@ def check_suite(suite, module_name):
                 "Invalid test, %r,\nin test_suite from %s"
                 % (x, module_name)
                 )
-            
-    
+
+
 
 
 class StartUpFailure:
@@ -1634,7 +1634,7 @@ def get_options(args=None, defaults=None):
                          [(os.path.abspath(path), package)
                           for (path, package) in options.package_path or ()
                           ])
-    
+
 
     options.prefix = [(path + os.path.sep, package)
                       for (path, package) in options.test_path]
@@ -1780,7 +1780,7 @@ def test_suite():
                         ]),
                     )
                 )
-            
+
     if hasattr(sys, 'gettotalrefcount'):
         suites.append(
             doctest.DocFileSuite(
@@ -1798,7 +1798,7 @@ def test_suite():
               (re.compile(r"^ +(int|type) +-?\d+ +-?\d+ *\n", re.M),
                ''),
               ]),
-            
+
             )
         )
     else:
@@ -1809,7 +1809,7 @@ def test_suite():
             optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
             checker=checker,
             )
-        )            
+        )
 
     return unittest.TestSuite(suites)
 
@@ -1841,7 +1841,7 @@ if __name__ == '__main__':
     # real_pdb_set_trace.
     import zope.testing.testrunner
     from zope.testing import doctest
-    
+
     main()
 
 # Test the testrunner
