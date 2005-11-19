@@ -2113,7 +2113,7 @@ def set_unittest_reportflags(flags):
     _unittest_reportflags = flags
     return old
 
-_para_re = re.compile('\s*\n\s*\n\s*')
+_para_re = re.compile(r'\s*\n\s*\n\s*')
 def _unittest_count(docstring):
     words = 0
     count = 0
