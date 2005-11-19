@@ -81,8 +81,7 @@ option:
     (Pdb) c
     True
 
-Note that the test runner exits after post-mortem debugging (as
-indicated by the SystemExit above.
+Note that the test runner exits after post-mortem debugging.
 
 In the example above, we debugged an error.  Failures are actually
 converted to errors and can be debugged the same way:
