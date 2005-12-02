@@ -30,6 +30,8 @@ class TestA(unittest.TestCase):
     def setUp(self):
         global x
         x = 1
+        self.clean = getattr(self, 'clean', 0) + 1
+        
     def tearDown(self):
         global x
         x = 0
@@ -45,6 +47,10 @@ class TestA(unittest.TestCase):
         self.assertEqual(z, 0)
         self.assertEqual(samplelayers.layer, layer.layer)
         self.assertEqual(samplelayers.layerx, layer.layerx)
+
+        # This is a test that the test runner clears attributes
+        # that are set in setUp but not cleared in tearDown.
+        self.assertEqual(self.clean, 1)
 
 class TestB(unittest.TestCase):
     layer = layername

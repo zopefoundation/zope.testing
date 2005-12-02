@@ -436,7 +436,10 @@ def run_tests(options, tests, name, failures, errors):
         if options.post_mortem:
             # post-mortem debugging
             for test in tests:
+                if result.shouldStop:
+                    break
                 result.startTest(test)
+                state = test.__dict__.copy()
                 try:
                     try:
                         test.debug()
@@ -449,11 +452,19 @@ def run_tests(options, tests, name, failures, errors):
                         result.addSuccess(test)
                 finally:
                     result.stopTest(test)
+                test.__dict__.clear()
+                test.__dict__.update(state)
 
         else:
             # normal
-            tests(result)
-
+            for test in tests:
+                if result.shouldStop:
+                    break
+                state = test.__dict__.copy()
+                test(result)
+                test.__dict__.clear()
+                test.__dict__.update(state)
+ 
         t = time.time() - t
         if options.verbose == 1 or options.progress:
             result.stopTests()
