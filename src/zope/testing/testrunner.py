@@ -73,7 +73,7 @@ class MyTrace(trace.Trace):
         if not self.donothing:
             sys.settrace(None)
             threading.settrace(None)
-        self.starte = False
+        self.started = False
 
 class EndRun(Exception):
     """Indicate that the existing run call should stop
@@ -1821,6 +1821,7 @@ def test_suite():
             checker=checker,
             )
         )
+
 
     return unittest.TestSuite(suites)
 
