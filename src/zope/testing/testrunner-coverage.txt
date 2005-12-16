@@ -32,7 +32,7 @@ will hold the coverage reports.
     >>> os.listdir('coverage_dir')
     [...]
 
-(We should clean up after ouselves.)
+(We should clean up after ourselves.)
 
     >>> import shutil
     >>> shutil.rmtree('coverage_dir')
