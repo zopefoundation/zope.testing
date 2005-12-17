@@ -42,9 +42,11 @@ try:
 except ImportError:
     hotshot = None
 
+
 real_pdb_set_trace = pdb.set_trace
 
 class MyIgnore(trace.Ignore):
+
     def names(self, filename, modulename):
         if modulename in self._ignore:
             return self._ignore[modulename]
@@ -54,11 +56,35 @@ class MyIgnore(trace.Ignore):
 
         return trace.Ignore.names(self, filename, modulename)
 
-
 class MyTrace(trace.Trace):
+    """Simple tracer.
+
+    >>> tracer = MyTrace(count=False, trace=False)
+
+    Simple rules for use: you can't stop the tracer if it not started
+    and you can't start the tracer if it already started:
+
+    >>> tracer.stop()
+    Traceback (most recent call last):
+        File 'testrunner.py'
+    AssertionError: can't stop if not started
+
+    >>> tracer.start()
+    >>> tracer.start()
+    Traceback (most recent call last):
+        File 'testrunner.py'
+    AssertionError: can't start if already started
+
+    >>> tracer.stop()
+    >>> tracer.stop()
+    Traceback (most recent call last):
+        File 'testrunner.py'
+    AssertionError: can't stop if not started
+    """
+
     def __init__(self, *args, **kws):
         trace.Trace.__init__(self, *args, **kws)
-        self.ignore = MyIgnore(kws['ignoremods'], kws['ignoredirs'])
+        self.ignore = MyIgnore(kws.get("ignoremods"), kws.get("ignoredirs"))
         self.started = False
 
     def start(self):
@@ -1767,7 +1793,8 @@ def test_suite():
         'testrunner-knit.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
-        checker=checker)
+        checker=checker),
+        doctest.DocTestSuite()
         ]
 
     # Python <= 2.4.1 had a bug that prevented hotshot from runnint in
