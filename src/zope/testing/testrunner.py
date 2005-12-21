@@ -506,7 +506,7 @@ def run_tests(options, tests, name, failures, errors):
         gc.collect()
         if len(gc.garbage) > lgarbage:
             print ("Tests generated new (%d) garbage:"
-                   % len(gc.garbage)-lgarbage)
+                   % (len(gc.garbage)-lgarbage))
             print gc.garbage[lgarbage:]
             lgarbage = len(gc.garbage)
 
