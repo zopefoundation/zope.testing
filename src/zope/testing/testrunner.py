@@ -45,21 +45,29 @@ except ImportError:
 
 real_pdb_set_trace = pdb.set_trace
 
-class MyIgnore(trace.Ignore):
+class TestIgnore:
 
+    def __init__(self, options):
+        self._test_dirs = [d[0] + os.path.sep for d in test_dirs(options, {})]
+        self._ignore = {'<string>': 1}
+        self._ignored = self._ignore.get
+        
     def names(self, filename, modulename):
-        if modulename in self._ignore:
-            return self._ignore[modulename]
+        ignore = self._ignored(modulename)
+        if ignore is None:
+            ignore = True
+            if filename is not None:
+                for d in self._test_dirs:
+                    if filename.startswith(d):
+                        ignore = False
+                        break
+            self._ignore[modulename] = ignore
+        return ignore
 
-        if filename.startswith('<doctest'):
-            self._ignore[modulename] = True
-
-        return trace.Ignore.names(self, filename, modulename)
-
-class MyTrace(trace.Trace):
+class TestTrace(trace.Trace):
     """Simple tracer.
 
-    >>> tracer = MyTrace(count=False, trace=False)
+    >>> tracer = TestTrace(None, count=False, trace=False)
 
     Simple rules for use: you can't stop the tracer if it not started
     and you can't start the tracer if it already started:
@@ -82,9 +90,10 @@ class MyTrace(trace.Trace):
     AssertionError: can't stop if not started
     """
 
-    def __init__(self, *args, **kws):
-        trace.Trace.__init__(self, *args, **kws)
-        self.ignore = MyIgnore(kws.get("ignoremods"), kws.get("ignoredirs"))
+    def __init__(self, options, **kw):
+        trace.Trace.__init__(self, **kw)
+        if options is not None:
+            self.ignore = TestIgnore(options)
         self.started = False
 
     def start(self):
@@ -203,9 +212,7 @@ def run(defaults=None, args=None):
         sys.exit()
 
     if options.coverage:
-        tracer = MyTrace(ignoredirs=[sys.prefix, sys.exec_prefix],
-                         ignoremods=["os", "posixpath", "stat"],
-                         trace=False, count=True)
+        tracer = TestTrace(options, trace=False, count=True)
         tracer.start()
     else:
         tracer = None
