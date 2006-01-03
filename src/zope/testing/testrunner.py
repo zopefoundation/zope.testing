@@ -178,6 +178,7 @@ def run(defaults=None, args=None):
     if len(args) > 1 and args[1] == '--resume-layer':
         args.pop(1)
         resume_layer = args.pop(1)
+        resume_number = int(args.pop(1))
         defaults = []
         while len(args) > 1 and args[1] == '--default':
             args.pop(1)
@@ -185,7 +186,7 @@ def run(defaults=None, args=None):
 
         sys.stdin = FakeInputContinueGenerator()
     else:
-        resume_layer = None
+        resume_layer = resume_number = None
 
     options = get_options(args, defaults)
     if options.fail:
@@ -193,6 +194,7 @@ def run(defaults=None, args=None):
 
     options.testrunner_defaults = defaults
     options.resume_layer = resume_layer
+    options.resume_number = resume_number
 
     # Make sure we start with real pdb.set_trace.  This is needed
     # to make tests of the test runner work properly. :)
@@ -364,38 +366,38 @@ def run_with_options(options):
                 nlayers += 1
                 ran += run_tests(options, tests, 'unit', failures, errors)
 
-    if options.resume_layer:
-        resume = False
-    else:
-        resume = True
-
     setup_layers = {}
-    for layer_name, layer, tests in ordered_layers(tests_by_layer_name):
-        if options.layer:
-            should_run = False
-            for pat in options.layer:
-                if pat(layer_name):
-                    should_run = True
-                    break
-        else:
-            should_run = True
 
-        if should_run:
-            if (not resume) and (layer_name == options.resume_layer):
-                resume = True
-            if not resume:
-                continue
-            nlayers += 1
-            try:
-                ran += run_layer(options, layer_name, layer, tests,
-                                 setup_layers, failures, errors)
-            except CanNotTearDown:
-                setup_layers = None
-                ran += resume_tests(options, layer_name, failures, errors)
+    layers_to_run = list(ordered_layers(tests_by_layer_name))
+    if options.resume_layer is not None:
+        layers_to_run = [
+            (layer_name, layer, tests)
+            for (layer_name, layer, tests) in layers_to_run
+            if layer_name == options.resume_layer
+        ]
+    elif options.layer:
+        layers_to_run = [
+            (layer_name, layer, tests)
+            for (layer_name, layer, tests) in layers_to_run
+            if filter(None, [pat(layer_name) for pat in options.layer])
+        ]
+
+    
+    for layer_name, layer, tests in layers_to_run:
+        nlayers += 1
+        try:
+            ran += run_layer(options, layer_name, layer, tests,
+                             setup_layers, failures, errors)
+        except CanNotTearDown:
+            setup_layers = None
+            if not options.resume_layer:
+                ran += resume_tests(options, layer_name, layers_to_run,
+                                    failures, errors)
                 break
 
     if setup_layers:
-        print "Tearing down left over layers:"
+        if options.resume_layer == None:
+            print "Tearing down left over layers:"
         tear_down_unneeded((), setup_layers, True)
 
     if options.resume_layer:
@@ -547,54 +549,67 @@ def run_tests(options, tests, name, failures, errors):
 
 def run_layer(options, layer_name, layer, tests, setup_layers,
               failures, errors):
-    print "Running %s tests:" % layer_name
 
     gathered = []
     gather_layers(layer, gathered)
     needed = dict([(l, 1) for l in gathered])
+    if options.resume_number != 0:
+        print "Running %s tests:" % layer_name
     tear_down_unneeded(needed, setup_layers)
+
+    if options.resume_layer != None:
+        print "  Running in a subprocess."
 
     setup_layer(layer, setup_layers)
     return run_tests(options, tests, layer_name, failures, errors)
 
-def resume_tests(options, layer_name, failures, errors):
-    args = [sys.executable,
-            options.original_testrunner_args[0],
-            '--resume-layer', layer_name,
-            ]
-    for d in options.testrunner_defaults:
-        args.extend(['--default', d])
+def resume_tests(options, layer_name, layers, failures, errors):
+    layers = [l for (l, _, _) in layers]
+    layers = layers[layers.index(layer_name):]
+    rantotal = 0
+    resume_number = 0
+    for layer_name in layers:
+        args = [sys.executable,
+                options.original_testrunner_args[0],
+                '--resume-layer', layer_name, str(resume_number),
+                ]
+        resume_number += 1
+        for d in options.testrunner_defaults:
+            args.extend(['--default', d])
 
-    args.extend(options.original_testrunner_args[1:])
+        args.extend(options.original_testrunner_args[1:])
 
-    # this is because of a bug in Python (http://www.python.org/sf/900092)
-    if (hotshot is not None and options.profile
-    and sys.version_info[:3] <= (2,4,1)):
-        args.insert(1, '-O')
+        # this is because of a bug in Python (http://www.python.org/sf/900092)
+        if (hotshot is not None and options.profile
+        and sys.version_info[:3] <= (2,4,1)):
+            args.insert(1, '-O')
 
-    if sys.platform.startswith('win'):
-        args = args[0] + ' ' + ' '.join([
-            ('"' + a.replace('\\', '\\\\').replace('"', '\\"') + '"')
-            for a in args[1:]
-            ])
+        if sys.platform.startswith('win'):
+            args = args[0] + ' ' + ' '.join([
+                ('"' + a.replace('\\', '\\\\').replace('"', '\\"') + '"')
+                for a in args[1:]
+                ])
 
-    subin, subout, suberr = os.popen3(args)
-    for l in subout:
-        sys.stdout.write(l)
+        subin, subout, suberr = os.popen3(args)
+        for l in subout:
+            sys.stdout.write(l)
 
-    line = suberr.readline()
-    try:
-        ran, nfail, nerr = map(int, line.strip().split())
-    except:
-        raise SubprocessError(line+suberr.read())
+        line = suberr.readline()
+        try:
+            ran, nfail, nerr = map(int, line.strip().split())
+        except:
+            raise SubprocessError(line+suberr.read())
 
-    while nfail > 0:
-        nfail -= 1
-        failures.append((suberr.readline().strip(), None))
-    while nerr > 0:
-        nerr -= 1
-        errors.append((suberr.readline().strip(), None))
-    return ran
+        while nfail > 0:
+            nfail -= 1
+            failures.append((suberr.readline().strip(), None))
+        while nerr > 0:
+            nerr -= 1
+            errors.append((suberr.readline().strip(), None))
+
+        rantotal += ran
+
+    return rantotal
 
 
 class SubprocessError(Exception):
