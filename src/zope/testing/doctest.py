@@ -1866,7 +1866,8 @@ def testmod(m=None, name=None, globs=None, verbose=None, isprivate=None,
 
 def testfile(filename, module_relative=True, name=None, package=None,
              globs=None, verbose=None, report=True, optionflags=0,
-             extraglobs=None, raise_on_error=False, parser=DocTestParser()):
+             extraglobs=None, raise_on_error=False, parser=DocTestParser(),
+             encoding=None):
     """
     Test examples in the given file.  Return (#failures, #tests).
 
@@ -1931,6 +1932,9 @@ def testfile(filename, module_relative=True, name=None, package=None,
     Optional keyword arg "parser" specifies a DocTestParser (or
     subclass) that should be used to extract tests from the files.
 
+    Optional keyword arg "encoding" specifies an encoding that should
+    be used to convert the file to unicode.
+
     Advanced tomfoolery:  testmod runs methods of a local instance of
     class doctest.Tester, then merges the results into (or creates)
     global Tester instance doctest.master.  Methods of doctest.master
@@ -1969,6 +1973,10 @@ def testfile(filename, module_relative=True, name=None, package=None,
 
     # Read the file, convert it to a test, and run it.
     s = open(filename).read()
+    if encoding is None:
+        encoding = pep263_encoding(s)
+    if encoding is not None:
+        s = s.decode(encoding)
     test = parser.get_doctest(s, globs, name, filename, 0)
     runner.run(test)
 
@@ -1981,6 +1989,17 @@ def testfile(filename, module_relative=True, name=None, package=None,
         master.merge(runner)
 
     return runner.failures, runner.tries
+
+pep263_re_search = re.compile("coding[:=]\s*([-\w.]+)").search
+def pep263_encoding(s):
+    """Try to find the encoding of a string by looking for a pep263 coding.
+    """
+    for line in s.split('\n')[:2]:
+        r = pep263_re_search(line)
+        if r:
+            return r.group(1)
+
+    
 
 def run_docstring_examples(f, globs, verbose=False, name="NoName",
                            compileflags=None, optionflags=0):
@@ -2369,7 +2388,8 @@ class DocFileCase(DocTestCase):
                 )
 
 def DocFileTest(path, module_relative=True, package=None,
-                globs=None, parser=DocTestParser(), **options):
+                globs=None, parser=DocTestParser(),
+                encoding=None, **options):
     if globs is None:
         globs = {}
     else:
@@ -2389,6 +2409,12 @@ def DocFileTest(path, module_relative=True, package=None,
     # Find the file and read it.
     name = os.path.basename(path)
     doc = open(path).read()
+
+    # If an encoding is specified, use it to convert the file to unicode
+    if encoding is None:
+        encoding = pep263_encoding(doc)
+    if encoding is not None:
+        doc = doc.decode(encoding)
 
     # Convert it to a test, and wrap it in a DocFileCase.
     test = parser.get_doctest(doc, globs, name, path, 0)
@@ -2446,6 +2472,9 @@ def DocFileSuite(*paths, **kw):
     parser
       A DocTestParser (or subclass) that should be used to extract
       tests from the files.
+
+    encoding
+      An encoding that will be used to convert the files to unicode.
     """
     suite = unittest.TestSuite()
 
