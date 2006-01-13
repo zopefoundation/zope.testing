@@ -1684,6 +1684,11 @@ def get_options(args=None, defaults=None):
     if options.package:
         options.package = [p.replace('/', '.').replace('\\', '.')
                            for p in options.package]
+        # Remove useless dot ('.') at the end of the package. bash
+        # adds a `/` by default using completion. Otherweise, it
+        # raises an exception trying to import an empty package
+        # because of this.
+        options.package = [re.sub(r'\.$', '',  p) for p in options.package]
     options.path = map(os.path.abspath, options.path or ())
     options.test_path = map(os.path.abspath, options.test_path or ())
     options.test_path += options.path
