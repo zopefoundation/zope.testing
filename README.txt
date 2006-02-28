@@ -56,7 +56,10 @@ Useful for doctests.
 testrunner.py
 --------------
 
-The test runner. For overview of usage, see testrunner.txt.
+The test runner module.  This is typically wrapped by a test.py script that
+sets up options to run a particular set of tests.
+
+For overview of usage, see testrunner.txt.
 
 tests.py
 ---------
