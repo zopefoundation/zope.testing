@@ -21,7 +21,7 @@ try:
 except ImportException, e:
     from distutils.core import setup
     
-setup(name='zope.testing',
+setup(name='zope_testing',
       version='3.0',
 
       url='http://svn.zope.org/zope.testing',
