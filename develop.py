@@ -11,30 +11,11 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Setup for zope.testing package
+"""Workspace configuration wrapper script
 
 $Id$
 """
 
-import os
+import workspace.develop
 
-try:
-    from setuptools import setup
-except ImportException, e:
-    from distutils.core import setup
-    
-setup(name='zope_testing',
-      version='3.0',
-
-      url='http://svn.zope.org/zope.testing',
-      license='ZPL 2.1',
-      description='Zope testing framework, including the testrunner script.',
-      author='Zope Corporation and Contributors',
-      author_email='zope3-dev@zope.org',
-      
-      package_dir = {'': os.path.join(os.path.dirname(__file__), 'src')},
-      packages=["zope", "zope.testing"],
-
-      include_package_data = True,
-      zip_safe = False,
-      )
+workspace.develop.main()
