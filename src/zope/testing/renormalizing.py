@@ -84,7 +84,7 @@ Usual OutputChecker options work as expected:
     >>> checker.check_output(want_ellided, got, 0)
     False
 
-    >>> checker.check_output(want, got, doctest.ELLIPSIS)
+    >>> checker.check_output(want_ellided, got, doctest.ELLIPSIS)
     True
 
 When we get differencs, we output them with normalized text:
