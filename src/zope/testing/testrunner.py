@@ -462,8 +462,6 @@ def run_tests(options, tests, name, failures, errors):
 
         if options.verbose > 0 or options.progress:
             print '  Running:'
-        if options.verbose == 1 and not options.progress:
-            print '    ',
         result = TestResult(options, tests)
 
         t = time.time()
@@ -730,11 +728,6 @@ class TestResult(unittest.TestResult):
             for i in range(count):
                 sys.stdout.write('.')
                 testsRun += 1
-                if (testsRun % 50) == 0:
-                    print
-                    print '    ',
-        elif options.verbose > 1:
-            print '   ',
 
         if options.verbose > 1:
             s = str(test)
