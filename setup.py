@@ -23,8 +23,8 @@ try:
 except ImportException, e:
     from distutils.core import setup
     
-setup(name='zope_testing',
-      version='3.0',
+setup(name='zope.testing',
+      version='1.0',
 
       url='http://svn.zope.org/zope.testing',
       license='ZPL 2.1',
