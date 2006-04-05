@@ -1,5 +1,5 @@
 ========================================
-zope.testing package
+zope.testing package Readme
 ========================================
 
 This package provides a flexible testing framework.  It includes a
@@ -65,3 +65,35 @@ tests.py
 ---------
 
 Test script for the testing package. Invokes testrunner.
+
+
+Changes
+-------
+
+See CHANGES.txt.
+
+
+Installation
+------------
+
+See INSTALL.txt.
+
+
+Developer Resources
+-------------------
+
+- Subversion browser:
+
+  http://svn.zope.org/zope.testing/
+
+- Read-only Subversion checkout:
+
+  $ svn co svn://svn.zope.org/repos/main/zope.testing/trunk
+
+- Writable Subversion checkout:
+
+  $ svn co svn://svn.zope.org/repos/main/zope.testing/trunk
+
+- Note that the 'src/zope/testing' package is acutally a 'svn:externals' link
+  to the corresponding package in the Zope3 trunk (or to a specific tag,
+  for released versions of the package).
