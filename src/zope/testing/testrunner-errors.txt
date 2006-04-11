@@ -129,8 +129,7 @@ If we ask for single verbosity, the dotted output will be interrupted:
     Running tests at level 1
     Running unit tests:
       Running:
-        ..................................................
-        ...............................................
+     .................................................................................................
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_e)
     Failed doctest test for sample2.sampletests_e.eek
@@ -196,8 +195,7 @@ If we ask for single verbosity, the dotted output will be interrupted:
         raise self.failureException, \
     AssertionError: 1 != 0
     <BLANKLINE>
-    ..............................................
-        ..................................................
+    ................................................................................................
     <BLANKLINE>
       Ran 200 tests with 3 failures and 1 errors in 0.040 seconds.
     True
