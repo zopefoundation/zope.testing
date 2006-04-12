@@ -24,6 +24,8 @@ everything. If you want to log less than everything, you can provide a
 level keyword argument.  The level setting effects only the named
 loggers.
 
+  >>> handler_with_levels = InstalledHandler('baz', level=logging.WARNING)
+
 Then, any log output is collected in the handler:
 
   >>> logging.getLogger('foo.bar').exception('eek')
@@ -48,6 +50,7 @@ A similar effect can be gotten by just printing the handler:
 After checking the log output, you need to uninstall the handler:
 
   >>> handler.uninstall()
+  >>> handler_with_levels.uninstall()
 
 At which point, the handler won't get any more log output.
 Let's clear the handler:
@@ -116,6 +119,6 @@ class Handler(logging.Handler):
 
 class InstalledHandler(Handler):
 
-    def __init__(self, *names):
-        Handler.__init__(self, *names)
+    def __init__(self, *names, **kw):
+        Handler.__init__(self, *names, **kw)
         self.install()
