@@ -24,7 +24,7 @@ except ImportException, e:
     from distutils.core import setup
     
 setup(name='zope.testing',
-      version='1.0',
+      version='3.0-dev',
 
       url='http://svn.zope.org/zope.testing',
       license='ZPL 2.1',
@@ -32,7 +32,7 @@ setup(name='zope.testing',
       author='Zope Corporation and Contributors',
       author_email='zope3-dev@zope.org',
       
-      package_dir = {'': os.path.join(os.path.dirname(__file__), 'src')},
+      package_dir = {'': 'src'},
       packages=["zope", "zope.testing"],
 
       include_package_data = True,
