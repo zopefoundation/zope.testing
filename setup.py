@@ -24,7 +24,7 @@ except ImportError, e:
     from distutils.core import setup, Extension
 
 setup(name='zope.testing',
-      version='2.0',
+      version='2.0.1',
       url='http://svn.zope.org/zope.testing',
       license='ZPL 2.1',
       description='Zope3 Testrunner',
