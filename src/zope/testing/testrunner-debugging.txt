@@ -109,7 +109,7 @@ converted to errors and can be debugged the same way:
     exceptions.AssertionError:
     1 != 2
     > .../unittest.py(302)failUnlessEqual()
-    -> raise self.failureException, \
+    -> ...
     (Pdb) up
     > testrunner-ex/sample3/sampletests_d.py(42)test_post_mortem_failure1()
     -> self.assertEqual(x, y)
