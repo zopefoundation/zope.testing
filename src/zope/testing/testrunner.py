@@ -51,7 +51,7 @@ class TestIgnore:
         self._test_dirs = [d[0] + os.path.sep for d in test_dirs(options, {})]
         self._ignore = {'<string>': 1}
         self._ignored = self._ignore.get
-        
+
     def names(self, filename, modulename):
         ignore = self._ignored(modulename)
         if ignore is None:
@@ -382,7 +382,7 @@ def run_with_options(options):
             if filter(None, [pat(layer_name) for pat in options.layer])
         ]
 
-    
+
     for layer_name, layer, tests in layers_to_run:
         nlayers += 1
         try:
@@ -497,7 +497,7 @@ def run_tests(options, tests, name, failures, errors):
                 test(result)
                 test.__dict__.clear()
                 test.__dict__.update(state)
- 
+
         t = time.time() - t
         if options.verbose == 1 or options.progress:
             result.stopTests()
@@ -1754,6 +1754,10 @@ def test_suite():
 
     import renormalizing
     checker = renormalizing.RENormalizing([
+        # 2.5 changed the way pdb reports exceptions
+        (re.compile(r"<class 'exceptions.(\w+)Error'>:"),
+                    r'exceptions.\1Error:'),
+
         (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
         (re.compile('\\\\'), '/'),   # hopefully, we'll make windows happy
         (re.compile('/r'), '\\\\r'), # undo damage from previous
@@ -1763,7 +1767,7 @@ def test_suite():
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
-                       r'\1doctest.py(NNN)'),
+                    r'\1doctest.py(NNN)'),
         (re.compile(r'[.]py\(\d+\)'), r'.py(NNN)'),
         (re.compile(r'[.]py:\d+'), r'.py:NNN'),
         (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
