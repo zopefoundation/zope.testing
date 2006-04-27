@@ -1619,7 +1619,7 @@ def merge_options(options, defaults):
 
 default_setup_args = [
     '--tests-pattern', '^tests$',
-    '--at-level', 1,
+    '--at-level', '1',
     '--ignore', '.svn',
     '--ignore', 'CVS',
     '--ignore', '{arch}',
@@ -1775,7 +1775,6 @@ def test_suite():
          r''),
         (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
         (re.compile('import pdb; pdb'), 'Pdb()'), # Py 2.3
-
         ])
 
     def setUp(test):
@@ -1833,7 +1832,7 @@ def test_suite():
                     setUp=setUp, tearDown=tearDown,
                     optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
                     checker = renormalizing.RENormalizing([
-                        (re.compile('tests_profile[.]\S*[.]prof'),
+                        (re.compile(r'tests_profile[.]\S*[.]prof'),
                          'tests_profile.*.prof'),
                         ]),
                     )
