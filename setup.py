@@ -20,7 +20,7 @@ import os
 
 try:
     from setuptools import setup
-except ImportException, e:
+except ImportError, e:
     from distutils.core import setup
     
 setup(name='zope.testing',
