@@ -1,6 +1,15 @@
 zope.testing Package Changelog
 =============================
 
+zope.testing version 2.x.y (???)
+--------------------------------
+
+- Fix the test coverage. If a module, for example `interfaces`, was in an
+  ignored directory/package, then if a module of the same name existed in a
+  covered direcotry/package, then it was also ignored there, because the
+  ignore cache stored the result by module name and not the filename of the
+  module.
+
 zope.testing version 2.0 (2006/01/05)
 --------------------------------------
 

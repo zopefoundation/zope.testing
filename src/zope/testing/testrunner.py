@@ -49,11 +49,14 @@ class TestIgnore:
 
     def __init__(self, options):
         self._test_dirs = [d[0] + os.path.sep for d in test_dirs(options, {})]
-        self._ignore = {'<string>': 1}
+        self._ignore = {}
         self._ignored = self._ignore.get
 
     def names(self, filename, modulename):
-        ignore = self._ignored(modulename)
+        # Special case: Modules generated from text files; i.e. doctests
+        if modulename == '<string>':
+            return True
+        ignore = self._ignored(filename)
         if ignore is None:
             ignore = True
             if filename is not None:
@@ -61,7 +64,7 @@ class TestIgnore:
                     if filename.startswith(d):
                         ignore = False
                         break
-            self._ignore[modulename] = ignore
+            self._ignore[filename] = ignore
         return ignore
 
 class TestTrace(trace.Trace):

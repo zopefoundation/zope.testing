@@ -1,5 +1,6 @@
 Test Runner
 ===========
+
 Code Coverage
 -------------
 
@@ -76,3 +77,53 @@ will hold the coverage reports.
 
     >>> import shutil
     >>> shutil.rmtree('coverage_dir')
+
+
+Ignoring Tests
+--------------
+
+The ``trace`` module supports ignoring directories and modules based the test
+selection. Only directories selected for testing should report coverage. The
+test runner provides a custom implementation of the relevant API.
+
+The ``TestIgnore`` class, the class managing the ignoring, is initialized by
+passing the command line options. It uses the options to determine the
+directories that should be covered.
+
+  >>> class FauxOptions(object):
+  ...   package = None
+  ...   test_path = [('/myproject/src/blah/foo', ''),
+  ...                ('/myproject/src/blah/bar', '')]
+
+  >>> from zope.testing import testrunner
+  >>> ignore = testrunner.TestIgnore(FauxOptions())
+  >>> ignore._test_dirs
+  ['/myproject/src/blah/foo/', '/myproject/src/blah/bar/']
+
+We can now ask whether a particular module should be ignored:
+
+  >>> ignore.names('/myproject/src/blah/foo/baz.py', 'baz')
+  False
+  >>> ignore.names('/myproject/src/blah/bar/mine.py', 'mine')
+  False
+  >>> ignore.names('/myproject/src/blah/foo/__init__.py', 'foo')
+  False
+  >>> ignore.names('/myproject/src/blah/hello.py', 'hello')
+  True
+
+When running the test runner, modules are sometimes created from text
+strings. Those should *always* be ignored:
+
+  >>> ignore.names('/myproject/src/blah/hello.txt', '<string>')
+  True
+
+To make this check fast, the class implements a cache. In an early
+implementation, the result was cached by the module name, which was a problem,
+since a lot of modules carry the same name (not the Python dotted name
+here!). So just because a module has the same name in an ignored and tested
+directory, does not mean it is always ignored:
+
+  >>> ignore.names('/myproject/src/blah/module.py', 'module')
+  True
+  >>> ignore.names('/myproject/src/blah/foo/module.py', 'module')
+  False
