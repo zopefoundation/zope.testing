@@ -48,7 +48,8 @@ real_pdb_set_trace = pdb.set_trace
 class TestIgnore:
 
     def __init__(self, options):
-        self._test_dirs = [d[0] + os.path.sep for d in test_dirs(options, {})]
+        self._test_dirs = [os.path.abspath(d[0]) + os.path.sep
+                           for d in test_dirs(options, {})]
         self._ignore = {}
         self._ignored = self._ignore.get
 
@@ -56,6 +57,7 @@ class TestIgnore:
         # Special case: Modules generated from text files; i.e. doctests
         if modulename == '<string>':
             return True
+        filename = os.path.abspath(filename)
         ignore = self._ignored(filename)
         if ignore is None:
             ignore = True
@@ -1762,11 +1764,13 @@ def test_suite():
                     r'exceptions.\1Error:'),
 
         (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
-        (re.compile('\\\\'), '/'),   # hopefully, we'll make windows happy
-        (re.compile('/r'), '\\\\r'), # undo damage from previous
-        (re.compile(r'\r'), '\\\\r\n'),
-        (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
-        (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
+        (re.compile("'[A-Z]:\\\\"), "'"), # hopefully, we'll make Windows happy
+        (re.compile(r'\\\\'), '/'), # more Windows happiness
+        (re.compile(r'\\'), '/'), # even more Windows happiness
+       (re.compile('/r'), '\\\\r'), # undo damage from previous
+       (re.compile(r'\r'), '\\\\r\n'),
+       (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
+       (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
@@ -1823,7 +1827,7 @@ def test_suite():
         doctest.DocTestSuite()
         ]
 
-    # Python <= 2.4.1 had a bug that prevented hotshot from runnint in
+    # Python <= 2.4.1 had a bug that prevented hotshot from running in
     # non-optimize mode
     if sys.version_info[:3] > (2,4,1) or not __debug__:
         # some Linux distributions don't include the profiling module (which
