@@ -1,6 +1,23 @@
 zope.testing Package Changelog
 =============================
 
+zope.testing version 3.0
+------------------------
+
+- Updated the doctest copy with text-file encoding support
+
+- Added logging-level support to loggingsuppport module.
+
+- At verbosity-level 1, dots are not output continuously, without any
+  line breaks.
+
+- Improved outout when the inability to tear down a layer causes tests
+  to be run in a subprocess.
+
+- Made zope.exception required only if the zope_tracebacks extra is
+  requested.
+
+
 zope.testing version 2.x.y (???)
 --------------------------------
 
