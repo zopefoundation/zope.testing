@@ -35,7 +35,7 @@ setup(name='zope.testing',
       package_dir = {'': 'src'},
 
       namespace_packages=['zope',],
-      extra_requires={'zope_tracebacks': 'zope.exceptions'},
+      extras_require={'zope_tracebacks': 'zope.exceptions'},
       include_package_data = True,
 
       zip_safe = False,
