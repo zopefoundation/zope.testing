@@ -24,17 +24,19 @@ except ImportError, e:
     from distutils.core import setup
     
 setup(name='zope.testing',
-      version='3.0-dev',
-
+      version='3.0b1',
       url='http://svn.zope.org/zope.testing',
       license='ZPL 2.1',
       description='Zope testing framework, including the testrunner script.',
       author='Zope Corporation and Contributors',
       author_email='zope3-dev@zope.org',
       
-      package_dir = {'': 'src'},
       packages=["zope", "zope.testing"],
+      package_dir = {'': 'src'},
 
+      namespace_packages=['zope',],
+      extra_requires={'zope_tracebacks': 'zope.exceptions'},
       include_package_data = True,
+
       zip_safe = False,
       )
