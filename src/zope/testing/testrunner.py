@@ -45,6 +45,15 @@ except ImportError:
 
 real_pdb_set_trace = pdb.set_trace
 
+# For some reason, the doctest module resets the trace callable randomly, thus
+# disabling the coverage. Simply disallow the code from doing this. A real
+# trace can be set, so that debugging still works.
+osettrace = sys.settrace
+def settrace(trace):
+    if trace is None:
+        return
+    osettrace(trace)
+
 class TestIgnore:
 
     def __init__(self, options):
@@ -104,6 +113,7 @@ class TestTrace(trace.Trace):
     def start(self):
         assert not self.started, "can't start if already started"
         if not self.donothing:
+            sys.settrace = settrace
             sys.settrace(self.globaltrace)
             threading.settrace(self.globaltrace)
         self.started = True
@@ -111,6 +121,7 @@ class TestTrace(trace.Trace):
     def stop(self):
         assert self.started, "can't stop if not started"
         if not self.donothing:
+            sys.settrace = osettrace
             sys.settrace(None)
             threading.settrace(None)
         self.started = False
