@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Zope Corporation and Contributors.
+# Copyright (c) 2004-2006 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -253,7 +253,7 @@ def run(defaults=None, args=None):
 
     try:
         try:
-            failed = run_with_options(options)
+            failed = not run_with_options(options)
         except EndRun:
             failed = True
     finally:
@@ -288,7 +288,19 @@ def run(defaults=None, args=None):
 
     return failed
 
-def run_with_options(options):
+def run_with_options(options, found_suites=None):
+    """Find and run tests
+    
+    Passing a list of suites using the found_suites parameter will cause
+    that list of suites to be used instead of attempting to load them from
+    the filesystem. This is useful for unit testing the test runner.
+
+    Returns True if all tests passed, or False if there were any failures
+    of any kind.
+    """
+
+    global _layer_name_cache
+    _layer_name_cache = {} # Reset to enforce test isolation
 
     if options.resume_layer:
         original_stderr = sys.stderr
@@ -350,7 +362,7 @@ def run_with_options(options):
 
     remove_stale_bytecode(options)
 
-    tests_by_layer_name = find_tests(options)
+    tests_by_layer_name = find_tests(options, found_suites)
 
     ran = 0
     failures = []
@@ -456,7 +468,7 @@ def run_with_options(options):
     if options.gc:
         gc.set_threshold(*old_threshold)
 
-    return bool(import_errors or failures or errors)
+    return not bool(import_errors or failures or errors)
 
 def run_tests(options, tests, name, failures, errors):
     repeat = options.repeat or 1
@@ -478,7 +490,7 @@ def run_tests(options, tests, name, failures, errors):
 
         if options.verbose > 0 or options.progress:
             print '  Running:'
-        result = TestResult(options, tests)
+        result = TestResult(options, tests, layer_name=name)
 
         t = time.time()
 
@@ -656,7 +668,7 @@ def setup_layer(layer, setup_layers):
     if layer not in setup_layers:
         for base in layer.__bases__:
             setup_layer(base, setup_layers)
-        print "  Set up %s.%s" % (layer.__module__, layer.__name__),
+        print "  Set up %s" % name_from_layer(layer),
         t = time.time()
         layer.setUp()
         print "in %.3f seconds." % (time.time() - t)
@@ -671,9 +683,14 @@ class TestResult(unittest.TestResult):
 
     max_width = 80
 
-    def __init__(self, options, tests):
+    def __init__(self, options, tests, layer_name=None):
         unittest.TestResult.__init__(self)
         self.options = options
+        # Calculate our list of relevant layers we need to call testSetUp
+        # and testTearDown on.
+        self.layers = []
+        if layer_name != 'unit':
+            gather_layers(layer_from_name(layer_name), self.layers)
         if options.progress:
             count = 0
             for test in tests:
@@ -716,7 +733,28 @@ class TestResult(unittest.TestResult):
 
         return ' ' + s[:room]
 
+    def testSetUp(self):
+        """A layer may define a setup method to be called before each
+        individual test.
+        """
+        for layer in self.layers[-1::-1]:
+            if hasattr(layer, 'testSetUp'):
+                layer.testSetUp()
+
+    def testTearDown(self):
+        """A layer may define a teardown method to be called after each
+           individual test.
+           
+           This is useful for clearing the state of global
+           resources or resetting external systems such as relational
+           databases or daemons.
+        """
+        for layer in self.layers:
+            if hasattr(layer, 'testTearDown'):
+                layer.testTearDown()
+
     def startTest(self, test):
+        self.testSetUp()
         unittest.TestResult.startTest(self, test)
         testsRun = self.testsRun - 1
         count = test.countTestCases()
@@ -805,6 +843,7 @@ class TestResult(unittest.TestResult):
             sys.stdout.write('\r' + (' ' * self.last_width) + '\r')
 
     def stopTest(self, test):
+        self.testTearDown()
         if self.options.progress:
             self.last_width = self.test_width
         elif self.options.verbose > 1:
@@ -923,6 +962,16 @@ def gather_layers(layer, result):
         gather_layers(b, result)
 
 def layer_from_name(layer_name):
+    """Return the layer for the corresponding layer_name by discovering
+       and importing the necessary module if necessary.
+
+       Note that a name -> layer cache is maintained by name_from_layer
+       to allow locating layers in cases where it would otherwise be
+       impossible.
+    """
+    global _layer_name_cache
+    if _layer_name_cache.has_key(layer_name):
+        return _layer_name_cache[layer_name]
     layer_names = layer_name.split('.')
     layer_module, module_layer_name = layer_names[:-1], layer_names[-1]
     return getattr(import_name('.'.join(layer_module)), module_layer_name)
@@ -946,12 +995,34 @@ def order_by_bases(layers):
                 result.append(layer)
     return result
 
-def name_from_layer(layer):
-    return layer.__module__ + '.' + layer.__name__
+_layer_name_cache = {}
 
-def find_tests(options):
+def name_from_layer(layer):
+    """Determine a name for the Layer using the namespace to avoid conflicts.
+
+    We also cache a name -> layer mapping to enable layer_from_name to work
+    in cases where the layer cannot be imported (such as layers defined
+    in doctests)
+    """
+    if layer.__module__ == '__builtin__':
+        name = layer.__name__
+    else:
+        name = layer.__module__ + '.' + layer.__name__
+    _layer_name_cache[name] = layer
+    return name
+
+def find_tests(options, found_suites=None):
+    """Creates a dictionary mapping layer name to a suite of tests to be run
+    in that layer.
+
+    Passing a list of suites using the found_suites parameter will cause
+    that list of suites to be used instead of attempting to load them from
+    the filesystem. This is useful for unit testing the test runner.
+    """
     suites = {}
-    for suite in find_suites(options):
+    if found_suites is None:
+        found_suites = find_suites(options)
+    for suite in found_suites:
         for test, layer_name in tests_from_suite(suite, options):
             suite = suites.get(layer_name)
             if not suite:
@@ -960,10 +1031,20 @@ def find_tests(options):
     return suites
 
 def tests_from_suite(suite, options, dlevel=1, dlayer='unit'):
+    """Returns a sequence of (test, layer_name)
+
+    The tree of suites is recursively visited, with the most specific
+    layer taking precidence. So if a TestCase with a layer of 'foo' is
+    contained in a TestSuite with a layer of 'bar', the test case would be
+    returned with 'foo' as the layer.
+
+    Tests are also filtered out based on the test level and test selection
+    filters stored in the options.
+    """
     level = getattr(suite, 'level', dlevel)
     layer = getattr(suite, 'layer', dlayer)
     if not isinstance(layer, basestring):
-        layer = layer.__module__ + '.' + layer.__name__
+        layer = name_from_layer(layer)
 
     if isinstance(suite, unittest.TestSuite):
         for possible_suite in suite:
@@ -1824,6 +1905,7 @@ def test_suite():
         'testrunner-errors.txt',
         'testrunner-layers-ntd.txt',
         'testrunner-layers.txt',
+        'testrunner-layers-api.txt',
         'testrunner-progress.txt',
         'testrunner-simple.txt',
         'testrunner-test-selection.txt',
