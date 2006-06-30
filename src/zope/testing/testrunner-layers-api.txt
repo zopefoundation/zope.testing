@@ -193,3 +193,78 @@ BaseLayer.testTearDown
 TopLayer.tearDown
 BaseLayer.tearDown
 
+Now lets stack a few more layers to ensure that our setUp and tearDown
+methods are called in the correct order.
+
+>>> from zope.testing.testrunner import name_from_layer
+>>> class A(object):
+...     def setUp(cls):
+...         log('%s.setUp' % name_from_layer(cls))
+...     setUp = classmethod(setUp)
+...
+...     def tearDown(cls):
+...         log('%s.tearDown' % name_from_layer(cls))
+...     tearDown = classmethod(tearDown)
+...
+...     def testSetUp(cls):
+...         log('%s.testSetUp' % name_from_layer(cls))
+...     testSetUp = classmethod(testSetUp)
+...
+...     def testTearDown(cls):
+...         log('%s.testTearDown' % name_from_layer(cls))
+...     testTearDown = classmethod(testTearDown)
+...         
+>>> class B(A): pass
+>>> class C(B): pass
+>>> class D(A): pass
+>>> class E(D): pass
+>>> class F(C,E): pass
+
+>>> class DeepTest(unittest.TestCase):
+...     layer = F
+...     def test(self):
+...         pass
+>>> suite = unittest.makeSuite(DeepTest)
+>>> log_handler.clear()
+>>> succeeded = testrunner.run_with_options(fresh_options(), [suite])
+  Set up A in 0.000 seconds.
+  Set up B in 0.000 seconds.
+  Set up C in 0.000 seconds.
+  Set up D in 0.000 seconds.
+  Set up E in 0.000 seconds.
+  Set up F in 0.000 seconds.
+  Ran 1 tests with 0 failures and 0 errors in 0.003 seconds.
+Tearing down left over layers:
+  Tear down F in 0.000 seconds.
+  Tear down E in 0.000 seconds.
+  Tear down D in 0.000 seconds.
+  Tear down C in 0.000 seconds.
+  Tear down B in 0.000 seconds.
+  Tear down A in 0.000 seconds.
+
+>>> report()
+A.setUp
+B.setUp
+C.setUp
+D.setUp
+E.setUp
+F.setUp
+A.testSetUp
+B.testSetUp
+C.testSetUp
+D.testSetUp
+E.testSetUp
+F.testSetUp
+F.testTearDown
+E.testTearDown
+D.testTearDown
+C.testTearDown
+B.testTearDown
+A.testTearDown
+F.tearDown
+E.tearDown
+D.tearDown
+C.tearDown
+B.tearDown
+A.tearDown
+

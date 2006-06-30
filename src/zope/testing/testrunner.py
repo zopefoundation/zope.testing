@@ -655,7 +655,8 @@ def tear_down_unneeded(needed, setup_layers, optional=False):
         print "  Tear down %s" % name_from_layer(l),
         t = time.time()
         try:
-            l.tearDown()
+            if hasattr(l, 'tearDown'):
+                l.tearDown()
         except NotImplementedError:
             print "... not supported"
             if not optional:
@@ -665,12 +666,15 @@ def tear_down_unneeded(needed, setup_layers, optional=False):
         del setup_layers[l]
 
 def setup_layer(layer, setup_layers):
+    assert layer is not object
     if layer not in setup_layers:
         for base in layer.__bases__:
-            setup_layer(base, setup_layers)
+            if base is not object:
+                setup_layer(base, setup_layers)
         print "  Set up %s" % name_from_layer(layer),
         t = time.time()
-        layer.setUp()
+        if hasattr(layer, 'setUp'):
+            layer.setUp()
         print "in %.3f seconds." % (time.time() - t)
         setup_layers[layer] = 1
 
@@ -688,9 +692,12 @@ class TestResult(unittest.TestResult):
         self.options = options
         # Calculate our list of relevant layers we need to call testSetUp
         # and testTearDown on.
-        self.layers = []
         if layer_name != 'unit':
-            gather_layers(layer_from_name(layer_name), self.layers)
+            layers = []
+            gather_layers(layer_from_name(layer_name), layers)
+            self.layers = order_by_bases(layers)
+        else:
+            self.layers = []
         if options.progress:
             count = 0
             for test in tests:
@@ -737,7 +744,7 @@ class TestResult(unittest.TestResult):
         """A layer may define a setup method to be called before each
         individual test.
         """
-        for layer in self.layers[-1::-1]:
+        for layer in self.layers:
             if hasattr(layer, 'testSetUp'):
                 layer.testSetUp()
 
@@ -749,7 +756,7 @@ class TestResult(unittest.TestResult):
            resources or resetting external systems such as relational
            databases or daemons.
         """
-        for layer in self.layers:
+        for layer in self.layers[-1::-1]:
             if hasattr(layer, 'testTearDown'):
                 layer.testTearDown()
 
@@ -957,7 +964,8 @@ def ordered_layers(tests_by_layer_name):
         yield layer_name, layer, tests_by_layer_name[layer_name]
 
 def gather_layers(layer, result):
-    result.append(layer)
+    if layer is not object:
+        result.append(layer)
     for b in layer.__bases__:
         gather_layers(b, result)
 
