@@ -646,19 +646,6 @@ class DocTestParser:
                             for match in matches:
                                 footnotes[match.group(1)] = []
 
-                            # XXX is this code (through "continue") needed?
-
-                            # throw away all the prose leading up to the last
-                            # footnote definition in the prose, this is so we
-                            # don't confuse a previous footnote end with the
-                            # end of *this* footnote
-                            tail = x[match.end()+1:]
-
-                            if self._FOOTNOTE_END_RE.search(tail):
-                                # over before it began
-                                raise 'hmm'
-                                continue
-
                             in_footnote = True
                             name = match.group(1)
                             footnote = []
@@ -2901,6 +2888,15 @@ def _test_footnotes():
         and a third:
 
         >>> three = 3
+
+
+    More than one footnote can be referenced at a time [1]_ [2]_
+
+        >>> counter
+        6
+
+    .. [2] let's multiply ``counter`` by two
+        >>> counter *= 2
 
 
     Parsing Details
