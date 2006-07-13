@@ -1864,7 +1864,7 @@ def test_suite():
                     r'exceptions.\1Error:'),
 
         (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
-        (re.compile("'[A-Z]:\\\\"), "'"), # hopefully, we'll make Windows happy
+        (re.compile("'[A-Za-z]:\\\\"), "'"), # hopefully, we'll make Windows happy
         (re.compile(r'\\\\'), '/'), # more Windows happiness
         (re.compile(r'\\'), '/'), # even more Windows happiness
        (re.compile('/r'), '\\\\r'), # undo damage from previous
