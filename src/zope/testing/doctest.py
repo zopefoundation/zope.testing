@@ -2905,20 +2905,20 @@ def _test_footnotes():
     If the INTERPRET_FOOTNOTES optionflag isn't set, footnotes are ignored.
 
     >>> doctest = """
-    ... This is a doctest. [1]_
+    ... This is a doctest. [#1]_
     ...
     ...     >>> print var
     ...
-    ... .. [1] a footnote
+    ... .. [#1] a footnote
     ...     Here we set up the variable
     ...
     ...     >>> var = 1
     ... """
 
     >>> print_structure(doctest)
-    Prose| This is a doctest. [1]_
+    Prose| This is a doctest. [#1]_
     Code | print var
-    Prose| .. [1] a footnote
+    Prose| .. [#1] a footnote
     Code | var = 1
     Prose|
 
@@ -2926,69 +2926,69 @@ def _test_footnotes():
     which they are referenced.
 
     >>> print_structure(doctest, optionflags=INTERPRET_FOOTNOTES)
-    Prose| This is a doctest. [1]_
+    Prose| This is a doctest. [#1]_
     Code | var = 1
     Prose|
     Code | print var
-    Prose| .. [1] a footnote
+    Prose| .. [#1] a footnote
     Prose|
 
     >>> print_structure("""
-    ... Footnotes can have code that starts with no prose. [quick code]_
+    ... Footnotes can have code that starts with no prose. [#quick code]_
     ...
-    ... .. [quick code]
+    ... .. [#quick code]
     ...     >>> print 'this is some code'
     ...     this is some code
     ... """, optionflags=INTERPRET_FOOTNOTES)
-    Prose| Footnotes can have code that starts with no prose. [quick code]_
+    Prose| Footnotes can have code that starts with no prose. [#quick code]_
     Code | print 'this is some code'
     Prose|
     Prose|
 
     >>> print_structure("""
-    ... Footnotes can be back-to-back [first]_ [second]_
-    ... .. [first]
-    ... .. [second]
+    ... Footnotes can be back-to-back [#first]_ [#second]_
+    ... .. [#first]
+    ... .. [#second]
     ...     >>> 1+1
     ...     2
     ... """, optionflags=INTERPRET_FOOTNOTES)
-    Prose| Footnotes can be back-to-back [first]_ [second]_
-    Prose| Footnotes can be back-to-back [first]_ [second]_
+    Prose| Footnotes can be back-to-back [#first]_ [#second]_
+    Prose| Footnotes can be back-to-back [#first]_ [#second]_
     Code | 1+1
     Prose|
     Prose|
 
     >>> print_structure("""
-    ... .. [no code] Footnotes can also be defined with no code.
+    ... .. [#no code] Footnotes can also be defined with no code.
     ... """, optionflags=INTERPRET_FOOTNOTES)
-    Prose| .. [no code] Footnotes can also be defined with no code.
+    Prose| .. [#no code] Footnotes can also be defined with no code.
 
     If there are multiple footnotes with no code, then one with code, they are
     parsed correctly.
 
     >>> print_structure("""
-    ... I'd like some code to go here [some code]_
-    ... .. [no code 1] Footnotes can also be defined with no code.
-    ... .. [no code 2] Footnotes can also be defined with no code.
-    ... .. [no code 3] Footnotes can also be defined with no code.
-    ... .. [some code]
+    ... I'd like some code to go here [#some code]_
+    ... .. [#no code 1] Footnotes can also be defined with no code.
+    ... .. [#no code 2] Footnotes can also be defined with no code.
+    ... .. [#no code 3] Footnotes can also be defined with no code.
+    ... .. [#some code]
     ...     >>> print 'hi'
     ...     hi
     ... """, optionflags=INTERPRET_FOOTNOTES)
-    Prose| I'd like some code to go here [some code]_
+    Prose| I'd like some code to go here [#some code]_
     Code | print 'hi'
     Prose|
     Prose|
 
-    The "autonumber" flavor of labels works too.
+    The non-autonumbered flavor of labels works too.
 
     >>> print_structure("""
-    ... Numbered footnotes are good [#foo]_
-    ... .. [#foo]
+    ... Here is some text. [foo]_
+    ... .. [foo]
     ...     >>> print 'hi'
     ...     hi
     ... """, optionflags=INTERPRET_FOOTNOTES)
-    Prose| Numbered footnotes are good [#foo]_
+    Prose| Here is some text. [foo]_
     Code | print 'hi'
     Prose|
     Prose|
