@@ -57,7 +57,7 @@ def settrace(trace):
 class TestIgnore:
 
     def __init__(self, options):
-        self._test_dirs = [os.path.abspath(d[0]) + os.path.sep
+        self._test_dirs = [self._filenameFormat(d[0]) + os.path.sep
                            for d in test_dirs(options, {})]
         self._ignore = {}
         self._ignored = self._ignore.get
@@ -66,7 +66,7 @@ class TestIgnore:
         # Special case: Modules generated from text files; i.e. doctests
         if modulename == '<string>':
             return True
-        filename = os.path.abspath(filename)
+        filename = self._filenameFormat(filename)
         ignore = self._ignored(filename)
         if ignore is None:
             ignore = True
@@ -77,6 +77,21 @@ class TestIgnore:
                         break
             self._ignore[filename] = ignore
         return ignore
+    
+    def _filenameFormat(self, filename):
+        return os.path.abspath(filename)
+
+if sys.platform == 'win32':
+    #on win32 drive name can be passed with different case to `names`
+    #that lets e.g. the coverage profiler skip complete files
+    #_filenameFormat will make sure that all drive and filenames get lowercased
+    #albeit trace coverage has still problems with lowercase drive letters
+    #when determining the dotted module name
+    OldTestIgnore = TestIgnore
+    
+    class TestIgnore(OldTestIgnore):
+        def _filenameFormat(self, filename):
+            return os.path.normcase(os.path.abspath(filename))
 
 class TestTrace(trace.Trace):
     """Simple tracer.
@@ -1927,7 +1942,15 @@ def test_suite():
         checker=checker),
         doctest.DocTestSuite()
         ]
-
+    
+    if sys.platform == 'win32':
+        suites.append(
+            doctest.DocFileSuite(
+            'testrunner-coverage-win32.txt',
+            setUp=setUp, tearDown=tearDown,
+            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+            checker=checker))
+    
     # Python <= 2.4.1 had a bug that prevented hotshot from running in
     # non-optimize mode
     if sys.version_info[:3] > (2,4,1) or not __debug__:
