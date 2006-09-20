@@ -4,20 +4,10 @@ Installing This Package
 This software is distributed via distutils source distributions and
 Python eggs and is installed in the usual ways.
 
-Installing a Development Checkout
----------------------------------
-
-Run bootstrap.py to create a buildout script::
-
-  python bootstrap.py
-
-Run the generated buildout script::
-
-  bin/buildout
-
 Running the Tests
 -----------------
 
 You can then run the tests from the checkout directory::
 
-  bin/test
+  python test.py
+
