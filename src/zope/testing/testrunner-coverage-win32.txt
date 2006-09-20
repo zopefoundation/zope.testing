@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Code Coverage
--------------
+=============
 
 On Windows drive names can be upper and lower case, these can be
 randomly passed to TestIgnore.names.

@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Debugging Memory Leaks without a debug build of Python 
-------------------------------------------------------
+======================================================
 
 To use the --report-refcounts (-r) to detect or debug memory leaks,
 you must have a debug build of Python. Without a debug build, you will

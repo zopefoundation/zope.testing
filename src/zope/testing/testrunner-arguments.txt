@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Passing arguments explicitly
-----------------------------
+============================
 
 In most of the examples here, we set up `sys.argv`.  In normal usage,
 the testrunner just uses `sys.argv`.  It is possible to pass arguments

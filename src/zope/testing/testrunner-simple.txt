@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Simple Usage
-------------
+============
 
 The test runner consists of an importable module.  The test runner is
 used by providing scripts that import and invoke the `run` method from

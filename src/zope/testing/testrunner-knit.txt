@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Knitting in extra package directories
--------------------------------------
+=====================================
 
 Python packages have __path__ variables that can be manipulated to add
 extra directories cntaining software used in the packages.  The

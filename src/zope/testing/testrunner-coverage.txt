@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Code Coverage
--------------
+=============
 
 If the --coverage option is used, test coverage reports will be generated.  The
 directory name given as the parameter will be used to hold the reports.

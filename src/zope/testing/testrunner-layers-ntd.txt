@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Layers that can't be torn down
-------------------------------
+==============================
 
 A layer can have a tearDown method that raises NotImplementedError.
 If this is the case and there are no remaining tests to run, the test

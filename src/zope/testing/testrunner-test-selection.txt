@@ -1,9 +1,5 @@
-Test Runner
-===========
-
-
 Test Selection
---------------
+==============
 
 We've already seen that we can select tests by layer.  There are three
 other ways we can select tests.  We can select tests by package:

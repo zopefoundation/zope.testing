@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Errors and Failures
--------------------
+===================
 
 Let's look at tests that have errors and failures:
 
