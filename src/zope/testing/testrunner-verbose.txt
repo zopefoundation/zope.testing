@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Verbose Output
---------------
+==============
 
 Normally, we just get a summary.  We can use the -v option to get
 increasingly more information.

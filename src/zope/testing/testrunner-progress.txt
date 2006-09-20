@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Test Progress
--------------
+=============
 
 If the --progress (-p) option is used, progress information is printed and
 a carriage return (rather than a new-line) is printed between

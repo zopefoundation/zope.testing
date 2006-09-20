@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Repeating Tests
----------------
+===============
 
 The --repeat option can be used to repeat tests some number of times.
 Repeating tests is useful to help make sure that tests clean up after

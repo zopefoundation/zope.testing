@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Running Without Source Code
----------------------------
+===========================
 
 The ``--usecompiled`` option allows running tests in a tree without .py
 source code, provided compiled .pyc or .pyo files exist (without

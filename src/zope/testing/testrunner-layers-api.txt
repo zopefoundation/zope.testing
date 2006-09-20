@@ -1,8 +1,5 @@
-Test Runner
-===========
-
-The Layers API
---------------
+Layers
+======
 
 A Layer is an object providing setup and teardown methods used to setup
 and teardown the environment provided by the layer. It may also provide

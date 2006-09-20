@@ -1,8 +1,8 @@
-zope.testing Package Changelog
-=============================
+zope.testing Changelog
+**********************
 
-zope.testing version 3.0
-------------------------
+3.0 (2006/09/20)
+================
 
 - Updated the doctest copy with text-file encoding support
 
@@ -17,9 +17,8 @@ zope.testing version 3.0
 - Made zope.exception required only if the zope_tracebacks extra is
   requested.
 
-
-zope.testing version 2.x.y (???)
---------------------------------
+2.x.y (???)
+===========
 
 - Fix the test coverage. If a module, for example `interfaces`, was in an
   ignored directory/package, then if a module of the same name existed in a
@@ -27,8 +26,8 @@ zope.testing version 2.x.y (???)
   ignore cache stored the result by module name and not the filename of the
   module.
 
-zope.testing version 2.0 (2006/01/05)
---------------------------------------
+2.0 (2006/01/05)
+================
 
 - Corresponds to the verison of the zope.testing package shipped as part of
   the Zope 3.2.0 release.

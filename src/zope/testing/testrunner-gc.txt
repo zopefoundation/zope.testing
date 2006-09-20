@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Garbage Collection Control
---------------------------
+==========================
 
 When having problems that seem to be caused my memory-management
 errors, it can be helpful to adjust Python's cyclic garbage collector

@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Debugging
----------
+=========
 
 The testrunner module supports post-mortem debugging and debugging
 using `pdb.set_trace`.  Let's look first at using `pdb.set_trace`.

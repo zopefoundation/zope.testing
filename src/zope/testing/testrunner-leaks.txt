@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Debugging Memory Leaks
-----------------------
+======================
 
 The --report-refcounts (-r) option can be used with the --repeat (-N)
 option to detect and diagnose memory leaks.  To use this option, you

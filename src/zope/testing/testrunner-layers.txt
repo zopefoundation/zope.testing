@@ -1,8 +1,5 @@
-Test Runner
-===========
-
 Layer Selection
----------------
+===============
 
 We can select which layers to run using the --layer option:
 
