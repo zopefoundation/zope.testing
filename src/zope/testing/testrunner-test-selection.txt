@@ -154,7 +154,7 @@ You can specify multiple packages:
       Ran 128 tests with 0 failures and 0 errors in 0.025 seconds.
     False
 
-We can select by test module name using the --moduke (-m) option:
+We can select by test module name using the --module (-m) option:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m_one -mtest1'.split()
     >>> testrunner.run(defaults)
@@ -222,7 +222,7 @@ and by test within the module using the --test (-t) option:
       Ran 20 tests with 0 failures and 0 errors in 0.004 seconds.
     False
 
-The --moduke and --test options take regular expressions.  If the
+The --module and --test options take regular expressions.  If the
 regular expressions specified begin with '!', then tests that don't
 match the regular expression are selected:
 
@@ -336,7 +336,7 @@ Module and test filters can also be given as positional arguments:
       Ran 20 tests with 0 failures and 0 errors in 0.004 seconds.
     False
 
-Sometimes, ere are tests that you don't want to run by default.
+Sometimes, There are tests that you don't want to run by default.
 For example, you might have tests that take a long time.  Tests can
 have a level attribute.  If no level is specified, a level of 1 is
 assumed and, by default, only tests at level one are run.  to run
