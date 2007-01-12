@@ -1896,7 +1896,7 @@ def test_suite():
 
         # omit traceback entries for unittest.py or doctest.py from
         # output:
-        (re.compile(r'^ +File "[^\n]+(doc|unit)test.py", [^\n]+\n[^\n]+\n',
+        (re.compile(r'^ +File "[^\n]*(doc|unit)test.py", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
         (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
