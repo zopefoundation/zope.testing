@@ -1889,7 +1889,7 @@ def test_suite():
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
-                    r'\1doctest.py(NNN)'),
+                    r'\1test.py(NNN)'),
         (re.compile(r'[.]py\(\d+\)'), r'.py(NNN)'),
         (re.compile(r'[.]py:\d+'), r'.py:NNN'),
         (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
