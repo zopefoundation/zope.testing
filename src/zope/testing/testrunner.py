@@ -1826,13 +1826,6 @@ def get_options(args=None, defaults=None):
     if options.all:
         options.at_level = sys.maxint
 
-    if options.unit and options.non_unit:
-        # The test runner interpets this as "run only those tests that are both
-        # unit and non-unit at the same time".  The user, however, wants to run
-        # both unit and non-unit tests.  Disable the filtering so that the user
-        # will get what she wants:
-        options.unit = options.non_unit = False
-
     if options.unit:
         options.layer = ['unit']
     if options.layer:
