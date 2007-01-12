@@ -519,6 +519,8 @@ def run_tests(options, tests, name, failures, errors):
                 try:
                     try:
                         test.debug()
+                    except KeyboardInterrupt:
+                        raise
                     except:
                         result.addError(
                             test,
@@ -638,6 +640,8 @@ def resume_tests(options, layer_name, layers, failures, errors):
         line = suberr.readline()
         try:
             ran, nfail, nerr = map(int, line.strip().split())
+        except KeyboardInterrupt:
+            raise
         except:
             raise SubprocessError(line+suberr.read())
 
@@ -1103,6 +1107,8 @@ def find_suites(options):
 
                 try:
                     module = import_name(module_name)
+                except KeyboardInterrupt:
+                    raise
                 except:
                     suite = StartUpFailure(
                         options, module_name,
@@ -1119,6 +1125,8 @@ def find_suites(options):
                                 "Invalid test_suite, %r, in %s"
                                 % (suite, module_name)
                                 )
+                    except KeyboardInterrupt:
+                        raise
                     except:
                         suite = StartUpFailure(
                             options, module_name, sys.exc_info()[:2]+(None,))
