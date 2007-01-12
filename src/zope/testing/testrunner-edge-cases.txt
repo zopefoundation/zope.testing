@@ -401,15 +401,15 @@ Post-mortem debugging with triple verbosity
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Running:
-        test_x1 (sampletestsf.TestA1) (0.000 ms)
-        test_y0 (sampletestsf.TestA1) (0.000 ms)
-        test_z0 (sampletestsf.TestA1) (0.000 ms)
-        test_x0 (sampletestsf.TestB1) (0.000 ms)
-        test_y1 (sampletestsf.TestB1) (0.000 ms)
-        test_z0 (sampletestsf.TestB1) (0.000 ms)
-        test_1 (sampletestsf.TestNotMuch1) (0.000 ms)
-        test_2 (sampletestsf.TestNotMuch1) (0.000 ms)
-        test_3 (sampletestsf.TestNotMuch1) (0.000 ms)
+        test_x1 (sampletestsf.TestA1) (0.000 s)
+        test_y0 (sampletestsf.TestA1) (0.000 s)
+        test_z0 (sampletestsf.TestA1) (0.000 s)
+        test_x0 (sampletestsf.TestB1) (0.000 s)
+        test_y1 (sampletestsf.TestB1) (0.000 s)
+        test_z0 (sampletestsf.TestB1) (0.000 s)
+        test_1 (sampletestsf.TestNotMuch1) (0.000 s)
+        test_2 (sampletestsf.TestNotMuch1) (0.000 s)
+        test_3 (sampletestsf.TestNotMuch1) (0.000 s)
       Ran 9 tests with 0 failures and 0 errors in 0.001 seconds.
     Tearing down left over layers:
       Tear down samplelayers.Layer1 in 0.000 seconds.

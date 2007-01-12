@@ -823,13 +823,13 @@ class TestResult(unittest.TestResult):
     def addSuccess(self, test):
         if self.options.verbose > 2:
             t = max(time.time() - self._start_time, 0.0)
-            s = " (%.3f ms)" % t
+            s = " (%.3f s)" % t
             sys.stdout.write(s)
             self.test_width += len(s) + 1
 
     def addError(self, test, exc_info):
         if self.options.verbose > 2:
-            print " (%.3f ms)" % (time.time() - self._start_time)
+            print " (%.3f s)" % (time.time() - self._start_time)
 
         unittest.TestResult.addError(self, test, exc_info)
         print
@@ -852,7 +852,7 @@ class TestResult(unittest.TestResult):
 
 
         if self.options.verbose > 2:
-            print " (%.3f ms)" % (time.time() - self._start_time)
+            print " (%.3f s)" % (time.time() - self._start_time)
 
         unittest.TestResult.addFailure(self, test, exc_info)
         print
@@ -1825,6 +1825,13 @@ def get_options(args=None, defaults=None):
                       for (path, package) in options.test_path]
     if options.all:
         options.at_level = sys.maxint
+
+    if options.unit and options.non_unit:
+        # The test runner interpets this as "run only those tests that are both
+        # unit and non-unit at the same time".  The user, however, wants to run
+        # both unit and non-unit tests.  Disable the filtering so that the user
+        # will get what she wants:
+        options.unit = options.non_unit = False
 
     if options.unit:
         options.layer = ['unit']
