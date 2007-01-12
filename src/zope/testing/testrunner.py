@@ -729,7 +729,7 @@ class TestResult(unittest.TestResult):
                 # Note that doing this every time is more test friendly.
                 import curses
             except ImportError:
-                # avoid repimporting a broken module in python 2.3
+                # avoid reimporting a broken module in python 2.3
                 sys.modules['curses'] = None
             else:
                 try:
@@ -969,7 +969,7 @@ def post_mortem(exc_info):
     raise EndRun
 
 def print_doctest_location(err):
-    # This mimicks pdb's output, which gives way cool results in emacs :)
+    # This mimics pdb's output, which gives way cool results in emacs :)
     filename = err.test.filename
     if filename.endswith('.pyc'):
         filename = filename[:-1]
@@ -1061,7 +1061,7 @@ def tests_from_suite(suite, options, dlevel=1, dlayer='unit'):
     """Returns a sequence of (test, layer_name)
 
     The tree of suites is recursively visited, with the most specific
-    layer taking precidence. So if a TestCase with a layer of 'foo' is
+    layer taking precedence. So if a TestCase with a layer of 'foo' is
     contained in a TestSuite with a layer of 'bar', the test case would be
     returned with 'foo' as the layer.
 
@@ -1423,7 +1423,7 @@ sense of the remaining regexp to be negated (so "!bc" matches any
 string that does not match "bc", and vice versa).  The option can be
 specified multiple test-module filters.  Test modules matching any of
 the test filters are searched.  If no test-module filter is specified,
-then all test moduless are used.
+then all test modules are used.
 """)
 
 searching.add_option(
@@ -1552,7 +1552,7 @@ analysis.add_option(
     help="""\
 Set the garbage collector generation threshold.  This can be used
 to stress memory and gc correctness.  Some crashes are only
-reproducible when the threshold is set to 1 (agressive garbage
+reproducible when the threshold is set to 1 (aggressive garbage
 collection).  Do "--gc 0" to disable garbage collection altogether.
 
 The --gc option can be used up to 3 times to specify up to 3 of the 3
@@ -1573,8 +1573,8 @@ once to set multiple flags.
 analysis.add_option(
     '--repeat', '-N', action="store", type="int", dest='repeat',
     help="""\
-Repeat the testst the given number of times.  This option is used to
-make sure that tests leave thier environment in the state they found
+Repeat the tests the given number of times.  This option is used to
+make sure that tests leave their environment in the state they found
 it and, with the --report-refcounts option to look for memory leaks.
 """)
 
@@ -1651,7 +1651,7 @@ setup.add_option(
     help="""\
 Specify a path to be searched for tests, but not added to the Python
 search path.  Also specify a package for files found in this path.
-This is used to deal with directories that are stiched into packages
+This is used to deal with directories that are stitched into packages
 that are not otherwise searched for tests.
 
 This option takes 2 arguments.  The first is a path name. The second is
