@@ -77,7 +77,7 @@ class TestIgnore:
                         break
             self._ignore[filename] = ignore
         return ignore
-    
+
     def _filenameFormat(self, filename):
         return os.path.abspath(filename)
 
@@ -88,7 +88,7 @@ if sys.platform == 'win32':
     #albeit trace coverage has still problems with lowercase drive letters
     #when determining the dotted module name
     OldTestIgnore = TestIgnore
-    
+
     class TestIgnore(OldTestIgnore):
         def _filenameFormat(self, filename):
             return os.path.normcase(os.path.abspath(filename))
@@ -305,7 +305,7 @@ def run(defaults=None, args=None):
 
 def run_with_options(options, found_suites=None):
     """Find and run tests
-    
+
     Passing a list of suites using the found_suites parameter will cause
     that list of suites to be used instead of attempting to load them from
     the filesystem. This is useful for unit testing the test runner.
@@ -766,7 +766,7 @@ class TestResult(unittest.TestResult):
     def testTearDown(self):
         """A layer may define a teardown method to be called after each
            individual test.
-           
+
            This is useful for clearing the state of global
            resources or resetting external systems such as relational
            databases or daemons.
@@ -1882,10 +1882,10 @@ def test_suite():
         (re.compile("'[A-Za-z]:\\\\"), "'"), # hopefully, we'll make Windows happy
         (re.compile(r'\\\\'), '/'), # more Windows happiness
         (re.compile(r'\\'), '/'), # even more Windows happiness
-       (re.compile('/r'), '\\\\r'), # undo damage from previous
-       (re.compile(r'\r'), '\\\\r\n'),
-       (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
-       (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
+        (re.compile('/r'), '\\\\r'), # undo damage from previous
+        (re.compile(r'\r'), '\\\\r\n'),
+        (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
+        (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
@@ -1942,7 +1942,7 @@ def test_suite():
         checker=checker),
         doctest.DocTestSuite()
         ]
-    
+
     if sys.platform == 'win32':
         suites.append(
             doctest.DocFileSuite(
@@ -1950,7 +1950,7 @@ def test_suite():
             setUp=setUp, tearDown=tearDown,
             optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
             checker=checker))
-    
+
     # Python <= 2.4.1 had a bug that prevented hotshot from running in
     # non-optimize mode
     if sys.version_info[:3] > (2,4,1) or not __debug__:
