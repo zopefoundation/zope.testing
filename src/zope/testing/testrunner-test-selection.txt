@@ -154,6 +154,39 @@ You can specify multiple packages:
       Ran 128 tests with 0 failures and 0 errors in 0.025 seconds.
     False
 
+You can specify directory names instead of packages (useful for
+tab-completion):
+
+    >>> subdir = os.path.join(directory_with_tests, 'sample1')
+    >>> sys.argv = ('test --layer 122 -s %s -vv' % subdir).split()
+    >>> from zope.testing import testrunner
+    >>> testrunner.run(defaults)
+    Running tests at level 1
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Running:
+        test_x1 (sample1.sampletests.test122.TestA)
+        test_y0 (sample1.sampletests.test122.TestA)
+        test_z0 (sample1.sampletests.test122.TestA)
+        test_x0 (sample1.sampletests.test122.TestB)
+        test_y1 (sample1.sampletests.test122.TestB)
+        test_z0 (sample1.sampletests.test122.TestB)
+        test_1 (sample1.sampletests.test122.TestNotMuch)
+        test_2 (sample1.sampletests.test122.TestNotMuch)
+        test_3 (sample1.sampletests.test122.TestNotMuch)
+        test_x0 (sample1.sampletests.test122)
+        test_y0 (sample1.sampletests.test122)
+        test_z1 (sample1.sampletests.test122)
+        testrunner-ex/sample1/sampletests/../../sampletestsl.txt
+      Ran 17 tests with 0 failures and 0 errors in 0.005 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
 We can select by test module name using the --module (-m) option:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m_one -mtest1'.split()

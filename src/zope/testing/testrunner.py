@@ -1802,14 +1802,6 @@ def get_options(args=None, defaults=None):
     options.test = map(compile_filter, options.test or ('.'))
     options.module = map(compile_filter, options.module or ('.'))
 
-    if options.package:
-        options.package = [p.replace('/', '.').replace('\\', '.')
-                           for p in options.package]
-        # Remove useless dot ('.') at the end of the package. bash
-        # adds a `/` by default using completion. Otherweise, it
-        # raises an exception trying to import an empty package
-        # because of this.
-        options.package = [re.sub(r'\.$', '',  p) for p in options.package]
     options.path = map(os.path.abspath, options.path or ())
     options.test_path = map(os.path.abspath, options.test_path or ())
     options.test_path += options.path
@@ -1820,6 +1812,10 @@ def get_options(args=None, defaults=None):
                           for (path, package) in options.package_path or ()
                           ])
 
+    if options.package:
+        pkgmap = dict(options.test_path)
+        options.package = [normalize_package(p, pkgmap)
+                           for p in options.package]
 
     options.prefix = [(path + os.path.sep, package)
                       for (path, package) in options.test_path]
@@ -1866,6 +1862,50 @@ def get_options(args=None, defaults=None):
         return options
 
     return options
+
+def normalize_package(package, package_map={}):
+    r"""Normalize package name passed to the --package option.
+
+        >>> normalize_package('zope.testing')
+        'zope.testing'
+
+    Converts path names into package names for compatibility with the old
+    test runner.
+
+        >>> normalize_package('zope/testing')
+        'zope.testing'
+        >>> normalize_package('zope/testing/')
+        'zope.testing'
+        >>> normalize_package('zope\\testing')
+        'zope.testing'
+
+    Can use a map of absolute pathnames to package names
+
+        >>> a = os.path.abspath
+        >>> normalize_package('src/zope/testing/',
+        ...                   {a('src'): ''})
+        'zope.testing'
+        >>> normalize_package('src/zope_testing/',
+        ...                   {a('src/zope_testing'): 'zope.testing'})
+        'zope.testing'
+        >>> normalize_package('src/zope_something/tests',
+        ...                   {a('src/zope_something'): 'zope.something',
+        ...                    a('src'): ''})
+        'zope.something.tests'
+
+    """
+    package = package.replace('\\', '/')
+    if package.endswith('/'):
+        package = package[:-1]
+    bits = package.split('/')
+    for n in range(len(bits), 0, -1):
+        pkg = package_map.get(os.path.abspath('/'.join(bits[:n])))
+        if pkg is not None:
+            bits = bits[n:]
+            if pkg:
+                bits = [pkg] + bits
+            return '.'.join(bits)
+    return package.replace('/', '.')
 
 # Command-line UI
 ###############################################################################
