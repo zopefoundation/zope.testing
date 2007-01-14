@@ -1900,7 +1900,7 @@ def test_suite():
         (re.compile('/r'), '\\\\r'), # undo damage from previous
         (re.compile(r'\r'), '\\\\r\n'),
         (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
-        (re.compile(r'\d+[.]\d\d\d ms'), 'N.NNN ms'),
+        (re.compile(r'\d+[.]\d\d\d s'), 'N.NNN s'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
