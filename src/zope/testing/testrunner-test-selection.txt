@@ -519,3 +519,46 @@ We can use the --all option to run tests at all levels:
         test_y0 (sampletests.test_one)
       Ran 39 tests with 0 failures and 0 errors in 0.009 seconds.
     False
+
+
+Listing Selected Tests
+----------------------
+
+When you're trying to figure out why the test you want is not matched by the
+pattern you specified, it is convenient to see which tests match your
+specifications.
+
+    >>> sys.argv = 'test --all -m sample1 -t test_y0 --list-tests'.split()
+    >>> testrunner.run(defaults)
+    Listing unit tests:
+      test_y0 (sample1.sampletestsf.TestA)
+      test_y0 (sample1.sampletestsf)
+      test_y0 (sample1.sample11.sampletests.TestA)
+      test_y0 (sample1.sample11.sampletests.TestA3)
+      test_y0 (sample1.sample11.sampletests)
+      test_y0 (sample1.sample13.sampletests.TestA)
+      test_y0 (sample1.sample13.sampletests)
+      test_y0 (sample1.sampletests.test1.TestA)
+      test_y0 (sample1.sampletests.test1)
+      test_y0 (sample1.sampletests.test_one.TestA)
+      test_y0 (sample1.sampletests.test_one)
+    Listing samplelayers.Layer11 tests:
+      test_y0 (sample1.sampletests.test11.TestA)
+      test_y0 (sample1.sampletests.test11)
+    Listing samplelayers.Layer111 tests:
+      test_y0 (sample1.sampletests.test111.TestA)
+      test_y0 (sample1.sampletests.test111)
+    Listing samplelayers.Layer112 tests:
+      test_y0 (sample1.sampletests.test112.TestA)
+      test_y0 (sample1.sampletests.test112)
+    Listing samplelayers.Layer12 tests:
+      test_y0 (sample1.sampletests.test12.TestA)
+      test_y0 (sample1.sampletests.test12)
+    Listing samplelayers.Layer121 tests:
+      test_y0 (sample1.sampletests.test121.TestA)
+      test_y0 (sample1.sampletests.test121)
+    Listing samplelayers.Layer122 tests:
+      test_y0 (sample1.sampletests.test122.TestA)
+      test_y0 (sample1.sampletests.test122)
+    False
+

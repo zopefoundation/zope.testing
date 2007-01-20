@@ -391,7 +391,6 @@ def run_with_options(options, found_suites=None):
             print_traceback("Module: %s\n" % error.module, error.exc_info),
         print
 
-
     if 'unit' in tests_by_layer_name:
         tests = tests_by_layer_name.pop('unit')
         if (not options.non_unit) and not options.resume_layer:
@@ -405,9 +404,12 @@ def run_with_options(options, found_suites=None):
                 should_run = True
 
             if should_run:
-                print "Running unit tests:"
-                nlayers += 1
-                ran += run_tests(options, tests, 'unit', failures, errors)
+                if options.list_tests:
+                    list_tests(options, tests, 'unit')
+                else:
+                    print "Running unit tests:"
+                    nlayers += 1
+                    ran += run_tests(options, tests, 'unit', failures, errors)
 
     setup_layers = {}
 
@@ -425,6 +427,11 @@ def run_with_options(options, found_suites=None):
             if filter(None, [pat(layer_name) for pat in options.layer])
         ]
 
+
+    if options.list_tests:
+        for layer_name, layer, tests in layers_to_run:
+            list_tests(options, tests, layer_name)
+        return True
 
     for layer_name, layer, tests in layers_to_run:
         nlayers += 1
@@ -484,6 +491,11 @@ def run_with_options(options, found_suites=None):
         gc.set_threshold(*old_threshold)
 
     return not bool(import_errors or failures or errors)
+
+def list_tests(options, tests, layer_name):
+    print "Listing %s tests:" % layer_name
+    for test in tests:
+        print ' ', test
 
 def run_tests(options, tests, name, failures, errors):
     repeat = options.repeat or 1
@@ -1477,6 +1489,10 @@ runs all tests.
 searching.add_option(
     '--all', action="store_true", dest='all',
     help="Run tests at all levels.")
+
+searching.add_option(
+    '--list-tests', action="store_true", dest='list_tests', default=False,
+    help="List all tests that matched your filters.  Do not run any tests.")
 
 parser.add_option_group(searching)
 
