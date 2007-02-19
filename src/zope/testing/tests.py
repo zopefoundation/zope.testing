@@ -25,6 +25,7 @@ def test_suite():
         doctest.DocTestSuite('zope.testing.renormalizing'),
         doctest.DocFileSuite('formparser.txt'),
         doctest.DocTestSuite('zope.testing.loggingsupport'),
+        doctest.DocTestSuite('zope.testing.server'),
         testrunner.test_suite(),
         ))
 
