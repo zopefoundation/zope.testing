@@ -9,11 +9,11 @@ We have a very simple directory tree, under ``usecompiled/``, to test
 this.  Because we're going to delete its .py files, we want to work
 in a copy of that:
 
-    >>> import os.path, shutil, sys
-    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
+    >>> import os.path, shutil, sys, tempfile
+    >>> directory_with_tests = tempfile.mkdtemp()
 
     >>> NEWNAME = "unlikely_package_name"
-    >>> src = os.path.join(directory_with_tests, 'usecompiled')
+    >>> src = os.path.join(this_directory, 'testrunner-ex', 'usecompiled')
     >>> os.path.isdir(src)
     True
     >>> dst = os.path.join(directory_with_tests, NEWNAME)
@@ -32,7 +32,6 @@ can't be deleted later.
     ...                     os.path.join(dst, root[n:], f))
 
 Now run the tests in the copy:
-
 
     >>> from zope.testing import testrunner
 
@@ -85,6 +84,6 @@ also implies ``--keepbytecode``:
       Ran 4 tests with 0 failures and 0 errors in N.NNN seconds.
     False
 
-Remove the copy:
+Remove the temporary directory:
 
-    >>> shutil.rmtree(dst)
+    >>> shutil.rmtree(directory_with_tests)

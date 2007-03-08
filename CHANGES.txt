@@ -1,6 +1,12 @@
 zope.testing Changelog
 **********************
 
+????
+====
+
+- Fix testrunner-wo-source.txt and testrunner-errors.txt to run with a
+  read-only source tree.
+
 3.0 (2006/09/20)
 ================
 

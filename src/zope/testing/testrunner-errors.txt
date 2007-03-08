@@ -1,10 +1,22 @@
 Errors and Failures
 ===================
 
-Let's look at tests that have errors and failures:
+Let's look at tests that have errors and failures, first we need to make a
+temporary copy of the entire testing dirctory (except .svn files which may
+be read only):
 
-    >>> import os.path, sys
-    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
+    >>> import os.path, sys, tempfile, shutil
+    >>> tmpdir = tempfile.mkdtemp()
+    >>> directory_with_tests = os.path.join(tmpdir, 'testrunner-ex')
+    >>> source = os.path.join(this_directory, 'testrunner-ex')
+    >>> n = len(source) + 1
+    >>> for root, dirs, files in os.walk(source):
+    ...     dirs[:] = [d for d in dirs if d != ".svn"] # prune cruft
+    ...     os.mkdir(os.path.join(directory_with_tests, root[n:]))
+    ...     for f in files:
+    ...         shutil.copy(os.path.join(root, f),
+    ...                     os.path.join(directory_with_tests, root[n:], f))
+    
     >>> from zope.testing import testrunner
     >>> defaults = [
     ...     '--path', directory_with_tests,
@@ -794,6 +806,6 @@ Then run the tests:
       sample2.sample23.sampletests_i
     True
 
-And remove the file with bad syntax:
+And remove the temporary directory:
 
-    >>> os.remove(badsyntax_path)
+    >>> shutil.rmtree(tmpdir)
