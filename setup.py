@@ -49,7 +49,7 @@ chapters = '\n'.join([
     
 setup(
     name='zope.testing',
-    version='3.0',
+    version='3.4dev',
     url='http://svn.zope.org/zope.testing',
     license='ZPL 2.1',
     description='Zope testing framework, including the testrunner script.',
