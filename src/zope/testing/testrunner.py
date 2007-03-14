@@ -301,6 +301,9 @@ def run(defaults=None, args=None):
 
     doctest.set_unittest_reportflags(old_reporting_flags)
 
+    if failed and options.exitwithstatus:
+        sys.exit(1)
+
     return failed
 
 def run_with_options(options, found_suites=None):
@@ -1742,6 +1745,13 @@ file XYZ.py contains tests but is absent while XYZ.pyc or XYZ.pyo exists
 then the compiled files will be used.  This is necessary when running
 tests against a tree where the .py files have been removed after
 compilation to .pyc/.pyo.  Use of this option implies --keepbytecode.
+""")
+
+other.add_option(
+    '--exit-with-status', action="store_true", dest='exitwithstatus',
+    help="""\
+Return an error exit status if the tests failed.  This can be useful for
+an invoking process that wants to monitor the result of a test run.
 """)
 
 parser.add_option_group(other)

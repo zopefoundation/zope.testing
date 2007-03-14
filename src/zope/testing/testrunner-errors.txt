@@ -806,6 +806,46 @@ Then run the tests:
       sample2.sample23.sampletests_i
     True
 
+Reporting Errors to Calling Processes
+-------------------------------------
+
+The testrunner can return an error status, indicating that the tests
+failed.  This can be useful for an invoking process that wants to
+monitor the result of a test run.
+
+To use, specify the argument "--exit-with-status".
+
+    >>> sys.argv = (
+    ...     'test --exit-with-status --tests-pattern ^sampletests_1$'.split())
+    >>> try:
+    ...     testrunner.run(defaults)
+    ... except SystemExit, e:
+    ...     print 'exited with code', e.code
+    ... else:
+    ...     print 'sys.exit was not called'
+    ... # doctest: +ELLIPSIS
+    Running unit tests:
+    ...
+      Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    exited with code 1
+
+A passing test does not exit.
+
+    >>> sys.argv = (
+    ...     'test --exit-with-status --tests-pattern ^sampletests$'.split())
+    >>> try:
+    ...     testrunner.run(defaults)
+    ... except SystemExit, e2:
+    ...     print 'oops'
+    ... else:
+    ...     print 'sys.exit was not called'
+    ... # doctest: +ELLIPSIS
+    Running unit tests:
+    ...
+    Total: 364 tests, 0 failures, 0 errors
+    ...
+    sys.exit was not called
+
 And remove the temporary directory:
 
     >>> shutil.rmtree(tmpdir)

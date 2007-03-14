@@ -7,6 +7,9 @@ zope.testing Changelog
 - Fix testrunner-wo-source.txt and testrunner-errors.txt to run with a
   read-only source tree.
 
+- Added exit-with-status support (supports use with buildbot and
+  zc.recipe.testing)
+
 3.0 (2006/09/20)
 ================
 
