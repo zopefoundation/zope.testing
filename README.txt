@@ -4,7 +4,7 @@ zope.testing
 
 .. contents::
 
-This package provides a flexible testing framework.  It includes a
+This package provides a number of testing frameworks.  It includes a
 flexible test runner, and supports both doctest and unittest.
 
 cleanup.py
@@ -36,6 +36,62 @@ renormalizing.py
   Regular expression pattern normalizing output checker.
   Useful for doctests.
 
+setupstack
+  A simple framework for automating doctest set-up and tear-down.
+  See setupstack.txt.
+
+
 testrunner.py
   The test runner module.  This is typically wrapped by a test.py script that
   sets up options to run a particular set of tests.
+
+Releases
+********
+
+3.4 (2007/03/29)
+================
+
+New Features
+------------
+
+- Added exit-with-status support (supports use with buildbot and
+  zc.recipe.testing)
+
+
+
+Bugs Fixed:
+-----------
+
+- Fix testrunner-wo-source.txt and testrunner-errors.txt to run with a
+  read-only source tree.
+
+3.0 (2006/09/20)
+================
+
+- Updated the doctest copy with text-file encoding support.
+
+- Added logging-level support to loggingsuppport module.
+
+- At verbosity-level 1, dots are not output continuously, without any
+  line breaks.
+
+- Improved output when the inability to tear down a layer causes tests
+  to be run in a subprocess.
+
+- Made zope.exception required only if the zope_tracebacks extra is
+  requested.
+
+2.x.y (???)
+===========
+
+- Fix the test coverage. If a module, for example `interfaces`, was in an
+  ignored directory/package, then if a module of the same name existed in a
+  covered directory/package, then it was also ignored there, because the
+  ignore cache stored the result by module name and not the filename of the
+  module.
+
+2.0 (2006/01/05)
+================
+
+- Corresponds to the version of the zope.testing package shipped as part of
+  the Zope 3.2.0 release.

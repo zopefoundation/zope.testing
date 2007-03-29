@@ -47,22 +47,24 @@ chapters = '\n'.join([
     'formparser.txt',
     'setupstack.txt',
     )])
-    
+
+long_description=(
+    open('README.txt').read()
+    + '\n' +
+    'Detailed Documentation\n'
+    '**********************\n'
+    + '\n' + chapters
+    )
+
+open('documentation.txt', 'w').write(long_description)
+
 setup(
     name='zope.testing',
-    version='3.4dev',
-    url='http://svn.zope.org/zope.testing',
+    version='3.4',
+    url='http://www.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing framework, including the testrunner script.',
-    long_description=(
-        open('README.txt').read()
-        + '\n' +
-        open('CHANGES.txt').read()
-        + '\n' +
-        'Detailed Documentation\n'
-        '**********************\n'
-        + '\n' + chapters
-        ),
+    long_description=long_description,
     author='Zope Corporation and Contributors',
     author_email='zope3-dev@zope.org',
     
