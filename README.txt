@@ -57,7 +57,8 @@ New Features
 - Added exit-with-status support (supports use with buildbot and
   zc.recipe.testing)
 
-
+- Added a small framework for automating set up and tear down of
+  doctest tests. See setupstack.txt.
 
 Bugs Fixed:
 -----------
