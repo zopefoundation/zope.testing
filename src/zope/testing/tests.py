@@ -27,6 +27,7 @@ def test_suite():
         doctest.DocTestSuite('zope.testing.loggingsupport'),
         doctest.DocTestSuite('zope.testing.server'),
         testrunner.test_suite(),
+        doctest.DocFileSuite('setupstack.txt'),
         ))
 
 if __name__ == '__main__':
