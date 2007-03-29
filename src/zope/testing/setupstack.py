@@ -29,7 +29,7 @@ def register(test, function, *args, **kw):
 def tearDown(test):
     stack = test.globs.get(key)
     while stack:
-        f, p, k = stack.pop(0)
+        f, p, k = stack.pop()
         f(*p, **k)
 
 def setUpDirectory(test):

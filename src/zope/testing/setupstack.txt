@@ -29,10 +29,12 @@ We'll register some tearDown functions that just print something:
 Now, when we call the tearDown function:
 
     >>> zope.testing.setupstack.tearDown(test)
-    td 1
     td 2
+    td 1
 
-The registered tearDown functions are run.
+The registered tearDown functions are run. Note that they are run in
+the reverse order that they were registered.
+
 
 Extra positional arguments can be passed to register:
 

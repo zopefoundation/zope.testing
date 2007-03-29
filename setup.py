@@ -45,6 +45,7 @@ chapters = '\n'.join([
     'testrunner-leaks.txt',
     'testrunner-knit.txt',
     'formparser.txt',
+    'setupstack.txt',
     )])
     
 setup(
