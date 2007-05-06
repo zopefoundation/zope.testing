@@ -20,8 +20,16 @@ import os
 
 try:
     from setuptools import setup
+    extra = dict(
+        namespace_packages=['zope',],
+        install_requires = ['setuptools'],
+        extras_require={'zope_tracebacks': 'zope.exceptions'},
+        include_package_data = True,    
+        zip_safe = False,
+        )
 except ImportError, e:
     from distutils.core import setup
+    extra = {}
 
 chapters = '\n'.join([
     open(os.path.join('src', 'zope', 'testing', name)).read()
@@ -70,9 +78,4 @@ setup(
     
     packages=["zope", "zope.testing"],
     package_dir = {'': 'src'},
-    
-    namespace_packages=['zope',],
-    extras_require={'zope_tracebacks': 'zope.exceptions'},
-    include_package_data = True,    
-    zip_safe = False,
-    )
+    **extra)
