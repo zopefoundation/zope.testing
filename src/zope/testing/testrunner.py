@@ -649,8 +649,11 @@ def resume_tests(options, layer_name, layers, failures, errors):
                 ])
 
         subin, subout, suberr = os.popen3(args)
-        for l in subout:
-            sys.stdout.write(l)
+        try:
+            for l in subout:
+                sys.stdout.write(l)
+        except IOError:
+            print "Error reading subprocess output for", layer_name
 
         line = suberr.readline()
         try:
