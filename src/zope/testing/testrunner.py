@@ -1529,10 +1529,19 @@ Output progress status
 """)
 
 reporting.add_option(
-    '-1', action="store_true", dest='report_only_first_failure',
+    '-1', '--hide-secondary-failures',
+    action="store_true", dest='report_only_first_failure',
     help="""\
 Report only the first failure in a doctest. (Examples after the
 failure are still executed, in case they do any cleanup.)
+""")
+
+reporting.add_option(
+    '--show-secondary-failures',
+    action="store_false", dest='report_only_first_failure',
+    help="""\
+Report all failures in a doctest.  This is the default, but can
+be used to counter a default use of -1 or --hide-secondary-failures.
 """)
 
 reporting.add_option(

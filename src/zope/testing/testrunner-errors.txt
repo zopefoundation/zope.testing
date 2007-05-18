@@ -590,6 +590,94 @@ me the first failed example in a doctest" :)
       Ran 1 tests with 1 failures and 0 errors in 0.001 seconds.
     True
 
+The --hide-secondary-failures option is an alias for -1:
+
+    >>> sys.argv = (
+    ...     'test --tests-pattern ^sampletests_1$'
+    ...     ' --hide-secondary-failures'
+    ...     ).split()
+    >>> testrunner.run(defaults) # doctest:
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test eek (sample2.sampletests_1)
+    Failed doctest test for sample2.sampletests_1.eek
+      File "testrunner-ex/sample2/sampletests_1.py", line 17, in eek
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 19,
+         in sample2.sampletests_1.eek
+    Failed example:
+        x = y
+    Exception raised:
+        Traceback (most recent call last):
+          File ".../doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+            x = y
+        NameError: name 'y' is not defined
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.001 seconds.
+    True
+
+The --show-secondary-failures option counters -1 (or it's alias),
+causing the second and subsequent errors to be shown.  This is useful
+if -1 is provided by a test script by inserting it ahead of
+command-line options in sys.argv.
+
+    >>> sys.argv = (
+    ...     'test --tests-pattern ^sampletests_1$'
+    ...     ' --hide-secondary-failures --show-secondary-failures'
+    ...     ).split()
+    >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
+    Running unit tests:
+    <BLANKLINE>
+    <BLANKLINE>
+    Failure in test eek (sample2.sampletests_1)
+    Failed doctest test for sample2.sampletests_1.eek
+      File "testrunner-ex/sample2/sampletests_1.py", line 17, in eek
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 19,
+         in sample2.sampletests_1.eek
+    Failed example:
+        x = y
+    Exception raised:
+        Traceback (most recent call last):
+          File ".../doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+            x = y
+        NameError: name 'y' is not defined
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 21,
+         in sample2.sampletests_1.eek
+    Failed example:
+        x
+    Exception raised:
+        Traceback (most recent call last):
+          File ".../doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[1]>", line 1, in ?
+            x
+        NameError: name 'x' is not defined
+    ----------------------------------------------------------------------
+    File "testrunner-ex/sample2/sampletests_1.py", line 24,
+         in sample2.sampletests_1.eek
+    Failed example:
+        z = x + 1
+    Exception raised:
+        Traceback (most recent call last):
+          File ".../doctest.py", line 1256, in __run
+            compileflags, 1) in test.globs
+          File "<doctest sample2.sampletests_1.eek[2]>", line 1, in ?
+            z = x + 1
+        NameError: name 'x' is not defined
+    <BLANKLINE>
+      Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    True
+
+
 Getting diff output for doctest failures
 ----------------------------------------
 
