@@ -282,6 +282,11 @@ class _SpoofOut(StringIO):
         if hasattr(self, "softspace"):
             del self.softspace
 
+    def write(self, value):
+        if isinstance(value, unicode):
+            value = value.encode('utf8')
+        StringIO.write(self, value)
+
 # Worst-case linear-time ellipsis matching.
 def _ellipsis_match(want, got):
     """
@@ -1353,7 +1358,6 @@ class DocTestRunner:
             except:
                 exception = sys.exc_info()
                 self.debugger.set_continue() # ==== Example Finished ====
-
             got = self._fakeout.getvalue()  # the actual output
             self._fakeout.truncate(0)
             outcome = FAILURE   # guilty until proved innocent or insane

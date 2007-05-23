@@ -906,7 +906,7 @@ unicode and another not::
     Running tests at level 1
     Running unit tests:
       Running:
-    ..
+    ...
     <BLANKLINE>
     Failure testrunner-ex/unicode.txt
     Failed doctest test for unicode.txt
@@ -930,7 +930,7 @@ unicode and another not::
         'xyz'
     <BLANKLINE>
     <BLANKLINE>
-      Ran 2 tests with 1 failures and 0 errors in N.NNN seconds.
+      Ran 3 tests with 1 failures and 0 errors in N.NNN seconds.
     True
 
  
