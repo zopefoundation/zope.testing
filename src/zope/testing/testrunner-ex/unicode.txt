@@ -1,0 +1,18 @@
+=========================
+Errors Containing Unicode
+=========================
+
+There was a unicode bug. Create a function which returns a unicode string with
+non us-ascii characters::
+
+    >>> def get_unicode():
+    ...    return u'foo \u2014 bar'
+    >>> print get_unicode()
+    oink
+
+Get some normal output as well::
+
+    >>> 'xyz'
+    123
+
+

@@ -894,6 +894,46 @@ Then run the tests:
       sample2.sample23.sampletests_i
     True
 
+
+Unicode Errors
+--------------
+
+There was a bug preventing decent error reporing when a result contained
+unicode and another not::
+
+    >>> sys.argv = 'test --tests-pattern ^unicode$ -uv'.split()
+    >>> testrunner.run(defaults)
+    Running tests at level 1
+    Running unit tests:
+      Running:
+    ..
+    <BLANKLINE>
+    Failure testrunner-ex/unicode.txt
+    Failed doctest test for unicode.txt
+     testrunner-ex/unicode.txt", line 0
+    <BLANKLINE>
+    ----------------------------------------------------------------------
+    File testrunner-ex/unicode.txt", Line NNN, in unicode.txt
+    Failed example:
+        print get_unicode()
+    Expected:
+        oink
+    Got:
+        foo — bar
+    ----------------------------------------------------------------------
+    File testrunner-ex/unicode.txt", Line NNN, in unicode.txt
+    Failed example:
+        'xyz'
+    Expected:
+        123
+    Got:
+        'xyz'
+    <BLANKLINE>
+    <BLANKLINE>
+      Ran 2 tests with 1 failures and 0 errors in N.NNN seconds.
+    True
+
+ 
 Reporting Errors to Calling Processes
 -------------------------------------
 

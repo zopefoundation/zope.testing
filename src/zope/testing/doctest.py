@@ -2300,11 +2300,15 @@ class DocTestCase(unittest.TestCase):
 
         runner = DocTestRunner(optionflags=optionflags,
                                checker=self._dt_checker, verbose=False)
+        def write(value):
+            if isinstance(value, unicode):
+                value = value.encode('utf8')
+            new.write(value)
 
         try:
             runner.DIVIDER = "-"*70
             failures, tries = runner.run(
-                test, out=new.write, clear_globs=False)
+                test, out=write, clear_globs=False)
         finally:
             sys.stdout = old
 
