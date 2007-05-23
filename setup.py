@@ -24,7 +24,7 @@ try:
         namespace_packages=['zope',],
         install_requires = ['setuptools'],
         extras_require={'zope_tracebacks': 'zope.exceptions'},
-        include_package_data = True,    
+        include_package_data = True,
         zip_safe = False,
         )
 except ImportError, e:
@@ -75,7 +75,7 @@ setup(
     long_description=long_description,
     author='Zope Corporation and Contributors',
     author_email='zope3-dev@zope.org',
-    
+
     packages=["zope", "zope.testing"],
     package_dir = {'': 'src'},
     **extra)
