@@ -35,12 +35,66 @@ import traceback
 import types
 import unittest
 
+
+available_profilers = {}
+
+try:
+    import cProfile
+    import pstats
+except ImportError:
+    pass
+else:
+    class CProfiler(object):
+        """cProfiler"""
+        def __init__(self, filepath):
+            self.filepath = filepath
+            self.profiler = cProfile.Profile()
+            self.enable = self.profiler.enable
+            self.disable = self.profiler.disable
+
+        def finish(self):
+            self.profiler.dump_stats(self.filepath)
+
+        def loadStats(self, prof_glob):
+            stats = None
+            for file_name in glob.glob(prof_glob):
+                if stats is None:
+                    stats = pstats.Stats(file_name)
+                else:
+                    stats.add(file_name)
+            return stats
+
+    available_profilers['cProfile'] = CProfiler
+
 # some Linux distributions don't include the profiler, which hotshot uses
 try:
     import hotshot
     import hotshot.stats
 except ImportError:
-    hotshot = None
+    pass
+else:
+    class HotshotProfiler(object):
+        """hotshot interface"""
+
+        def __init__(self, filepath):
+            self.profiler = hotshot.Profile(filepath)
+            self.enable = self.profiler.start
+            self.disable = self.profiler.stop
+
+        def finish(self):
+            self.profiler.close()
+
+        def loadStats(self, prof_glob):
+            stats = None
+            for file_name in glob.glob(prof_glob):
+                loaded = hotshot.stats.load(file_name)
+                if stats is None:
+                    stats = loaded
+                else:
+                    stats.add(loaded)
+            return stats
+
+    available_profilers['hotshot'] = HotshotProfiler
 
 
 real_pdb_set_trace = pdb.set_trace
@@ -231,11 +285,6 @@ def run(defaults=None, args=None):
     # to make tests of the test runner work properly. :)
     pdb.set_trace = real_pdb_set_trace
 
-    if hotshot is None and options.profile:
-        print ('The Python you\'re using doesn\'t seem to have the profiler '
-               'so you can\'t use the --profile switch.')
-        sys.exit()
-
     if (options.profile
         and sys.version_info[:3] <= (2,4,1)
         and __debug__):
@@ -263,8 +312,8 @@ def run(defaults=None, args=None):
 
         # set up the output file
         oshandle, file_path = tempfile.mkstemp(prof_suffix, prof_prefix, '.')
-        prof = hotshot.Profile(file_path)
-        prof.start()
+        profiler = available_profilers[options.profile](file_path)
+        profiler.enable()
 
     try:
         try:
@@ -275,22 +324,15 @@ def run(defaults=None, args=None):
         if tracer:
             tracer.stop()
         if options.profile:
-            prof.stop()
-            prof.close()
+            profiler.disable()
+            profiler.finish()
             # We must explicitly close the handle mkstemp returned, else on
             # Windows this dies the next time around just above due to an
             # attempt to unlink a still-open file.
             os.close(oshandle)
 
     if options.profile and not options.resume_layer:
-        stats = None
-        for file_name in glob.glob(prof_glob):
-            loaded = hotshot.stats.load(file_name)
-            if stats is None:
-                stats = loaded
-            else:
-                stats.add(loaded)
-
+        stats = profiler.loadStats(prof_glob)
         stats.sort_stats('cumulative', 'calls')
         stats.print_stats(50)
 
@@ -638,8 +680,8 @@ def resume_tests(options, layer_name, layers, failures, errors):
         args.extend(options.original_testrunner_args[1:])
 
         # this is because of a bug in Python (http://www.python.org/sf/900092)
-        if (hotshot is not None and options.profile
-        and sys.version_info[:3] <= (2,4,1)):
+        if (options.profile == 'hotshot'
+            and sys.version_info[:3] <= (2,4,1)):
             args.insert(1, '-O')
 
         if sys.platform.startswith('win'):
@@ -1626,10 +1668,11 @@ out.
 """)
 
 analysis.add_option(
-    '--profile', action="store_true", dest='profile',
+    '--profile', action="store", dest='profile', type="choice",
+    choices=available_profilers.keys(),
     help="""\
-Run the tests under hotshot and display the top 50 stats, sorted by
-cumulative time and number of calls.
+Run the tests under cProfiler or hotshot and display the top 50 stats, sorted
+by cumulative time and number of calls.
 """)
 
 def do_pychecker(*args):
@@ -2065,6 +2108,23 @@ def test_suite():
                         ]),
                     )
                 )
+        try:
+            import cProfile
+        except ImportError:
+            pass
+        else:
+            suites.append(
+                doctest.DocFileSuite(
+                    'testrunner-profiling-cprofiler.txt',
+                    setUp=setUp, tearDown=tearDown,
+                    optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
+                    checker = renormalizing.RENormalizing([
+                        (re.compile(r'tests_profile[.]\S*[.]prof'),
+                         'tests_profile.*.prof'),
+                        ]),
+                    )
+                )
+
 
     if hasattr(sys, 'gettotalrefcount'):
         suites.append(
