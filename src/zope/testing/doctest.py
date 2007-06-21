@@ -354,7 +354,10 @@ class _OutputRedirectingPdb(pdb.Pdb):
     def __init__(self, out):
         self.__out = out
         self.__debugger_used = False
-        pdb.Pdb.__init__(self)
+        try:
+	    pdb.Pdb.__init__(self, stdin=sys.stdin, stdout=out)
+        except TypeError:
+            pdb.Pdb.__init__(self) 
 
     def set_trace(self):
         self.__debugger_used = True

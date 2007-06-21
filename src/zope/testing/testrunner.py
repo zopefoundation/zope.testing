@@ -2015,6 +2015,9 @@ def test_suite():
                     r'exceptions.\1Error:'),
 
         (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
+        (re.compile(r"<module>"),(r'?')),
+        (re.compile(r"<type 'exceptions.(\w+)Error'>:"),
+                    r'exceptions.\1Error:'),
         (re.compile("'[A-Za-z]:\\\\"), "'"), # hopefully, we'll make Windows happy
         (re.compile(r'\\\\'), '/'), # more Windows happiness
         (re.compile(r'\\'), '/'), # even more Windows happiness
