@@ -45,6 +45,16 @@ testrunner.py
   The test runner module.  This is typically wrapped by a test.py script that
   sets up options to run a particular set of tests.
 
+
+Getting started
+***************
+
+zope.testing uses buildout.  To start, run ``python bootstrap.py``.  It will
+create a number of directories and the ``bin/buildout`` script.  Next, run
+``bin/buildout``.  It will create a test script for you.  Now, run ``bin/test``
+to run the zope.testing test suite.
+
+
 Releases
 ********
 
