@@ -1208,13 +1208,15 @@ def check_suite(suite, module_name):
 
 
 
-class StartUpFailure:
+class StartUpFailure(unittest.TestCase):
+    """Empty test case added to the test suite to indicate import failures."""
 
     def __init__(self, options, module, exc_info):
         if options.post_mortem:
             post_mortem(exc_info)
         self.module = module
         self.exc_info = exc_info
+
 
 def find_test_files(options):
     found = {}
