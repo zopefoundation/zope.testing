@@ -444,8 +444,7 @@ Test Suites with None for suites or tests
     <BLANKLINE>
     Module: sample1.sampletests_none_test
     <BLANKLINE>
-    TypeError: Invalid test, None,
-    in test_suite from sample1.sampletests_none_test
+    TypeError: ...
     <BLANKLINE>
     <BLANKLINE>
     Total: 0 tests, 0 failures, 0 errors
