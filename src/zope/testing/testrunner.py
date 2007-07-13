@@ -2115,6 +2115,7 @@ def test_suite():
                 )
         try:
             import cProfile
+            import pstats
         except ImportError:
             pass
         else:
