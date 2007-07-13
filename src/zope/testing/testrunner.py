@@ -1195,7 +1195,16 @@ def find_suites(options):
                 yield suite
                 break
 
+
 def check_suite(suite, module_name):
+    """Check for bad tests in a test suite.
+
+    "Bad tests" are those that do not inherit from unittest.TestCase.
+
+    Note that this function is pointless on Python 2.5, because unittest itself
+    checks for this in TestSuite.addTest.  It is, however, useful on earlier
+    Pythons.
+    """
     for x in suite:
         if isinstance(x, unittest.TestSuite):
             check_suite(x, module_name)
