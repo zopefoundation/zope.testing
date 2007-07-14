@@ -1886,7 +1886,7 @@ def get_options(args=None, defaults=None):
                 options.test = [test_filter]
 
             if positional:
-                parser.error("Too mant positional arguments")
+                parser.error("Too many positional arguments")
 
     options.ignore_dir = dict([(d,1) for d in options.ignore_dir])
     options.test_file_pattern = re.compile(options.test_file_pattern).search
