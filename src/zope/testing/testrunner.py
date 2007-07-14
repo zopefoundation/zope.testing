@@ -326,7 +326,7 @@ class OutputFormatter(object):
         """Report an error with a big ASCII banner."""
         print
         print '*'*70
-        print message
+        self.error(message)
         print '*'*70
         print
 
@@ -367,15 +367,15 @@ class OutputFormatter(object):
             for test in import_errors:
                 print "  " + test.module
 
-    def totals(self, n_tests, n_failures, n_errors):
-        """Report totals (number of tests, failures, and errors)."""
-        print "Total: %s tests, %s failures, %s errors" % (
-                        n_tests, n_failures, n_errors)
-
     def summary(self, n_tests, n_failures, n_errors, n_seconds):
-        """Summarize the results."""
+        """Summarize the results of a single test layer."""
         print ("  Ran %s tests with %s failures and %s errors in %.3f seconds."
                % (n_tests, n_failures, n_errors, n_seconds))
+
+    def totals(self, n_tests, n_failures, n_errors):
+        """Summarize the results of all layers."""
+        print "Total: %s tests, %s failures, %s errors" % (
+                        n_tests, n_failures, n_errors)
 
     def list_of_tests(self, tests, layer_name):
         """Report a list of test names."""
@@ -527,7 +527,10 @@ class OutputFormatter(object):
         """Report an error with a traceback."""
         print
         print msg
+        print self.format_traceback(exc_info)
 
+    def format_traceback(self, exc_info):
+        """Format the traceback."""
         v = exc_info[1]
         if isinstance(v, doctest.DocTestFailureException):
             tb = v.args[0]
@@ -542,8 +545,7 @@ class OutputFormatter(object):
                 )
         else:
             tb = "".join(traceback.format_exception(*exc_info))
-
-        print tb
+        return tb
 
     def stop_test(self, test):
         """Clean up the output state after a test."""
@@ -559,6 +561,220 @@ class OutputFormatter(object):
             sys.stdout.write('\r' + (' ' * self.last_width) + '\r')
         if self.verbose == 1 or self.progress:
             print
+
+
+class ColorfulOutputFormatter(OutputFormatter):
+    """Output formatter that uses ANSI color codes.
+
+    Like syntax highlighting in your text editor, colorizing
+    test failures helps the developer.
+    """
+
+    # These colors are carefully chosen to have enough contrast
+    # on terminals with both black and white background.
+    colorscheme = {'normal': 'normal',
+                   'default': 'default',
+                   'info': 'normal',
+                   'error': 'brightred',
+                   'number': 'green',
+                   'ok-number': 'green',
+                   'error-number': 'brightred',
+                   'filename': 'lightblue',
+                   'lineno': 'lightred',
+                   'testname': 'lightcyan',
+                   'failed-example': 'cyan',
+                   'expected-output': 'green',
+                   'actual-output': 'red',
+                   'character-diffs': 'magenta',
+                   'diff-chunk': 'magenta',
+                   'exception': 'red'}
+
+    # Map prefix character to color in diff output.  This handles ndiff and
+    # udiff correctly, but not cdiff.  In cdiff we ought to highlight '!' as
+    # expected-output until we see a '-', then highlight '!' as actual-output,
+    # until we see a '*', then switch back to highlighting '!' as
+    # expected-output.  Nevertheless, coloried cdiffs are reasonably readable,
+    # so I'm not going to fix this.
+    #   -- mgedmin
+    diff_color = {'-': 'expected-output',
+                  '+': 'actual-output',
+                  '?': 'character-diffs',
+                  '@': 'diff-chunk',
+                  '*': 'diff-chunk',
+                  '!': 'actual-output',}
+
+    prefixes = [('dark', '0;'),
+                ('light', '1;'),
+                ('bright', '1;'),
+                ('bold', '1;'),]
+
+    colorcodes = {'default': 0, 'normal': 0,
+                  'black': 30,
+                  'red': 31,
+                  'green': 32,
+                  'brown': 33, 'yellow': 33,
+                  'blue': 34,
+                  'magenta': 35,
+                  'cyan': 36,
+                  'grey': 37, 'gray': 37, 'white': 37}
+
+    def color_code(self, color):
+        """Convert a color description (e.g. 'lightgray') to a terminal code."""
+        prefix_code = ''
+        for prefix, code in self.prefixes:
+            if color.startswith(prefix):
+                color = color[len(prefix):]
+                prefix_code = code
+                break
+        color_code = self.colorcodes[color]
+        return '\033[%s%sm' % (prefix_code, color_code)
+
+    def color(self, what):
+        """Pick a named color from the color scheme"""
+        return self.color_code(self.colorscheme[what])
+
+    def colorize(self, what, message):
+        """Wrap message in color."""
+        return self.color(what) + message + self.color_code('normal')
+
+    def error_count_color(self, n):
+        """Choose a color for the number of errors."""
+        if n:
+            return self.color('error-number')
+        else:
+            return self.color('ok-number')
+
+    def info(self, message):
+        """Print an informative message."""
+        print self.colorize('info', message)
+
+    def error(self, message):
+        """Report an error."""
+        print self.colorize('error', message)
+
+    def error_with_banner(self, message):
+        """Report an error with a big ASCII banner."""
+        print
+        print self.colorize('error', '*'*70)
+        self.error(message)
+        print self.colorize('error', '*'*70)
+        print
+
+    def summary(self, n_tests, n_failures, n_errors, n_seconds):
+        """Summarize the results."""
+        sys.stdout.writelines([
+            self.color('info'), '  Ran ',
+            self.color('number'), str(n_tests),
+            self.color('info'), ' tests with ',
+            self.error_count_color(n_failures), str(n_failures),
+            self.color('info'), ' failures and ',
+            self.error_count_color(n_errors), str(n_errors),
+            self.color('info'), ' errors in ',
+            self.color('number'), '%.3f' % n_seconds,
+            self.color('info'), ' seconds.',
+            self.color('normal'), '\n'])
+
+    def totals(self, n_tests, n_failures, n_errors):
+        """Report totals (number of tests, failures, and errors)."""
+        sys.stdout.writelines([
+            self.color('info'), 'Total: ',
+            self.color('number'), str(n_tests),
+            self.color('info'), ' tests, ',
+            self.error_count_color(n_failures), str(n_failures),
+            self.color('info'), ' failures, ',
+            self.error_count_color(n_errors), str(n_errors),
+            self.color('info'), ' errors',
+            self.color('normal'), '\n'])
+
+    def print_traceback(self, msg, exc_info):
+        """Report an error with a traceback."""
+        print
+        print self.colorize('error', msg)
+        v = exc_info[1]
+        if isinstance(v, doctest.DocTestFailureException):
+            self.print_doctest_failure(v.args[0])
+        elif isinstance(v, doctest.DocTestFailure):
+            # I don't think these are ever used... -- mgedmin
+            tb = self.format_traceback(exc_info)
+            print tb
+        else:
+            tb = self.format_traceback(exc_info)
+            self.print_colorized_traceback(tb)
+
+    def print_doctest_failure(self, formatted_failure):
+        """Report a doctest failure.
+
+        ``formatted_failure`` is a string -- that's what
+        DocTestSuite/DocFileSute
+        """
+        color_of_indented_text = 'normal'
+        colorize_diff = False
+        for line in formatted_failure.splitlines():
+            if line.startswith('File '):
+                m = re.match(r'File "(.*)", line (\d*), in (.*)$', line)
+                if m:
+                    filename, lineno, test = m.groups()
+                    sys.stdout.writelines([
+                        self.color('normal'), 'File "',
+                        self.color('filename'), filename,
+                        self.color('normal'), '", line ',
+                        self.color('lineno'), lineno,
+                        self.color('normal'), ', in ',
+                        self.color('testname'), test,
+                        self.color('normal'), '\n'])
+                else:
+                    print line
+            elif line.startswith('    '):
+                if colorize_diff and len(line) > 4:
+                    color = self.diff_color.get(line[4], color_of_indented_text)
+                    print self.colorize(color, line)
+                else:
+                    print self.colorize(color_of_indented_text, line)
+            else:
+                colorize_diff = False
+                if line.startswith('Failed example'):
+                    color_of_indented_text = 'failed-example'
+                elif line.startswith('Expected:'):
+                    color_of_indented_text = 'expected-output'
+                elif line.startswith('Got:'):
+                    color_of_indented_text = 'actual-output'
+                elif line.startswith('Exception raised:'):
+                    color_of_indented_text = 'exception'
+                elif line.startswith('Differences '):
+                    color_of_indented_text = 'normal'
+                    colorize_diff = True
+                else:
+                    color_of_indented_text = 'normal'
+                print line
+        print
+
+    def print_colorized_traceback(self, formatted_traceback):
+        """Report a test failure.
+
+        ``formatted_traceback`` is a string.
+        """
+        for line in formatted_traceback.splitlines():
+            if line.startswith('  File'):
+                m = re.match(r'  File "(.*)", line (\d*), in (.*)$', line)
+                if m:
+                    filename, lineno, test = m.groups()
+                    sys.stdout.writelines([
+                        self.color('normal'), '  File "',
+                        self.color('filename'), filename,
+                        self.color('normal'), '", line ',
+                        self.color('lineno'), lineno,
+                        self.color('normal'), ', in ',
+                        self.color('testname'), test,
+                        self.color('normal'), '\n'])
+                else:
+                    print line
+            elif line.startswith('    '):
+                print self.colorize('failed-example', line)
+            elif line.startswith('Traceback (most recent call last)'):
+                print line
+            else:
+                print self.colorize('exception', line)
+        print
 
 
 def run(defaults=None, args=None):
@@ -1745,6 +1961,12 @@ Output progress status
 """)
 
 reporting.add_option(
+    '--color', '-c', action="store_true", dest='color',
+    help="""\
+Colorize the output.
+""")
+
+reporting.add_option(
     '-1', '--hide-secondary-failures',
     action="store_true", dest='report_only_first_failure',
     help="""\
@@ -2031,7 +2253,10 @@ def get_options(args=None, defaults=None):
     merge_options(options, defaults)
     options.original_testrunner_args = original_testrunner_args
 
-    options.output = OutputFormatter(options)
+    if options.color:
+        options.output = ColorfulOutputFormatter(options)
+    else:
+        options.output = OutputFormatter(options)
 
     options.fail = False
 
@@ -2201,6 +2426,7 @@ def test_suite():
         (re.compile(r'\r'), '\\\\r\n'),
         (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
         (re.compile(r'\d+[.]\d\d\d s'), 'N.NNN s'),
+        (re.compile(r'\d+[.]\d\d\d{'), 'N.NNN{'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
@@ -2245,6 +2471,7 @@ def test_suite():
         'testrunner-layers.txt',
         'testrunner-layers-api.txt',
         'testrunner-progress.txt',
+        'testrunner-colors.txt',
         'testrunner-simple.txt',
         'testrunner-test-selection.txt',
         'testrunner-verbose.txt',

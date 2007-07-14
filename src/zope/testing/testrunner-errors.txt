@@ -683,7 +683,7 @@ Getting diff output for doctest failures
 
 If a doctest has large expected and actual output, it can be hard to
 see differences when expected and actual output differ.  The --ndiff,
---udiff, and --cdiff options can be used to get diff output pf various
+--udiff, and --cdiff options can be used to get diff output of various
 kinds.
 
     >>> sys.argv = 'test --tests-pattern ^pledge$'.split()
