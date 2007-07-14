@@ -705,7 +705,7 @@ class ColorfulOutputFormatter(OutputFormatter):
         """Report a doctest failure.
 
         ``formatted_failure`` is a string -- that's what
-        DocTestSuite/DocFileSute
+        DocTestSuite/DocFileSuite gives us.
         """
         color_of_indented_text = 'normal'
         colorize_diff = False
