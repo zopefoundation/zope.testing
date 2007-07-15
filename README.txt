@@ -78,6 +78,8 @@ Bugs Fixed:
 
 - Fix some problems with Unicode in doctests.
 
+- Fix "Error reading from subprocess" errors on Unix-like systems.
+
 3.4 (2007/03/29)
 ================
 
