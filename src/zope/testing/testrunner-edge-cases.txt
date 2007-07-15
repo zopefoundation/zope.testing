@@ -429,7 +429,7 @@ Test Suites with None for suites or tests
     TypeError: Invalid test_suite, None, in sample1.sampletests_none_suite
     <BLANKLINE>
     <BLANKLINE>
-    Total: 0 tests, 0 failures, 0 errors
+    Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     <BLANKLINE>
     Test-modules with import problems:
       sample1.sampletests_none_suite
@@ -447,7 +447,7 @@ Test Suites with None for suites or tests
     TypeError: ...
     <BLANKLINE>
     <BLANKLINE>
-    Total: 0 tests, 0 failures, 0 errors
+    Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     <BLANKLINE>
     Test-modules with import problems:
       sample1.sampletests_none_test

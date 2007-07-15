@@ -48,7 +48,7 @@ this option to configure and then build Python.)
     Tearing down left over layers:
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
-    Total: 68 tests, 0 failures, 0 errors
+    Total: 68 tests, 0 failures, 0 errors in N.NNN seconds.
 
 Each layer is repeated the requested number of times.  For each
 iteration after the first, the system refcount and change in system

@@ -118,7 +118,7 @@ Running unit tests:
     Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
 Tearing down left over layers:
     Tear down BaseLayer in N.NNN seconds.
-Total: 4 tests, 0 failures, 0 errors
+Total: 4 tests, 0 failures, 0 errors in N.NNN seconds.
 
 Now lets specify a layer in the suite containing TestSpecifyingNoLayer
 and run the tests again. This demonstrates the other method of specifying
@@ -150,7 +150,7 @@ TestSpecifyingNoLayer tests are run.
 Tearing down left over layers:
   Tear down TopLayer in N.NNN seconds.
   Tear down BaseLayer in N.NNN seconds.
-Total: 4 tests, 0 failures, 0 errors
+Total: 4 tests, 0 failures, 0 errors in N.NNN seconds.
 
 If we inspect our trace of what methods got called in what order, we can
 see that the layer setup and teardown methods only got called once. We can

@@ -74,7 +74,7 @@ resuming tests where it left off:
     <BLANKLINE>
       Ran 6 tests with 2 failures and 2 errors in N.NNN seconds.
       Tear down sample3.sampletests_ntd.Layer ... not supported
-    Total: 8 tests, 2 failures, 2 errors
+    Total: 8 tests, 2 failures, 2 errors in N.NNN seconds.
     True
 
 in the example above, some of the tests run as a subprocess had errors
@@ -152,7 +152,7 @@ Note that debugging doesn't work when running tests in a subprocess:
     <BLANKLINE>
       Ran 6 tests with 0 failures and 4 errors in N.NNN seconds.
       Tear down sample3.sampletests_ntd.Layer ... not supported
-    Total: 8 tests, 0 failures, 4 errors
+    Total: 8 tests, 0 failures, 4 errors in N.NNN seconds.
     True
 
 Similarly, pdb.set_trace doesn't work when running tests in a layer
@@ -232,7 +232,7 @@ that is run as a subprocess:
     <BLANKLINE>
       Ran 7 tests with 0 failures and 0 errors in 0.008 seconds.
       Tear down sample2.sampletests_ntds.Layer ... not supported
-    Total: 8 tests, 0 failures, 0 errors
+    Total: 8 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 
 If you want to use pdb from a test in a layer that is run as a

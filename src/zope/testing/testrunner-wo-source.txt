@@ -64,7 +64,7 @@ delete the compiled Python files too:
     ...            os.remove(os.path.join(root, f))
     >>> testrunner.run(mydefaults, ["test", "--keepbytecode"])
     Running tests at level 1
-    Total: 0 tests, 0 failures, 0 errors
+    Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 
 Finally, passing ``--usecompiled`` asks the test runner to treat .pyc

@@ -49,7 +49,7 @@ directory name given as the parameter will be used to hold the reports.
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
-    Total: 405 tests, 0 failures, 0 errors
+    Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
     lines   cov%   module   (path)
     ...
        52    92%   sample1.sampletests.test1   (testrunner-ex/sample1/sampletests/test1.py)

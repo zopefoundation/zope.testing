@@ -163,7 +163,7 @@ A failed test run highlights the failures in red:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
-    {normal}Total: {green}413{normal} tests, {boldred}3{normal} failures, {boldred}1{normal} errors{normal}
+    {normal}Total: {green}413{normal} tests, {boldred}3{normal} failures, {boldred}1{normal} errors in {green}0.023{normal} seconds.{normal}
     True
 
 The expected and actual outputs of failed doctests are shown in different

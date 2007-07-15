@@ -380,10 +380,10 @@ class OutputFormatter(object):
         print ("  Ran %s tests with %s failures and %s errors in %.3f seconds."
                % (n_tests, n_failures, n_errors, n_seconds))
 
-    def totals(self, n_tests, n_failures, n_errors):
+    def totals(self, n_tests, n_failures, n_errors, n_seconds):
         """Summarize the results of all layers."""
-        print "Total: %s tests, %s failures, %s errors" % (
-                        n_tests, n_failures, n_errors)
+        print "Total: %s tests, %s failures, %s errors in %.3f seconds." % (
+                        n_tests, n_failures, n_errors, n_seconds)
 
     def list_of_tests(self, tests, layer_name):
         """Report a list of test names."""
@@ -698,7 +698,7 @@ class ColorfulOutputFormatter(OutputFormatter):
             self.color('info'), ' seconds.',
             self.color('normal'), '\n'])
 
-    def totals(self, n_tests, n_failures, n_errors):
+    def totals(self, n_tests, n_failures, n_errors, n_seconds):
         """Report totals (number of tests, failures, and errors)."""
         sys.stdout.writelines([
             self.color('info'), 'Total: ',
@@ -707,7 +707,9 @@ class ColorfulOutputFormatter(OutputFormatter):
             self.error_count_color(n_failures), str(n_failures),
             self.color('info'), ' failures, ',
             self.error_count_color(n_errors), str(n_errors),
-            self.color('info'), ' errors',
+            self.color('info'), ' errors in ',
+            self.color('number'), '%.3f' % n_seconds,
+            self.color('info'), ' seconds.',
             self.color('normal'), '\n'])
 
     def print_traceback(self, msg, exc_info):
@@ -1034,6 +1036,8 @@ def run_with_options(options, found_suites=None):
             output.list_of_tests(tests, layer_name)
         return True
 
+    start_time = time.time()
+
     for layer_name, layer, tests in layers_to_run:
         nlayers += 1
         try:
@@ -1051,6 +1055,8 @@ def run_with_options(options, found_suites=None):
             output.info("Tearing down left over layers:")
         tear_down_unneeded(options, (), setup_layers, True)
 
+    total_time = time.time() - start_time
+
     if options.resume_layer:
         sys.stdout.close()
         # Communicate with the parent.  The protocol is obvious:
@@ -1066,7 +1072,7 @@ def run_with_options(options, found_suites=None):
             output.tests_with_failures(failures)
 
         if nlayers != 1:
-            output.totals(ran, len(failures), len(errors))
+            output.totals(ran, len(failures), len(errors), total_time)
 
         output.modules_with_import_problems(import_errors)
 

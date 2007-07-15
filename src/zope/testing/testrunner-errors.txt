@@ -123,7 +123,7 @@ be read only):
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
-    Total: 413 tests, 3 failures, 1 errors
+    Total: 413 tests, 3 failures, 1 errors in N.NNN seconds.
     True
 
 We see that we get an error report and a traceback for the failing
@@ -885,7 +885,7 @@ Then run the tests:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
-    Total: 213 tests, 0 failures, 0 errors
+    Total: 213 tests, 0 failures, 0 errors in N.NNN seconds.
     <BLANKLINE>
     Test-modules with import problems:
       sample2.sampletests_i
@@ -970,7 +970,7 @@ A passing test does not exit.
     ... # doctest: +ELLIPSIS
     Running unit tests:
     ...
-    Total: 364 tests, 0 failures, 0 errors
+    Total: 364 tests, 0 failures, 0 errors in N.NNN seconds.
     ...
     sys.exit was not called
 

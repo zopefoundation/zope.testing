@@ -80,7 +80,7 @@ Now, if we run the tests, without any other options:
       Tear down samplelayers.Layer122 in N.NNN seconds.
       Tear down samplelayers.Layer12 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
-    Total: 405 tests, 0 failures, 0 errors
+    Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 
 we see the normal testrunner output, which summarizes the tests run for
