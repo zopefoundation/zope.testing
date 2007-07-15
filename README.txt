@@ -58,6 +58,26 @@ to run the zope.testing test suite.
 Releases
 ********
 
+Next release
+============
+
+New Features
+------------
+
+- The test runner now works on Python 2.5.
+
+- Added support for cProfile.
+
+- Added output colorizing (-c option).
+
+- Added --hide-secondary-failures and --show-secondary-failures options
+  (https://bugs.launchpad.net/zope3/+bug/115454).
+
+Bugs Fixed:
+-----------
+
+- Fix some problems with Unicode in doctests.
+
 3.4 (2007/03/29)
 ================
 
