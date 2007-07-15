@@ -2474,10 +2474,14 @@ def test_suite():
         (re.compile(r'[.]py\(\d+\)'), r'.py(NNN)'),
         (re.compile(r'[.]py:\d+'), r'.py:NNN'),
         (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
+        (re.compile(r' line {([a-z]+)}\d+{', re.IGNORECASE), r' Line {\1}NNN{'),
 
         # omit traceback entries for unittest.py or doctest.py from
         # output:
         (re.compile(r'^ +File "[^\n]*(doc|unit)test.py", [^\n]+\n[^\n]+\n',
+                    re.MULTILINE),
+         r''),
+        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doc|unit)test.py{\w+}", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
         (re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
