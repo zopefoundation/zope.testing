@@ -24,6 +24,7 @@ import glob
 import logging
 import optparse
 import os
+import errno
 import pdb
 import re
 import sys
@@ -1227,11 +1228,20 @@ def resume_tests(options, layer_name, layers, failures, errors):
                 ])
 
         subin, subout, suberr = os.popen3(args)
-        try:
-            for l in subout:
-                sys.stdout.write(l)
-        except IOError:
-            output.error("Error reading subprocess output for %s" % layer_name)
+        while True:
+            try:
+                for l in subout:
+                    sys.stdout.write(l)
+            except IOError, e:
+                if e.errno == errno.EINTR:
+                    # If the subprocess dies before we finish reading its
+                    # output, a SIGCHLD signal can interrupt the reading.
+                    # The correct thing to to in that case is to retry.
+                    continue
+                output.error("Error reading subprocess output for %s" % layer_name)
+                output.info(str(e))
+            else:
+                break
 
         line = suberr.readline()
         try:
