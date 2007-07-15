@@ -318,6 +318,14 @@ class OutputFormatter(object):
         """Print an informative message."""
         print message
 
+    def info_suboptimal(self, message):
+        """Print an informative message about losing some of the features.
+
+        For example, when you run some tests in a subprocess, you lose the
+        ability to use the debugger.
+        """
+        print message
+
     def error(self, message):
         """Report an error."""
         print message
@@ -575,6 +583,7 @@ class ColorfulOutputFormatter(OutputFormatter):
     colorscheme = {'normal': 'normal',
                    'default': 'default',
                    'info': 'normal',
+                   'suboptimal-behaviour': 'magenta',
                    'error': 'brightred',
                    'number': 'green',
                    'ok-number': 'green',
@@ -648,6 +657,14 @@ class ColorfulOutputFormatter(OutputFormatter):
         """Print an informative message."""
         print self.colorize('info', message)
 
+    def info_suboptimal(self, message):
+        """Print an informative message about losing some of the features.
+
+        For example, when you run some tests in a subprocess, you lose the
+        ability to use the debugger.
+        """
+        print self.colorize('suboptimal-behaviour', message)
+
     def error(self, message):
         """Report an error."""
         print self.colorize('error', message)
@@ -659,6 +676,13 @@ class ColorfulOutputFormatter(OutputFormatter):
         self.error(message)
         print self.colorize('error', '*'*70)
         print
+
+    def tear_down_not_supported(self):
+        """Report that we could not tear down a layer.
+
+        Should be called right after start_tear_down().
+        """
+        print "...", self.colorize('suboptimal-behaviour', "not supported")
 
     def summary(self, n_tests, n_failures, n_errors, n_seconds):
         """Summarize the results."""
@@ -1163,7 +1187,7 @@ def run_layer(options, layer_name, layer, tests, setup_layers,
     tear_down_unneeded(options, needed, setup_layers)
 
     if options.resume_layer != None:
-        output.info( "  Running in a subprocess.")
+        output.info_suboptimal( "  Running in a subprocess.")
 
     setup_layer(options, layer, setup_layers)
     return run_tests(options, tests, layer_name, failures, errors)
