@@ -238,7 +238,6 @@ a test runner wrapper script), but no colorized output is desired, the -C or
       Tear down samplelayers.Layer1 in 0.000 seconds.
     False
 
-
     >>> sys.argv = 'test --layer 122 -c --no-color'.split()
     >>> testrunner.run(defaults)
     Running samplelayers.Layer122 tests:
@@ -251,6 +250,24 @@ a test runner wrapper script), but no colorized output is desired, the -C or
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
     False
+
+The --auto-color option will determine if stdout is a terminal, and only enable
+colorized output if so.  Of course, stdout is not a terminal here, so no color
+will be produced:
+
+    >>> sys.argv = 'test --layer 122 --auto-color'.split()
+    >>> testrunner.run(defaults)
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
 
 Clean up:
 

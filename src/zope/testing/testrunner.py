@@ -1977,6 +1977,9 @@ parser.add_option_group(searching)
 ######################################################################
 # Reporting
 
+def handle_auto_color(option, opt_str, value, parser):
+    parser.values.color = sys.stdout.isatty()
+
 reporting = optparse.OptionGroup(parser, "Reporting", """\
 Reporting options control basic aspects of test-runner output
 """)
@@ -2011,6 +2014,12 @@ reporting.add_option(
     help="""\
 Do not colorize the output.  This is the default, but can be used to
 counter a previous use of --color or -c.
+""")
+
+reporting.add_option(
+    '--auto-color', action="callback", callback=handle_auto_color,
+    help="""\
+Colorize the output, but only when stdout is a terminal.
 """)
 
 reporting.add_option(
