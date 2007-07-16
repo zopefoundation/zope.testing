@@ -221,6 +221,37 @@ apart:
     <BLANKLINE>
     {normal}  Ran {green}1{normal} tests with {boldred}1{normal} failures and {green}0{normal} errors in {green}0.003{normal} seconds.{normal}
 
+If -c or --color have been previously provided on the command line (perhaps by
+a test runner wrapper script), but no colorized output is desired, the -C or
+--no-color options will disable colorized output:
+
+    >>> sys.argv = 'test --layer 122 -c -C'.split()
+    >>> testrunner.run(defaults)
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
+
+    >>> sys.argv = 'test --layer 122 -c --no-color'.split()
+    >>> testrunner.run(defaults)
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
 Clean up:
 
     >>> sys.stdout = real_stdout

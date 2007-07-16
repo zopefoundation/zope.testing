@@ -2007,6 +2007,13 @@ Colorize the output.
 """)
 
 reporting.add_option(
+    '--no-color', '-C', action="store_false", dest='color',
+    help="""\
+Do not colorize the output.  This is the default, but can be used to
+counter a previous use of --color or -c.
+""")
+
+reporting.add_option(
     '-1', '--hide-secondary-failures',
     action="store_true", dest='report_only_first_failure',
     help="""\
