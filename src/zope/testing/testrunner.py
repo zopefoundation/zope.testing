@@ -1068,7 +1068,7 @@ def run_with_options(options, found_suites=None):
             print >> original_stderr, ' '.join(str(test).strip().split('\n'))
 
     else:
-        if options.verbose > 1:
+        if options.verbose:
             output.tests_with_errors(errors)
             output.tests_with_failures(failures)
 
