@@ -2015,7 +2015,7 @@ counter a previous use of --color or -c.
 
 # We use a noop callback because the actual processing will be done in the
 # get_options function, but we want optparse to generate appropriate help info
-# for us, so we add the option anyway.
+# for us, so we add an option anyway.
 reporting.add_option(
     '--auto-color', action="callback", callback=lambda *args: None,
     help="""\
@@ -2291,6 +2291,23 @@ default_setup_args = [
     ]
 
 def get_options(args=None, defaults=None):
+    # Because we want to inspect stdout and decide to colorize or not, we
+    # replace the --auto-color option with the appropriate --color or
+    # --no-color option.  That way the subprocess doesn't have to decide (which
+    # it would do incorrectly anyway because stdout wouled be a pipe).
+    def apply_auto_color(args):
+            if '--auto-color' in args:
+                if sys.stdout.isatty():
+                    colorization = '--color'
+                else:
+                    colorization = '--no-color'
+
+                args[:] = [arg.replace('--auto-color', colorization)
+                           for arg in args]
+
+    apply_auto_color(args)
+    apply_auto_color(defaults)
+
     default_setup, _ = parser.parse_args(default_setup_args)
     assert not _
     if defaults:
@@ -2302,18 +2319,6 @@ def get_options(args=None, defaults=None):
 
     if args is None:
         args = sys.argv
-
-    # Because we want to inspect stdout and decide to colorize or not, we
-    # replace the --auto-color option with the appropriate --color or
-    # --no-color option.  That way the subprocess doesn't have to decide (which
-    # it would do incorrectly anyway because stdout wouled be a pipe).
-    if '--auto-color' in args:
-        if sys.stdout.isatty():
-            colorization = '--color'
-        else:
-            colorization = '--no-color'
-
-        args = [arg.replace('--auto-color', colorization) for arg in args]
 
     original_testrunner_args = args
     args = args[1:]
