@@ -2296,14 +2296,14 @@ def get_options(args=None, defaults=None):
     # --no-color option.  That way the subprocess doesn't have to decide (which
     # it would do incorrectly anyway because stdout wouled be a pipe).
     def apply_auto_color(args):
-            if args and '--auto-color' in args:
-                if sys.stdout.isatty():
-                    colorization = '--color'
-                else:
-                    colorization = '--no-color'
+        if args and '--auto-color' in args:
+            if sys.stdout.isatty():
+                colorization = '--color'
+            else:
+                colorization = '--no-color'
 
-                args[:] = [arg.replace('--auto-color', colorization)
-                           for arg in args]
+            args[:] = [arg.replace('--auto-color', colorization)
+                       for arg in args]
 
     apply_auto_color(args)
     apply_auto_color(defaults)
