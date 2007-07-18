@@ -2,7 +2,7 @@ Errors and Failures
 ===================
 
 Let's look at tests that have errors and failures, first we need to make a
-temporary copy of the entire testing dirctory (except .svn files which may
+temporary copy of the entire testing directory (except .svn files which may
 be read only):
 
     >>> import os.path, sys, tempfile, shutil
@@ -713,7 +713,7 @@ kinds.
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
 
 Here, the actual output uses the word "and" rather than the word "an",
-but it's a bit hard to pick this out.  Wr can use the various diff
+but it's a bit hard to pick this out.  We can use the various diff
 outputs to see this better. We could modify the test to ask for diff
 output, but it's easier to use one of the diff options.
 
@@ -898,8 +898,8 @@ Then run the tests:
 Unicode Errors
 --------------
 
-There was a bug preventing decent error reporing when a result contained
-unicode and another not::
+There was a bug preventing decent error reporting when a result contained
+unicode and another not:
 
     >>> sys.argv = 'test --tests-pattern ^unicode$ -uv'.split()
     >>> testrunner.run(defaults)
