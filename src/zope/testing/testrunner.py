@@ -806,7 +806,7 @@ class ColorfulOutputFormatter(OutputFormatter):
 
 def run(defaults=None, args=None):
     if args is None:
-        args = sys.argv
+        args = sys.argv[:]
 
     # Set the default logging policy.
     # XXX There are no tests for this logging behavior.
@@ -1977,9 +1977,6 @@ parser.add_option_group(searching)
 ######################################################################
 # Reporting
 
-def handle_auto_color(option, opt_str, value, parser):
-    parser.values.color = sys.stdout.isatty()
-
 reporting = optparse.OptionGroup(parser, "Reporting", """\
 Reporting options control basic aspects of test-runner output
 """)
@@ -2016,8 +2013,11 @@ Do not colorize the output.  This is the default, but can be used to
 counter a previous use of --color or -c.
 """)
 
+# We use a noop callback because the actual processing will be done in the
+# get_options function, but we want optparse to generate appropriate help info
+# for us, so we add the option anyway.
 reporting.add_option(
-    '--auto-color', action="callback", callback=handle_auto_color,
+    '--auto-color', action="callback", callback=lambda *args: None,
     help="""\
 Colorize the output, but only when stdout is a terminal.
 """)
@@ -2291,7 +2291,6 @@ default_setup_args = [
     ]
 
 def get_options(args=None, defaults=None):
-
     default_setup, _ = parser.parse_args(default_setup_args)
     assert not _
     if defaults:
@@ -2303,8 +2302,22 @@ def get_options(args=None, defaults=None):
 
     if args is None:
         args = sys.argv
+
+    # Because we want to inspect stdout and decide to colorize or not, we
+    # replace the --auto-color option with the appropriate --color or
+    # --no-color option.  That way the subprocess doesn't have to decide (which
+    # it would do incorrectly anyway because stdout wouled be a pipe).
+    if '--auto-color' in args:
+        if sys.stdout.isatty():
+            colorization = '--color'
+        else:
+            colorization = '--no-color'
+
+        args = [arg.replace('--auto-color', colorization) for arg in args]
+
     original_testrunner_args = args
     args = args[1:]
+
     options, positional = parser.parse_args(args)
     merge_options(options, defaults)
     options.original_testrunner_args = original_testrunner_args
