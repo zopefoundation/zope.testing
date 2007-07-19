@@ -376,15 +376,25 @@ class OutputFormatter(object):
             for test in import_errors:
                 print "  " + test.module
 
+    def format_seconds(self, n_seconds):
+        """Format a time in seconds."""
+        return "%.3f seconds" % n_seconds
+
+    def format_seconds_short(self, n_seconds):
+        """Format a time in seconds (short version)."""
+        return "%.3f s" % n_seconds
+
     def summary(self, n_tests, n_failures, n_errors, n_seconds):
         """Summarize the results of a single test layer."""
-        print ("  Ran %s tests with %s failures and %s errors in %.3f seconds."
-               % (n_tests, n_failures, n_errors, n_seconds))
+        print ("  Ran %s tests with %s failures and %s errors in %s."
+               % (n_tests, n_failures, n_errors,
+                  self.format_seconds(n_seconds)))
 
     def totals(self, n_tests, n_failures, n_errors, n_seconds):
         """Summarize the results of all layers."""
-        print "Total: %s tests, %s failures, %s errors in %.3f seconds." % (
-                        n_tests, n_failures, n_errors, n_seconds)
+        print ("Total: %s tests, %s failures, %s errors in %s."
+               % (n_tests, n_failures, n_errors,
+                  self.format_seconds(n_seconds)))
 
     def list_of_tests(self, tests, layer_name):
         """Report a list of test names."""
@@ -437,7 +447,7 @@ class OutputFormatter(object):
 
         Should be called right after start_set_up().
         """
-        print "in %.3f seconds." % seconds
+        print "in %s." % self.format_seconds(seconds)
 
     def start_tear_down(self, layer_name):
         """Report that we're tearing down a layer.
@@ -453,7 +463,7 @@ class OutputFormatter(object):
 
         Should be called right after start_tear_down().
         """
-        print "in %.3f seconds." % seconds
+        print "in %s." % self.format_seconds(seconds)
 
     def tear_down_not_supported(self):
         """Report that we could not tear down a layer.
@@ -502,7 +512,7 @@ class OutputFormatter(object):
         The next output operation should be stop_test().
         """
         if self.verbose > 2:
-            s = " (%.3f s)" % seconds
+            s = " (%s)" % self.format_seconds_short(seconds)
             sys.stdout.write(s)
             self.test_width += len(s) + 1
 
@@ -514,7 +524,7 @@ class OutputFormatter(object):
         The next output operation should be stop_test().
         """
         if self.verbose > 2:
-            print " (%.3f s)" % seconds
+            print " (%s)" % self.format_seconds_short(seconds)
         print
         self.print_traceback("Error in test %s" % test, exc_info)
         self.test_width = self.last_width = 0
@@ -527,7 +537,7 @@ class OutputFormatter(object):
         The next output operation should be stop_test().
         """
         if self.verbose > 2:
-            print " (%.3f s)" % seconds
+            print " (%s)" % self.format_seconds_short(seconds)
         print
         self.print_traceback("Failure in test %s" % test, exc_info)
         self.test_width = self.last_width = 0
@@ -643,9 +653,9 @@ class ColorfulOutputFormatter(OutputFormatter):
         """Pick a named color from the color scheme"""
         return self.color_code(self.colorscheme[what])
 
-    def colorize(self, what, message):
+    def colorize(self, what, message, normal='normal'):
         """Wrap message in color."""
-        return self.color(what) + message + self.color_code('normal')
+        return self.color(what) + message + self.color(normal)
 
     def error_count_color(self, n):
         """Choose a color for the number of errors."""
@@ -685,6 +695,10 @@ class ColorfulOutputFormatter(OutputFormatter):
         """
         print "...", self.colorize('suboptimal-behaviour', "not supported")
 
+    def format_seconds(self, n_seconds, normal='normal'):
+        """Format a time in seconds."""
+        return self.colorize('number', "%.3f" % n_seconds, normal) + ' seconds'
+
     def summary(self, n_tests, n_failures, n_errors, n_seconds):
         """Summarize the results."""
         sys.stdout.writelines([
@@ -695,8 +709,7 @@ class ColorfulOutputFormatter(OutputFormatter):
             self.color('info'), ' failures and ',
             self.error_count_color(n_errors), str(n_errors),
             self.color('info'), ' errors in ',
-            self.color('number'), '%.3f' % n_seconds,
-            self.color('info'), ' seconds.',
+            self.format_seconds(n_seconds, 'info'), '.',
             self.color('normal'), '\n'])
 
     def totals(self, n_tests, n_failures, n_errors, n_seconds):
@@ -709,8 +722,7 @@ class ColorfulOutputFormatter(OutputFormatter):
             self.color('info'), ' failures, ',
             self.error_count_color(n_errors), str(n_errors),
             self.color('info'), ' errors in ',
-            self.color('number'), '%.3f' % n_seconds,
-            self.color('info'), ' seconds.',
+            self.format_seconds(n_seconds, 'info'), '.',
             self.color('normal'), '\n'])
 
     def print_traceback(self, msg, exc_info):

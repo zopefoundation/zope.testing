@@ -48,14 +48,14 @@ A successful test run soothes the developer with warm green colors:
     >>> sys.argv = 'test --layer 122 -c'.split()
     >>> testrunner.run(defaults)
     {normal}Running samplelayers.Layer122 tests:{normal}
-      Set up samplelayers.Layer1 in 0.000 seconds.
-      Set up samplelayers.Layer12 in 0.000 seconds.
-      Set up samplelayers.Layer122 in 0.000 seconds.
+      Set up samplelayers.Layer1 in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer12 in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer122 in {green}0.000{normal} seconds.
     {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.007{normal} seconds.{normal}
     {normal}Tearing down left over layers:{normal}
-      Tear down samplelayers.Layer122 in 0.000 seconds.
-      Tear down samplelayers.Layer12 in 0.000 seconds.
-      Tear down samplelayers.Layer1 in 0.000 seconds.
+      Tear down samplelayers.Layer122 in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layer12 in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layer1 in {green}0.000{normal} seconds.
     False
 
 A failed test run highlights the failures in red:
@@ -133,36 +133,36 @@ A failed test run highlights the failures in red:
     <BLANKLINE>
     {normal}  Ran {green}200{normal} tests with {boldred}3{normal} failures and {boldred}1{normal} errors in {green}0.045{normal} seconds.{normal}
     {normal}Running samplelayers.Layer1 tests:{normal}
-      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer1 in {green}0.000{normal} seconds.
     {normal}  Ran {green}9{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.001{normal} seconds.{normal}
     {normal}Running samplelayers.Layer11 tests:{normal}
-      Set up samplelayers.Layer11 in 0.000 seconds.
+      Set up samplelayers.Layer11 in {green}0.000{normal} seconds.
     {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.007{normal} seconds.{normal}
     {normal}Running samplelayers.Layer111 tests:{normal}
-      Set up samplelayers.Layerx in 0.000 seconds.
-      Set up samplelayers.Layer111 in 0.000 seconds.
+      Set up samplelayers.Layerx in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer111 in {green}0.000{normal} seconds.
     {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.008{normal} seconds.{normal}
     {normal}Running samplelayers.Layer112 tests:{normal}
-      Tear down samplelayers.Layer111 in 0.000 seconds.
-      Set up samplelayers.Layer112 in 0.000 seconds.
+      Tear down samplelayers.Layer111 in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer112 in {green}0.000{normal} seconds.
     {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.008{normal} seconds.{normal}
     {normal}Running samplelayers.Layer12 tests:{normal}
-      Tear down samplelayers.Layer112 in 0.000 seconds.
-      Tear down samplelayers.Layerx in 0.000 seconds.
-      Tear down samplelayers.Layer11 in 0.000 seconds.
-      Set up samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer112 in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layerx in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layer11 in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer12 in {green}0.000{normal} seconds.
     {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.007{normal} seconds.{normal}
     {normal}Running samplelayers.Layer121 tests:{normal}
-      Set up samplelayers.Layer121 in 0.000 seconds.
+      Set up samplelayers.Layer121 in {green}0.000{normal} seconds.
     {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.007{normal} seconds.{normal}
     {normal}Running samplelayers.Layer122 tests:{normal}
-      Tear down samplelayers.Layer121 in 0.000 seconds.
-      Set up samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer121 in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer122 in {green}0.000{normal} seconds.
     {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.008{normal} seconds.{normal}
     {normal}Tearing down left over layers:{normal}
-      Tear down samplelayers.Layer122 in 0.000 seconds.
-      Tear down samplelayers.Layer12 in 0.000 seconds.
-      Tear down samplelayers.Layer1 in 0.000 seconds.
+      Tear down samplelayers.Layer122 in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layer12 in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layer1 in {green}0.000{normal} seconds.
     {normal}Total: {green}413{normal} tests, {boldred}3{normal} failures, {boldred}1{normal} errors in {green}0.023{normal} seconds.{normal}
     True
 
