@@ -378,7 +378,11 @@ class OutputFormatter(object):
 
     def format_seconds(self, n_seconds):
         """Format a time in seconds."""
-        return "%.3f seconds" % n_seconds
+        if n_seconds >= 60:
+            n_minutes, n_seconds = divmod(n_seconds, 60)
+            return "%d minutes %.3f seconds" % (n_minutes, n_seconds)
+        else:
+            return "%.3f seconds" % n_seconds
 
     def format_seconds_short(self, n_seconds):
         """Format a time in seconds (short version)."""
@@ -697,7 +701,14 @@ class ColorfulOutputFormatter(OutputFormatter):
 
     def format_seconds(self, n_seconds, normal='normal'):
         """Format a time in seconds."""
-        return self.colorize('number', "%.3f" % n_seconds, normal) + ' seconds'
+        if n_seconds >= 60:
+            n_minutes, n_seconds = divmod(n_seconds, 60)
+            return "%s minutes %s seconds" % (
+                        self.colorize('number', '%d' % n_minutes, normal),
+                        self.colorize('number', '%.3f' % n_seconds, normal))
+        else:
+            return "%s seconds" % (
+                        self.colorize('number', '%.3f' % n_seconds, normal))
 
     def summary(self, n_tests, n_failures, n_errors, n_seconds):
         """Summarize the results."""
