@@ -43,6 +43,10 @@ test file, let's wrap sys.stdout in a simple terminal interpreter
     >>> real_stdout = sys.stdout
     >>> sys.stdout = Terminal(sys.stdout)
 
+
+Successful test
+---------------
+
 A successful test run soothes the developer with warm green colors:
 
     >>> sys.argv = 'test --layer 122 -c'.split()
@@ -57,6 +61,10 @@ A successful test run soothes the developer with warm green colors:
       Tear down samplelayers.Layer12 in {green}0.000{normal} seconds.
       Tear down samplelayers.Layer1 in {green}0.000{normal} seconds.
     False
+
+
+Failed test
+-----------
 
 A failed test run highlights the failures in red:
 
@@ -166,6 +174,10 @@ A failed test run highlights the failures in red:
     {normal}Total: {green}413{normal} tests, {boldred}3{normal} failures, {boldred}1{normal} errors in {green}0.023{normal} seconds.{normal}
     True
 
+
+Doctest failures
+----------------
+
 The expected and actual outputs of failed doctests are shown in different
 colors:
 
@@ -221,6 +233,10 @@ apart:
     <BLANKLINE>
     {normal}  Ran {green}1{normal} tests with {boldred}1{normal} failures and {green}0{normal} errors in {green}0.003{normal} seconds.{normal}
 
+
+Disabling colors
+----------------
+
 If -c or --color have been previously provided on the command line (perhaps by
 a test runner wrapper script), but no colorized output is desired, the -C or
 --no-color options will disable colorized output:
@@ -250,6 +266,10 @@ a test runner wrapper script), but no colorized output is desired, the -C or
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
     False
+
+
+Autodetecting colors
+--------------------
 
 The --auto-color option will determine if stdout is a terminal, and only enable
 colorized output if so.  Of course, stdout is not a terminal here, so no color
