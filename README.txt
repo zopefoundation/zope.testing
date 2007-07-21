@@ -64,6 +64,16 @@ Next release
 New Features
 ------------
 
+- RENormalizer accepts plain Python callables.
+
+- Added --slow-test option.
+
+3.5.0 (2007/07/19)
+==================
+
+New Features
+------------
+
 - The test runner now works on Python 2.5.
 
 - Added support for cProfile.

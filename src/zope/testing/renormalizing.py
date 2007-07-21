@@ -171,6 +171,56 @@ When we get differencs, we output them with normalized text:
         <BLANKLINE>
     <BLANKLINE>
 
+If regular expressions aren't expressive enough, you can use arbitrary Python
+callables to transform the text.  For example, suppose you want to ignore
+case during comparison:
+
+    >>> checker = RENormalizing([
+    ...    lambda s: s.lower(),
+    ...    lambda s: s.replace('<blankline>', '<BLANKLINE>'),
+    ...    ])
+
+    >>> want = '''\
+    ... Usage: thundermonkey [options] [url]
+    ... <BLANKLINE>
+    ... Options:
+    ...     -h    display this help message
+    ... '''
+
+    >>> got = '''\
+    ... usage: thundermonkey [options] [URL]
+    ...
+    ... options:
+    ...     -h    Display this help message
+    ... '''
+
+    >>> checker.check_output(want, got, 0)
+    True
+
+Suppose we forgot that <BLANKLINE> must be in upper case:
+
+    >>> checker = RENormalizing([
+    ...    lambda s: s.lower(),
+    ...    ])
+
+    >>> checker.check_output(want, got, 0)
+    False
+
+The difference would show us that:
+
+    >>> source = '''\
+    ... >>> print_help_message()
+    ... ''' + want
+    >>> example = doctest.Example(source, want)
+    >>> print checker.output_difference(example, got,
+    ...                                 doctest.REPORT_NDIFF),
+    Differences (ndiff with -expected +actual):
+          usage: thundermonkey [options] [url]
+        - <blankline>
+        + <BLANKLINE>
+          options:
+              -h    display this help message
+
 $Id$
 """
 
@@ -181,15 +231,21 @@ class RENormalizing(doctest.OutputChecker):
     """
 
     def __init__(self, patterns):
-        self.patterns = patterns
+        self.transformers = map(self._cook, patterns)
+
+    def _cook(self, pattern):
+        if callable(pattern):
+            return pattern
+        regexp, replacement = pattern
+        return lambda text: regexp.sub(replacement, text)
 
     def check_output(self, want, got, optionflags):
         if got == want:
             return True
 
-        for pattern, repl in self.patterns:
-            want = pattern.sub(repl, want)
-            got = pattern.sub(repl, got)
+        for transformer in self.transformers:
+            want = transformer(want)
+            got = transformer(got)
 
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
 
@@ -208,9 +264,9 @@ class RENormalizing(doctest.OutputChecker):
         # Dang, this isn't as easy to override as we might wish
         original = want
 
-        for pattern, repl in self.patterns:
-            want = pattern.sub(repl, want)
-            got = pattern.sub(repl, got)
+        for transformer in self.transformers:
+            want = transformer(want)
+            got = transformer(got)
 
         # temporarily hack example with normalized want:
         example.want = want
