@@ -2035,6 +2035,22 @@ Output progress status
 """)
 
 reporting.add_option(
+    '--no-progress',action="store_false", dest='progress',
+    help="""\
+Do not output progress status.  This is the default, but can be used to
+counter a previous use of --progress or -p.
+""")
+
+# We use a noop callback because the actual processing will be done in the
+# get_options function, but we want optparse to generate appropriate help info
+# for us, so we add an option anyway.
+reporting.add_option(
+    '--auto-progress', action="callback", callback=lambda *args: None,
+    help="""\
+Output progress status, but only when stdout is a terminal.
+""")
+
+reporting.add_option(
     '--color', '-c', action="store_true", dest='color',
     help="""\
 Colorize the output.
@@ -2347,8 +2363,21 @@ def get_options(args=None, defaults=None):
             args[:] = [arg.replace('--auto-color', colorization)
                        for arg in args]
 
+    # The comment of apply_auto_color applies here as well
+    def apply_auto_progress(args):
+        if args and '--auto-progress' in args:
+            if sys.stdout.isatty():
+                progress = '--progress'
+            else:
+                progress = '--no-progress'
+
+            args[:] = [arg.replace('--auto-progress', progress)
+                       for arg in args]
+
     apply_auto_color(args)
     apply_auto_color(defaults)
+    apply_auto_progress(args)
+    apply_auto_progress(defaults)
 
     default_setup, _ = parser.parse_args(default_setup_args)
     assert not _

@@ -68,6 +68,8 @@ New Features
 
 - Added --slow-test option.
 
+- Added --no-progress and --auto-progress options.
+
 3.5.0 (2007/07/19)
 ==================
 

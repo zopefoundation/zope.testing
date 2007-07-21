@@ -362,3 +362,67 @@ In this example, we also excluded tests with "NotMuch" in their names.
 Unfortunately, the time data above doesn't buy us much because, in
 practice, the line is cleared before there is time to see the
 times. :/
+
+
+Autodetecting progress
+----------------------
+
+The --auto-progress option will determine if stdout is a terminal, and only enable
+progress output if so.
+
+Let's pretend we have a terminal
+
+    >>> class Terminal(object):
+    ...     def __init__(self, stream):
+    ...         self._stream = stream
+    ...     def __getattr__(self, attr):
+    ...         return getattr(self._stream, attr)
+    ...     def isatty(self):
+    ...         return True
+    >>> real_stdout = sys.stdout
+    >>> sys.stdout = Terminal(sys.stdout)
+
+    >>> sys.argv = 'test -u -t test_one.TestNotMuch --auto-progress'.split()
+    >>> testrunner.run(defaults)
+    Running unit tests:
+      Running:
+        1/6 (16.7%)\r
+                   \r
+        2/6 (33.3%)\r
+                   \r
+        3/6 (50.0%)\r
+                   \r
+        4/6 (66.7%)\r
+                   \r
+        5/6 (83.3%)\r
+                   \r
+        6/6 (100.0%)\r
+                    \r
+    <BLANKLINE>
+      Ran 6 tests with 0 failures and 0 errors in 0.000 seconds.
+    False
+
+Let's stop pretending
+
+    >>> sys.stdout = real_stdout
+
+    >>> sys.argv = 'test -u -t test_one.TestNotMuch --auto-progress'.split()
+    >>> testrunner.run(defaults)
+    Running unit tests:
+      Ran 6 tests with 0 failures and 0 errors in 0.000 seconds.
+    False
+
+
+Disabling progress indication
+-----------------------------
+
+If -p or --progress have been previously provided on the command line (perhaps by a
+wrapper script) but you do not desire progress indication, you can switch it off with
+--no-progress:
+
+    >>> sys.argv = 'test -u -t test_one.TestNotMuch -p --no-progress'.split()
+    >>> testrunner.run(defaults)
+    Running unit tests:
+      Ran 6 tests with 0 failures and 0 errors in 0.000 seconds.
+    False
+
