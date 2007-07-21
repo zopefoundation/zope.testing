@@ -601,6 +601,7 @@ class ColorfulOutputFormatter(OutputFormatter):
                    'suboptimal-behaviour': 'magenta',
                    'error': 'brightred',
                    'number': 'green',
+                   'slow-test': 'brightmagenta',
                    'ok-number': 'green',
                    'error-number': 'brightred',
                    'filename': 'lightblue',
@@ -641,6 +642,8 @@ class ColorfulOutputFormatter(OutputFormatter):
                   'magenta': 35,
                   'cyan': 36,
                   'grey': 37, 'gray': 37, 'white': 37}
+
+    slow_test_threshold = 10.0 # seconds
 
     def color_code(self, color):
         """Convert a color description (e.g. 'lightgray') to a terminal code."""
@@ -709,6 +712,14 @@ class ColorfulOutputFormatter(OutputFormatter):
         else:
             return "%s seconds" % (
                         self.colorize('number', '%.3f' % n_seconds, normal))
+
+    def format_seconds_short(self, n_seconds):
+        """Format a time in seconds (short version)."""
+        if n_seconds >= self.slow_test_threshold:
+            color = 'slow-test'
+        else:
+            color = 'number'
+        return self.colorize(color, "%.3f s" % n_seconds)
 
     def summary(self, n_tests, n_failures, n_errors, n_seconds):
         """Summarize the results."""
@@ -2046,6 +2057,14 @@ Colorize the output, but only when stdout is a terminal.
 """)
 
 reporting.add_option(
+    '--slow-test', type='float', dest='slow_test_threshold',
+    metavar='N', default=10,
+    help="""\
+With -c and -vvv, highlight tests that take longer than N seconds (default:
+%default).
+""")
+
+reporting.add_option(
     '-1', '--hide-secondary-failures',
     action="store_true", dest='report_only_first_failure',
     help="""\
@@ -2352,6 +2371,7 @@ def get_options(args=None, defaults=None):
 
     if options.color:
         options.output = ColorfulOutputFormatter(options)
+        options.output.slow_test_threshold = options.slow_test_threshold
     else:
         options.output = OutputFormatter(options)
 

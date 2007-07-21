@@ -236,6 +236,44 @@ apart:
     {normal}  Ran {green}1{normal} tests with {boldred}1{normal} failures and {green}0{normal} errors in {green}0.003{normal} seconds.{normal}
 
 
+Timing individual tests
+-----------------------
+
+At very high verbosity levels you can see the time taken by each test
+
+    >>> sys.argv = 'test -u -t test_one.TestNotMuch -c -vvv'.split()
+    >>> testrunner.run(defaults)
+    {normal}Running tests at level 1{normal}
+    {normal}Running unit tests:{normal}
+    {normal}  Running:{normal}
+     test_1 (sample1.sampletests.test_one.TestNotMuch) ({green}N.NNN s{normal})
+     test_2 (sample1.sampletests.test_one.TestNotMuch) ({green}N.NNN s{normal})
+     test_3 (sample1.sampletests.test_one.TestNotMuch) ({green}N.NNN s{normal})
+     test_1 (sampletests.test_one.TestNotMuch) ({green}N.NNN s{normal})
+     test_2 (sampletests.test_one.TestNotMuch) ({green}N.NNN s{normal})
+     test_3 (sampletests.test_one.TestNotMuch) ({green}N.NNN s{normal})
+    {normal}  Ran {green}6{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}N.NNN{normal} seconds.{normal}
+    False
+
+If we had very slow tests we would see their times highlighted in a different color.
+Instead of creating a test that waits 10 seconds, let's lower the slow test threshold
+in the test runner to 0 seconds to make all of the tests seem slow.
+
+    >>> sys.argv = 'test -u -t test_one.TestNotMuch -c -vvv --slow-test 0'.split()
+    >>> testrunner.run(defaults)
+    {normal}Running tests at level 1{normal}
+    {normal}Running unit tests:{normal}
+    {normal}  Running:{normal}
+     test_1 (sample1.sampletests.test_one.TestNotMuch) ({boldmagenta}N.NNN s{normal})
+     test_2 (sample1.sampletests.test_one.TestNotMuch) ({boldmagenta}N.NNN s{normal})
+     test_3 (sample1.sampletests.test_one.TestNotMuch) ({boldmagenta}N.NNN s{normal})
+     test_1 (sampletests.test_one.TestNotMuch) ({boldmagenta}N.NNN s{normal})
+     test_2 (sampletests.test_one.TestNotMuch) ({boldmagenta}N.NNN s{normal})
+     test_3 (sampletests.test_one.TestNotMuch) ({boldmagenta}N.NNN s{normal})
+    {normal}  Ran {green}6{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}N.NNN{normal} seconds.{normal}
+    False
+
+
 Disabling colors
 ----------------
 
