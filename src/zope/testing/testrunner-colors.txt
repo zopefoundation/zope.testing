@@ -312,7 +312,7 @@ Autodetecting colors
 --------------------
 
 The --auto-color option will determine if stdout is a terminal, and only enable
-colorized output if so.  Out ``Terminal`` wrapper pretends it is a terminal, so
+colorized output if so.  Our ``Terminal`` wrapper pretends it is a terminal, so
 we get colors:
 
     >>> sys.argv = 'test --layer 122 --auto-color'.split()
