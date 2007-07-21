@@ -27,6 +27,8 @@ test file, let's wrap sys.stdout in a simple terminal interpreter
     ...         self._stream = stream
     ...     def __getattr__(self, attr):
     ...         return getattr(self._stream, attr)
+    ...     def isatty(self):
+    ...         return True
     ...     def write(self, text):
     ...         if '\033[' in text:
     ...             text = self._color_regexp.sub(self._color, text)
@@ -272,8 +274,25 @@ Autodetecting colors
 --------------------
 
 The --auto-color option will determine if stdout is a terminal, and only enable
-colorized output if so.  Of course, stdout is not a terminal here, so no color
-will be produced:
+colorized output if so.  Out ``Terminal`` wrapper pretends it is a terminal, so
+we get colors:
+
+    >>> sys.argv = 'test --layer 122 --auto-color'.split()
+    >>> testrunner.run(defaults)
+    {normal}Running samplelayers.Layer122 tests:{normal}
+      Set up samplelayers.Layer1 in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer12 in {green}0.000{normal} seconds.
+      Set up samplelayers.Layer122 in {green}0.000{normal} seconds.
+    {normal}  Ran {green}34{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.007{normal} seconds.{normal}
+    {normal}Tearing down left over layers:{normal}
+      Tear down samplelayers.Layer122 in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layer12 in {green}0.000{normal} seconds.
+      Tear down samplelayers.Layer1 in {green}0.000{normal} seconds.
+    False
+
+The real stdout is not a terminal in a doctest:
+
+    >>> sys.stdout = real_stdout
 
     >>> sys.argv = 'test --layer 122 --auto-color'.split()
     >>> testrunner.run(defaults)
@@ -287,8 +306,4 @@ will be produced:
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
     False
-
-Clean up:
-
-    >>> sys.stdout = real_stdout
 
