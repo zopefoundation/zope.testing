@@ -311,9 +311,33 @@ a test runner wrapper script), but no colorized output is desired, the -C or
 Autodetecting colors
 --------------------
 
-The --auto-color option will determine if stdout is a terminal, and only enable
-colorized output if so.  Our ``Terminal`` wrapper pretends it is a terminal, so
-we get colors:
+The --auto-color option will determine if stdout is a terminal that supports
+colors, and only enable colorized output if so.  Our ``Terminal`` wrapper
+pretends it is a terminal, but the curses module will realize it isn't:
+
+    >>> sys.argv = 'test --layer 122 --auto-color'.split()
+    >>> testrunner.run(defaults)
+    Running samplelayers.Layer122 tests:
+      Set up samplelayers.Layer1 in 0.000 seconds.
+      Set up samplelayers.Layer12 in 0.000 seconds.
+      Set up samplelayers.Layer122 in 0.000 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+    False
+
+We can fake it
+
+    >>> class FakeCurses(object):
+    ...     class error(Exception):
+    ...         pass
+    ...     def setupterm(self):
+    ...         pass
+    ...     def tigetnum(self, attr):
+    ...         return dict(colors=8).get(attr, -2)
+    >>> sys.modules['curses'] = FakeCurses()
 
     >>> sys.argv = 'test --layer 122 --auto-color'.split()
     >>> testrunner.run(defaults)
@@ -327,6 +351,8 @@ we get colors:
       Tear down samplelayers.Layer12 in {green}0.000{normal} seconds.
       Tear down samplelayers.Layer1 in {green}0.000{normal} seconds.
     False
+
+    >>> del sys.modules['curses']
 
 The real stdout is not a terminal in a doctest:
 

@@ -259,6 +259,33 @@ Got:
 """
 
 
+def tigetnum(attr, default=None):
+    """Return a value from the terminfo database.
+
+    Terminfo is used on Unix-like systems to report various terminal attributes
+    (such as width, height or the number of supported colors).
+
+    Returns ``default`` when the ``curses`` module is not available, or when
+    sys.stdout is not a terminal.
+    """
+    try:
+        import curses
+    except ImportError:
+        # avoid reimporting a broken module in python 2.3
+        sys.modules['curses'] = None
+    else:
+        try:
+            curses.setupterm()
+        except (curses.error, TypeError):
+            # You get curses.error when $TERM is set to an unknown name
+            # You get TypeError when sys.stdout is not a real file object
+            # (e.g. in unit tests that use various wrappers).
+            pass
+        else:
+            return curses.tigetnum(attr)
+    return default
+
+
 class OutputFormatter(object):
     """Test runner output formatter."""
 
@@ -280,19 +307,8 @@ class OutputFormatter(object):
 
     def compute_max_width(self):
         """Try to determine the terminal width."""
-        try:
-            # Note that doing this every time is more test friendly.
-            import curses
-        except ImportError:
-            # avoid reimporting a broken module in python 2.3
-            sys.modules['curses'] = None
-        else:
-            try:
-                curses.setupterm()
-            except TypeError:
-                pass
-            else:
-                self.max_width = curses.tigetnum('cols')
+        # Note that doing this every time is more test friendly.
+        self.max_width = tigetnum('cols', self.max_width)
 
     def getShortDescription(self, test, room):
         """Return a description of a test that fits in ``room`` characters."""
@@ -2348,14 +2364,23 @@ default_setup_args = [
     '--suite-name', 'test_suite',
     ]
 
+
+def terminal_has_colors():
+    """Determine whether the terminal supports colors.
+
+    Some terminals (e.g. the emacs built-in one) don't.
+    """
+    return tigetnum('colors', -1) >= 8
+
+
 def get_options(args=None, defaults=None):
     # Because we want to inspect stdout and decide to colorize or not, we
     # replace the --auto-color option with the appropriate --color or
     # --no-color option.  That way the subprocess doesn't have to decide (which
-    # it would do incorrectly anyway because stdout wouled be a pipe).
+    # it would do incorrectly anyway because stdout would be a pipe).
     def apply_auto_color(args):
         if args and '--auto-color' in args:
-            if sys.stdout.isatty():
+            if sys.stdout.isatty() and terminal_has_colors():
                 colorization = '--color'
             else:
                 colorization = '--no-color'
