@@ -35,14 +35,17 @@ chapters = '\n'.join([
     open(os.path.join('src', 'zope', 'testing', name)).read()
     for name in (
     'testrunner.txt',
-    'testrunner-simple.txt',
+     'testrunner-simple.txt',
     'testrunner-layers-api.txt',
     'testrunner-layers.txt',
     'testrunner-arguments.txt',
     'testrunner-verbose.txt',
     'testrunner-test-selection.txt',
     'testrunner-progress.txt',
-    'testrunner-errors.txt',
+
+# The following seems to cause weird unicode in the output: :(
+##     'testrunner-errors.txt',
+    
     'testrunner-debugging.txt',
     'testrunner-layers-ntd.txt',
     'testrunner-coverage.txt',
