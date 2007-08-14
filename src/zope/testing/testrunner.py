@@ -19,6 +19,7 @@ $Id$
 # Too bad: For now, we depend on zope.testing.  This is because
 # we want to use the latest, greatest doctest, which zope.testing
 # provides.  Then again, zope.testing is generally useful.
+
 import gc
 import glob
 import logging
@@ -27,6 +28,7 @@ import os
 import errno
 import pdb
 import re
+import cStringIO
 import sys
 import tempfile
 import threading
@@ -1246,8 +1248,22 @@ def run_layer(options, layer_name, layer, tests, setup_layers,
     if options.resume_layer != None:
         output.info_suboptimal( "  Running in a subprocess.")
 
-    setup_layer(options, layer, setup_layers)
-    return run_tests(options, tests, layer_name, failures, errors)
+    try:
+        setup_layer(options, layer, setup_layers)
+    except EndRun:
+        raise
+    except Exception:
+        f = cStringIO.StringIO()
+        traceback.print_exc(file=f)
+        output.error(f.getvalue())
+        errors.append((SetUpLayerFailure(), sys.exc_info()))
+        return 0
+    else:
+        return run_tests(options, tests, layer_name, failures, errors)
+
+class SetUpLayerFailure(unittest.TestCase):
+    def runTest(self):
+        "Layer set up failure."
 
 def resume_tests(options, layer_name, layers, failures, errors):
     output = options.output
@@ -1341,6 +1357,12 @@ def tear_down_unneeded(options, needed, setup_layers, optional=False):
             output.stop_tear_down(time.time() - t)
         del setup_layers[l]
 
+
+cant_pm_in_subprocess_message = """
+Can't post-mortem debug when running a layer as a subprocess!
+Try running layer %r by itself.
+"""
+
 def setup_layer(options, layer, setup_layers):
     assert layer is not object
     output = options.output
@@ -1351,7 +1373,20 @@ def setup_layer(options, layer, setup_layers):
         output.start_set_up(name_from_layer(layer))
         t = time.time()
         if hasattr(layer, 'setUp'):
-            layer.setUp()
+            try:
+                layer.setUp()
+            except Exception:
+                if options.post_mortem:
+                    if options.resume_layer:
+                        options.output.error_with_banner(
+                            cant_pm_in_subprocess_message
+                            % options.resume_layer)
+                        raise
+                    else:
+                        post_mortem(sys.exc_info())
+                else:
+                    raise
+                    
         output.stop_set_up(time.time() - t)
         setup_layers[layer] = 1
 
@@ -2639,6 +2674,7 @@ def test_suite():
         doctest.DocFileSuite(
         'testrunner-arguments.txt',
         'testrunner-coverage.txt',
+        'testrunner-debugging-layer-setup.test',
         'testrunner-debugging.txt',
         'testrunner-edge-cases.txt',
         'testrunner-errors.txt',

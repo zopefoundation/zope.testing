@@ -70,6 +70,14 @@ New Features
 
 - Added --no-progress and --auto-progress options.
 
+3.5.1 (2007/08/14)
+==================
+
+Bugs Fixed:
+-----------
+
+- Post-mortem debugging wasn't invoked for layer-setup failures.
+
 3.5.0 (2007/07/19)
 ==================
 
