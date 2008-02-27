@@ -14,7 +14,7 @@
 r"""Regular expression pattern normalizing output checker
 
 The pattern-normalizing output checker extends the default output checker with
-an option to normalize expected an actual output.
+an option to normalize expected and actual output.
 
 You specify a sequence of patterns and replacements.  The replacements are
 applied to the expected and actual outputs before calling the default outputs
