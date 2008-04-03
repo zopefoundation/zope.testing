@@ -370,4 +370,3 @@ The real stdout is not a terminal in a doctest:
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
     False
-
