@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Zope Corporation and Contributors.
+# Copyright (c) 2004-2008 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,22 +11,24 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Tests for the testing framework.
+"""Self-test support.
 
-$Id$
+Provides setup routines that enable the test runner to test itself.
+
+$Id: __init__.py 86218 2008-05-03 14:17:26Z ctheune $
 """
 
-import os
-import sys
-import unittest
-from zope.testing import doctest, testrunner
+import pdb
+from zope.testing import doctest
+import zope.testing.testrunner.feature
+
+real_pdb_set_trace = pdb.set_trace
 
 
-def test_suite():
-    return unittest.TestSuite((
-        doctest.DocTestSuite('zope.testing.renormalizing'),
-        doctest.DocFileSuite('formparser.txt'),
-        doctest.DocTestSuite('zope.testing.loggingsupport'),
-        doctest.DocTestSuite('zope.testing.server'),
-        doctest.DocFileSuite('setupstack.txt'),
-        ))
+class SelfTest(zope.testing.testrunner.feature.Feature):
+
+    active = True
+
+    def global_setup(self):
+        # Make sure we start with real pdb.set_trace.
+        pdb.set_trace = real_pdb_set_trace

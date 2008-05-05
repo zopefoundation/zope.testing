@@ -35,13 +35,15 @@ runner will enter pdb at that point:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +ELLIPSIS
-    Running unit tests:...
+    Running zope.testing.testrunner.layer.UnitTests tests:
+    ...
     > testrunner-ex/sample3/sampletests_d.py(27)test_set_trace1()
     -> y = x
     (Pdb) p x
     1
     (Pdb) c
       Ran 1 tests with 0 failures and 0 errors in 0.001 seconds.
+    ...
     False
 
 Note that, prior to Python 2.4, calling pdb.set_trace caused pdb to
@@ -59,9 +61,8 @@ option:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
-    Running unit tests:
-    <BLANKLINE>
-    <BLANKLINE>
+    Running zope.testing.testrunner.layer.UnitTests tests:
+    ...
     Error in test test_post_mortem1 (sample3.sampletests_d.TestSomething)
     Traceback (most recent call last):
       File "testrunner-ex/sample3/sampletests_d.py",
@@ -89,9 +90,8 @@ converted to errors and can be debugged the same way:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
-    Running unit tests:
-    <BLANKLINE>
-    <BLANKLINE>
+    Running zope.testing.testrunner.layer.UnitTests tests:
+    ...
     Error in test test_post_mortem_failure1 (sample3.sampletests_d.TestSomething)
     Traceback (most recent call last):
       File ".../unittest.py",  line 252, in debug

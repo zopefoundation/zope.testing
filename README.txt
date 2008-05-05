@@ -58,7 +58,7 @@ to run the zope.testing test suite.
 Releases
 ********
 
-Next release
+3.6.0 (????/??/??)
 ============
 
 New Features
@@ -69,6 +69,12 @@ New Features
 - Added --slow-test option.
 
 - Added --no-progress and --auto-progress options.
+
+- Complete refactoring of the test runner into multiple code files and a more
+  modular (pipeline-like) architecture.
+
+- Unified unit tests with the layer support by introducing a real unit test
+  layer.
 
 3.5.1 (2007/08/14)
 ==================

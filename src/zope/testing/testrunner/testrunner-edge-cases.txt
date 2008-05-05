@@ -35,12 +35,20 @@ affecting the Python path:
     >>> sys.argv = ['test']
     >>> testrunner.run(defaults)
     ... # doctest: +ELLIPSIS
-    Running unit tests:
-      Ran 192 tests with 0 failures and 0 errors in 0.028 seconds.
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Ran 9 tests with 0 failures and 0 errors in 0.000 seconds.
     ...
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Tear down samplelayers.Layer122 in N.NNN seconds.
+      Tear down samplelayers.Layer12 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
+    False
 
 Debugging Edge Cases
 --------------------
@@ -66,13 +74,14 @@ Using pdb.set_trace in a function called by an ordinary test:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +ELLIPSIS
-    Running unit tests:...
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     > testrunner-ex/sample3/sampletests_d.py(47)f()
     -> y = x
     (Pdb) p x
     1
     (Pdb) c
       Ran 1 tests with 0 failures and 0 errors in 0.001 seconds.
+    ...
     False
 
 Using pdb.set_trace in a function called by a doctest in a doc string:
@@ -82,7 +91,7 @@ Using pdb.set_trace in a function called by a doctest in a doc string:
     ...             ' -t set_trace4').split()
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
     > doctest.py(351)set_trace()->None
     -> pdb.Pdb.set_trace(self)
@@ -93,6 +102,7 @@ Using pdb.set_trace in a function called by a doctest in a doc string:
     1
     (Pdb) c
       Ran 1 tests with 0 failures and 0 errors in 0.002 seconds.
+    ...
     False
 
 Using pdb in a docstring-based doctest
@@ -102,7 +112,7 @@ Using pdb in a docstring-based doctest
     ...             ' -t set_trace3').split()
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
     > doctest.py(351)set_trace()->None
     -> pdb.Pdb.set_trace(self)
@@ -113,6 +123,7 @@ Using pdb in a docstring-based doctest
     1
     (Pdb) c
       Ran 1 tests with 0 failures and 0 errors in 0.002 seconds.
+    ...
     False
 
 Using pdb.set_trace in a doc file:
@@ -123,7 +134,7 @@ Using pdb.set_trace in a doc file:
     ...             ' -t set_trace5').split()
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
     > doctest.py(351)set_trace()->None
     -> pdb.Pdb.set_trace(self)
@@ -134,6 +145,7 @@ Using pdb.set_trace in a doc file:
     1
     (Pdb) c
       Ran 1 tests with 0 failures and 0 errors in 0.002 seconds.
+    ...
     False
 
 
@@ -145,7 +157,7 @@ Using pdb.set_trace in a function called by a doctest in a doc file:
     ...             ' -t set_trace6').split()
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
     > doctest.py(351)set_trace()->None
     -> pdb.Pdb.set_trace(self)
@@ -156,6 +168,7 @@ Using pdb.set_trace in a function called by a doctest in a doc file:
     1
     (Pdb) c
       Ran 1 tests with 0 failures and 0 errors in 0.002 seconds.
+    ...
     False
 
 Post-mortem debugging function called from ordinary test:
@@ -166,7 +179,7 @@ Post-mortem debugging function called from ordinary test:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     <BLANKLINE>
     <BLANKLINE>
     Error in test test_post_mortem2 (sample3.sampletests_d.TestSomething)
@@ -196,9 +209,7 @@ Post-mortem debugging docstring-based doctest:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
-    <BLANKLINE>
-    <BLANKLINE>
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     Error in test post_mortem3 (sample3.sampletests_d)
     Traceback (most recent call last):
       File "zope/testing/doctest.py", line 2276, in debug
@@ -230,9 +241,7 @@ Post-mortem debugging function called from docstring-based doctest:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
-    <BLANKLINE>
-    <BLANKLINE>
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     Error in test post_mortem4 (sample3.sampletests_d)
     Traceback (most recent call last):
       File "zope/testing/doctest.py", line 2276, in debug
@@ -264,7 +273,7 @@ Post-mortem debugging file-based doctest:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     <BLANKLINE>
     <BLANKLINE>
     Error in test zope/testing/testrunner-ex/sample3/post_mortem5.txt
@@ -298,7 +307,7 @@ Post-mortem debugging function called from file-based doctest:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     <BLANKLINE>
     <BLANKLINE>
     Error in test zope/testing/testrunner-ex/sample3/post_mortem6.txt
@@ -332,7 +341,7 @@ Post-mortem debugging of a docstring doctest failure:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     <BLANKLINE>
     <BLANKLINE>
     Error in test post_mortem_failure2 (sample3.sampletests_d)
@@ -367,7 +376,7 @@ Post-mortem debugging of a docfile doctest failure:
     >>> try: testrunner.run(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:...
     <BLANKLINE>
     <BLANKLINE>
     Error in test /home/jim/z3/zope.testing/src/zope/testing/testrunner-ex/sample3/post_mortem_failure.txt
@@ -429,10 +438,10 @@ Test Suites with None for suites or tests
     TypeError: Invalid test_suite, None, in sample1.sampletests_none_suite
     <BLANKLINE>
     <BLANKLINE>
-    Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     <BLANKLINE>
     Test-modules with import problems:
       sample1.sampletests_none_suite
+    Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     True
 
 
@@ -447,10 +456,10 @@ Test Suites with None for suites or tests
     TypeError: ...
     <BLANKLINE>
     <BLANKLINE>
-    Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     <BLANKLINE>
     Test-modules with import problems:
       sample1.sampletests_none_test
+    Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     True
 
 You must use --repeat with --report-refcounts

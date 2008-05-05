@@ -19,15 +19,16 @@ When the tests are run, we get profiling output.
 
     >>> from zope.testing import testrunner
     >>> testrunner.run(defaults)
-    Running unit tests:
-    ...
     Running samplelayers.Layer1 tests:
     ...
     Running samplelayers.Layer11 tests:
     ...
-    Total: ... tests, 0 failures, 0 errors in ... seconds.
+    Running zope.testing.testrunner.layer.UnitTests tests:
     ...
-       ncalls  tottime  percall  cumtime  percall filename:lineno(function)...
+       ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    ...
+    Total: ... tests, 0 failures, 0 errors in ... seconds.
+    False
 
 Profiling also works across layers.
 

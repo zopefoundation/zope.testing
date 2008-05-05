@@ -44,14 +44,18 @@ Now run the tests in the copy:
     >>> sys.argv = ['test']
     >>> testrunner.run(mydefaults)
     Running tests at level 1
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
-        test1 (unlikely_package_name.compiletest.Test)
-        test2 (unlikely_package_name.compiletest.Test)
-        test1 (unlikely_package_name.package.compiletest.Test)
-        test2 (unlikely_package_name.package.compiletest.Test)
+     test1 (unlikely_package_name.compiletest.Test)
+     test2 (unlikely_package_name.compiletest.Test)
+     test1 (unlikely_package_name.package.compiletest.Test)
+     test2 (unlikely_package_name.package.compiletest.Test)
       Ran 4 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False
+
 
 If we delete the source files, it's normally a disaster:  the test runner
 doesn't believe any test files, or even packages, exist.  Note that we pass
@@ -75,14 +79,18 @@ also implies ``--keepbytecode``:
 
     >>> testrunner.run(mydefaults, ["test", "--usecompiled"])
     Running tests at level 1
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
-        test1 (unlikely_package_name.compiletest.Test)
-        test2 (unlikely_package_name.compiletest.Test)
-        test1 (unlikely_package_name.package.compiletest.Test)
-        test2 (unlikely_package_name.package.compiletest.Test)
+     test1 (unlikely_package_name.compiletest.Test)
+     test2 (unlikely_package_name.compiletest.Test)
+     test1 (unlikely_package_name.package.compiletest.Test)
+     test2 (unlikely_package_name.package.compiletest.Test)
       Ran 4 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False
+
 
 Remove the temporary directory:
 

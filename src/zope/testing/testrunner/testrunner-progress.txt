@@ -384,7 +384,8 @@ Let's pretend we have a terminal
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch --auto-progress'.split()
     >>> testrunner.run(defaults)
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
         1/6 (16.7%)\r
                    \r
@@ -399,8 +400,11 @@ Let's pretend we have a terminal
         6/6 (100.0%)\r
                     \r
     <BLANKLINE>
-      Ran 6 tests with 0 failures and 0 errors in 0.000 seconds.
+      Ran 6 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False
+
 
 Let's stop pretending
 
@@ -408,8 +412,11 @@ Let's stop pretending
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch --auto-progress'.split()
     >>> testrunner.run(defaults)
-    Running unit tests:
-      Ran 6 tests with 0 failures and 0 errors in 0.000 seconds.
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 6 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False
 
 
@@ -422,7 +429,12 @@ wrapper script) but you do not desire progress indication, you can switch it off
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch -p --no-progress'.split()
     >>> testrunner.run(defaults)
-    Running unit tests:
-      Ran 6 tests with 0 failures and 0 errors in 0.000 seconds.
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 6 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False
+
+
 

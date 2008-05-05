@@ -95,37 +95,45 @@ TestSpecifyingBaseLayer and TestSpecifyingNoLayer.
 
 Before we can run the tests, we need to setup some helpers.
 
->>> from zope.testing import testrunner
+>>> from zope.testing.testrunner import options
 >>> from zope.testing.loggingsupport import InstalledHandler
 >>> import logging
 >>> log_handler = InstalledHandler('zope.testing.tests')
 >>> def log(msg):
 ...     logging.getLogger('zope.testing.tests').info(msg)
 >>> def fresh_options():
-...     options = testrunner.get_options(['--test-filter', '.*'])
-...     options.resume_layer = None
-...     options.resume_number = 0
-...     return options
+...     opts = options.get_options(['--test-filter', '.*'])
+...     opts.resume_layer = None
+...     opts.resume_number = 0
+...     return opts
 
 Now we run the tests. Note that the BaseLayer was not setup when
 the TestSpecifyingNoLayer was run and setup/torn down around the
 TestSpecifyingBaseLayer tests.
 
->>> succeeded = testrunner.run_with_options(fresh_options(), [umbrella_suite])
-Running unit tests:
-    Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
-    Set up BaseLayer in N.NNN seconds.
-    Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
+>>> from zope.testing.testrunner.runner import Runner
+>>> runner = Runner(options=fresh_options(), args=[], found_suites=[umbrella_suite])
+>>> succeeded = runner.run()
+Running BaseLayer tests:
+  Set up BaseLayer in N.NNN seconds.
+  Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
+Running zope.testing.testrunner.layer.UnitTests tests:
+  Tear down BaseLayer in N.NNN seconds.
+  Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+  Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
 Tearing down left over layers:
-    Tear down BaseLayer in N.NNN seconds.
+  Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 Total: 4 tests, 0 failures, 0 errors in N.NNN seconds.
+
 
 Now lets specify a layer in the suite containing TestSpecifyingNoLayer
 and run the tests again. This demonstrates the other method of specifying
 a layer. This is generally how you specify what layer doctests need.
 
 >>> no_layer_suite.layer = BaseLayer
->>> succeeded = testrunner.run_with_options(fresh_options(), [umbrella_suite])
+>>> runner = Runner(options=fresh_options(), args=[], found_suites=[umbrella_suite])
+>>> succeeded = runner.run()
+Running BaseLayer tests:
   Set up BaseLayer in N.NNN seconds.
   Ran 4 tests with 0 failures and 0 errors in N.NNN seconds.
 Tearing down left over layers:
@@ -142,15 +150,19 @@ both the BaseLayer and TopLayer environments are setup when the
 TestSpecifyingNoLayer tests are run.
 
 >>> TestSpecifyingNoLayer.layer = TopLayer
->>> succeeded = testrunner.run_with_options(fresh_options(), [umbrella_suite])
+>>> runner = Runner(options=fresh_options(), args=[], found_suites=[umbrella_suite])
+>>> succeeded = runner.run()
+Running BaseLayer tests:
   Set up BaseLayer in N.NNN seconds.
   Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
+Running TopLayer tests:
   Set up TopLayer in N.NNN seconds.
   Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
 Tearing down left over layers:
   Tear down TopLayer in N.NNN seconds.
   Tear down BaseLayer in N.NNN seconds.
 Total: 4 tests, 0 failures, 0 errors in N.NNN seconds.
+
 
 If we inspect our trace of what methods got called in what order, we can
 see that the layer setup and teardown methods only got called once. We can
@@ -193,7 +205,7 @@ BaseLayer.tearDown
 Now lets stack a few more layers to ensure that our setUp and tearDown
 methods are called in the correct order.
 
->>> from zope.testing.testrunner import name_from_layer
+>>> from zope.testing.testrunner.find import name_from_layer
 >>> class A(object):
 ...     def setUp(cls):
 ...         log('%s.setUp' % name_from_layer(cls))
@@ -223,21 +235,24 @@ methods are called in the correct order.
 ...         pass
 >>> suite = unittest.makeSuite(DeepTest)
 >>> log_handler.clear()
->>> succeeded = testrunner.run_with_options(fresh_options(), [suite])
-  Set up A in 0.000 seconds.
-  Set up B in 0.000 seconds.
-  Set up C in 0.000 seconds.
-  Set up D in 0.000 seconds.
-  Set up E in 0.000 seconds.
-  Set up F in 0.000 seconds.
-  Ran 1 tests with 0 failures and 0 errors in 0.003 seconds.
+>>> runner = Runner(options=fresh_options(), args=[], found_suites=[suite])
+>>> succeeded = runner.run()
+Running F tests:
+  Set up A in N.NNN seconds.
+  Set up B in N.NNN seconds.
+  Set up C in N.NNN seconds.
+  Set up D in N.NNN seconds.
+  Set up E in N.NNN seconds.
+  Set up F in N.NNN seconds.
+  Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
 Tearing down left over layers:
-  Tear down F in 0.000 seconds.
-  Tear down E in 0.000 seconds.
-  Tear down D in 0.000 seconds.
-  Tear down C in 0.000 seconds.
-  Tear down B in 0.000 seconds.
-  Tear down A in 0.000 seconds.
+  Tear down F in N.NNN seconds.
+  Tear down E in N.NNN seconds.
+  Tear down D in N.NNN seconds.
+  Tear down C in N.NNN seconds.
+  Tear down B in N.NNN seconds.
+  Tear down A in N.NNN seconds.
+
 
 >>> report()
 A.setUp
@@ -264,4 +279,3 @@ D.tearDown
 C.tearDown
 B.tearDown
 A.tearDown
-

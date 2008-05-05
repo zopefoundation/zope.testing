@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Zope Corporation and Contributors.
+# Copyright (c) 2004-2008 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,22 +11,11 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Tests for the testing framework.
+"""Layer definitions
 
-$Id$
+$Id: __init__.py 86223 2008-05-03 14:36:04Z ctheune $
 """
 
-import os
-import sys
-import unittest
-from zope.testing import doctest, testrunner
 
-
-def test_suite():
-    return unittest.TestSuite((
-        doctest.DocTestSuite('zope.testing.renormalizing'),
-        doctest.DocFileSuite('formparser.txt'),
-        doctest.DocTestSuite('zope.testing.loggingsupport'),
-        doctest.DocTestSuite('zope.testing.server'),
-        doctest.DocFileSuite('setupstack.txt'),
-        ))
+class UnitTests(object):
+    """A layer for gathering all unit tests."""

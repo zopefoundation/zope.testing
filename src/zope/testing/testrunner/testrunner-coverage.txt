@@ -16,8 +16,6 @@ directory name given as the parameter will be used to hold the reports.
 
     >>> from zope.testing import testrunner
     >>> testrunner.run(defaults)
-    Running unit tests:
-      Ran 192 tests with 0 failures and 0 errors in 0.125 seconds.
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Ran 9 tests with 0 failures and 0 errors in 0.003 seconds.
@@ -45,11 +43,14 @@ directory name given as the parameter will be used to hold the reports.
       Tear down samplelayers.Layer121 in 0.000 seconds.
       Set up samplelayers.Layer122 in 0.000 seconds.
       Ran 34 tests with 0 failures and 0 errors in 0.025 seconds.
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Tear down samplelayers.Layer122 in N.NNN seconds.
+      Tear down samplelayers.Layer12 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
     Tearing down left over layers:
-      Tear down samplelayers.Layer122 in 0.000 seconds.
-      Tear down samplelayers.Layer12 in 0.000 seconds.
-      Tear down samplelayers.Layer1 in 0.000 seconds.
-    Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     lines   cov%   module   (path)
     ...
        52    92%   sample1.sampletests.test1   (testrunner-ex/sample1/sampletests/test1.py)
@@ -60,6 +61,7 @@ directory name given as the parameter will be used to hold the reports.
        78    94%   sample1.sampletests.test121   (testrunner-ex/sample1/sampletests/test121.py)
        78    94%   sample1.sampletests.test122   (testrunner-ex/sample1/sampletests/test122.py)
     ...
+    Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 
 The directory specified with the --coverage option will have been created and
@@ -91,9 +93,9 @@ directories that should be covered.
   ...   package = None
   ...   test_path = [('/myproject/src/blah/foo', ''),
   ...                ('/myproject/src/blah/bar', '')]
-
-  >>> from zope.testing import testrunner
-  >>> ignore = testrunner.TestIgnore(FauxOptions())
+  >>> from zope.testing.testrunner import coverage
+  >>> from zope.testing.testrunner.find import test_dirs
+  >>> ignore = coverage.TestIgnore(test_dirs(FauxOptions(), {}))
   >>> ignore._test_dirs
   ['/myproject/src/blah/foo/', '/myproject/src/blah/bar/']
 

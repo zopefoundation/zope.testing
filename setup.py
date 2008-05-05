@@ -32,31 +32,36 @@ except ImportError, e:
     extra = {}
 
 chapters = '\n'.join([
+    open(os.path.join('src', 'zope', 'testing', 'testrunner', name)).read()
+    for name in (
+        'testrunner.txt',
+        'testrunner-simple.txt',
+        'testrunner-layers-api.txt',
+        'testrunner-layers.txt',
+        'testrunner-arguments.txt',
+        'testrunner-verbose.txt',
+        'testrunner-test-selection.txt',
+        'testrunner-progress.txt',
+
+        # The following seems to cause weird unicode in the output: :(
+        ##     'testrunner-errors.txt',
+
+        'testrunner-debugging.txt',
+        'testrunner-layers-ntd.txt',
+        'testrunner-coverage.txt',
+        'testrunner-profiling.txt',
+        'testrunner-wo-source.txt',
+        'testrunner-repeat.txt',
+        'testrunner-gc.txt',
+        'testrunner-leaks.txt',
+        'testrunner-knit.txt',
+    )])
+
+chapters += '\n'.join([
     open(os.path.join('src', 'zope', 'testing', name)).read()
     for name in (
-    'testrunner.txt',
-     'testrunner-simple.txt',
-    'testrunner-layers-api.txt',
-    'testrunner-layers.txt',
-    'testrunner-arguments.txt',
-    'testrunner-verbose.txt',
-    'testrunner-test-selection.txt',
-    'testrunner-progress.txt',
-
-# The following seems to cause weird unicode in the output: :(
-##     'testrunner-errors.txt',
-    
-    'testrunner-debugging.txt',
-    'testrunner-layers-ntd.txt',
-    'testrunner-coverage.txt',
-    'testrunner-profiling.txt',
-    'testrunner-wo-source.txt',
-    'testrunner-repeat.txt',
-    'testrunner-gc.txt',
-    'testrunner-leaks.txt',
-    'testrunner-knit.txt',
-    'formparser.txt',
-    'setupstack.txt',
+        'formparser.txt',
+        'setupstack.txt',
     )])
 
 long_description=(

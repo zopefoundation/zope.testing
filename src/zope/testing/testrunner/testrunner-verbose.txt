@@ -36,10 +36,13 @@ If there are more than 50 tests, the dots are printed in groups of
     >>> sys.argv = 'test -uv'.split()
     >>> testrunner.run(defaults)
     Running tests at level 1
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
     ................................................................................................................................................................................................
       Ran 192 tests with 0 failures and 0 errors in 0.035 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False
 
 If the --verbose (-v) option is used twice, then the name and location of
@@ -143,6 +146,9 @@ the default verbosity is non-zero:
     ...     ]
     >>> sys.argv = 'test -q -u'.split()
     >>> testrunner.run(defaults)
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Ran 192 tests with 0 failures and 0 errors in 0.034 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False

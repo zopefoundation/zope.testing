@@ -10,32 +10,39 @@ We can select which layers to run using the --layer option:
     ...     '--tests-pattern', '^sampletestsf?$',
     ...     ]
 
-    >>> sys.argv = 'test --layer 112 --layer unit'.split()
+    >>> sys.argv = 'test --layer 112 --layer Unit'.split()
     >>> from zope.testing import testrunner
     >>> testrunner.run(defaults)
-    Running unit tests:
-      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
     Running samplelayers.Layer112 tests:
       Set up samplelayers.Layerx in N.NNN seconds.
       Set up samplelayers.Layer1 in N.NNN seconds.
       Set up samplelayers.Layer11 in N.NNN seconds.
       Set up samplelayers.Layer112 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
-    Tearing down left over layers:
+    Running zope.testing.testrunner.layer.UnitTests tests:
       Tear down samplelayers.Layer112 in N.NNN seconds.
       Tear down samplelayers.Layerx in N.NNN seconds.
       Tear down samplelayers.Layer11 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     Total: 226 tests, 0 failures, 0 errors in N.NNN seconds.
     False
+
 
 We can also specify that we want to run only the unit tests:
 
     >>> sys.argv = 'test -u'.split()
     >>> testrunner.run(defaults)
-    Running unit tests:
-      Ran 192 tests with 0 failures and 0 errors in 0.033 seconds.
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     False
+
 
 Or that we want to run all of the tests except for the unit tests:
 
@@ -79,8 +86,6 @@ Or we can explicitly say that we want both unit and non-unit tests.
 
     >>> sys.argv = 'test -uf'.split()
     >>> testrunner.run(defaults)
-    Running unit tests:
-      Ran 192 tests with 0 failures and 0 errors in 0.033 seconds.
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in N.NNN seconds.
       Ran 9 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -108,10 +113,14 @@ Or we can explicitly say that we want both unit and non-unit tests.
       Tear down samplelayers.Layer121 in N.NNN seconds.
       Set up samplelayers.Layer122 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
-    Tearing down left over layers:
+    Running zope.testing.testrunner.layer.UnitTests tests:
       Tear down samplelayers.Layer122 in N.NNN seconds.
       Tear down samplelayers.Layer12 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 

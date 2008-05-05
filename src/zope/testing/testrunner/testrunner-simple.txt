@@ -47,8 +47,6 @@ Now, if we run the tests, without any other options:
     >>> import sys
     >>> sys.argv = ['test']
     >>> testrunner.run(defaults)
-    Running unit tests:
-      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in N.NNN seconds.
       Ran 9 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -76,10 +74,14 @@ Now, if we run the tests, without any other options:
       Tear down samplelayers.Layer121 in N.NNN seconds.
       Set up samplelayers.Layer122 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
-    Tearing down left over layers:
+    Running zope.testing.testrunner.layer.UnitTests tests:
       Tear down samplelayers.Layer122 in N.NNN seconds.
       Tear down samplelayers.Layer12 in N.NNN seconds.
       Tear down samplelayers.Layer1 in N.NNN seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 

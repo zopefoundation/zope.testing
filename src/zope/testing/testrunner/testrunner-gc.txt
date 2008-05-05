@@ -15,15 +15,19 @@ using the --gc option with a value of zero.
     >>> defaults = ['--path', directory_with_tests]
 
     >>> from zope.testing import testrunner
-    
+
     >>> sys.argv = 'test --tests-pattern ^gc0$ --gc 0 -vv'.split()
     >>> _ = testrunner.run(defaults)
-    Running tests at level 1
     Cyclic garbage collection is disabled.
-    Running unit tests:
+    Running tests at level 1
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
-        make_sure_gc_is_disabled (gc0)
-      Ran 1 tests with 0 failures and 0 errors in 0.001 seconds.
+     make_sure_gc_is_disabled (gc0)
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+
 
 Alternatively, if you think you are having a garbage collection
 related problem, you can cause garbage collection to happen more often
@@ -31,12 +35,15 @@ by providing a low threshold:
     
     >>> sys.argv = 'test --tests-pattern ^gc1$ --gc 1 -vv'.split()
     >>> _ = testrunner.run(defaults)
-    Running tests at level 1
     Cyclic garbage collection threshold set to: (1,)
-    Running unit tests:
+    Running tests at level 1
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
-        make_sure_gc_threshold_is_one (gc1)
-      Ran 1 tests with 0 failures and 0 errors in 0.001 seconds.
+     make_sure_gc_threshold_is_one (gc1)
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
 You can specify up to 3 --gc options to set each of the 3 gc threshold
 values:
@@ -45,12 +52,16 @@ values:
     >>> sys.argv = ('test --tests-pattern ^gcset$ --gc 701 --gc 11 --gc 9 -vv'
     ...             .split())
     >>> _ = testrunner.run(defaults)
-    Running tests at level 1
     Cyclic garbage collection threshold set to: (701, 11, 9)
-    Running unit tests:
+    Running tests at level 1
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
-        make_sure_gc_threshold_is_701_11_9 (gcset)
-      Ran 1 tests with 0 failures and 0 errors in 0.001 seconds.
+     make_sure_gc_threshold_is_701_11_9 (gcset)
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+
 
 Garbage Collection Statistics
 -----------------------------
@@ -70,13 +81,15 @@ The output statistics are written to standard error.
     ...             .split())
     >>> _ = testrunner.run(defaults)
     Running tests at level 1
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
-        generate_some_gc_statistics (gcstats)
-      Ran 1 tests with 0 failures and 0 errors in 0.006 seconds.
+     generate_some_gc_statistics (gcstats)
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
     >>> sys.stderr = stderr
 
     >>> print err.getvalue()        # doctest: +ELLIPSIS
     gc: collecting generation ...
-        

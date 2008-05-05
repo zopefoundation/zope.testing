@@ -25,8 +25,11 @@ be read only):
 
     >>> sys.argv = 'test --tests-pattern ^sampletests(f|_e|_f)?$ '.split()
     >>> testrunner.run(defaults)
-    ... # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    ... # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    Running samplelayers.Layer1 tests:
+    ...
+    Running zope.testing.testrunner.layer.UnitTests tests:
+    ...
     <BLANKLINE>
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_e)
@@ -91,38 +94,9 @@ be read only):
         raise self.failureException, \
     AssertionError: 1 != 0
     <BLANKLINE>
-      Ran 200 tests with 3 failures and 1 errors in 0.038 seconds.
-    Running samplelayers.Layer1 tests:
-      Set up samplelayers.Layer1 in 0.000 seconds.
-      Ran 9 tests with 0 failures and 0 errors in 0.000 seconds.
-    Running samplelayers.Layer11 tests:
-      Set up samplelayers.Layer11 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
-    Running samplelayers.Layer111 tests:
-      Set up samplelayers.Layerx in 0.000 seconds.
-      Set up samplelayers.Layer111 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
-    Running samplelayers.Layer112 tests:
-      Tear down samplelayers.Layer111 in 0.000 seconds.
-      Set up samplelayers.Layer112 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.006 seconds.
-    Running samplelayers.Layer12 tests:
-      Tear down samplelayers.Layer112 in 0.000 seconds.
-      Tear down samplelayers.Layerx in 0.000 seconds.
-      Tear down samplelayers.Layer11 in 0.000 seconds.
-      Set up samplelayers.Layer12 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
-    Running samplelayers.Layer121 tests:
-      Set up samplelayers.Layer121 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.006 seconds.
-    Running samplelayers.Layer122 tests:
-      Tear down samplelayers.Layer121 in 0.000 seconds.
-      Set up samplelayers.Layer122 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.007 seconds.
+      Ran 200 tests with 3 failures and 1 errors in N.NNN seconds.
     Tearing down left over layers:
-      Tear down samplelayers.Layer122 in 0.000 seconds.
-      Tear down samplelayers.Layer12 in 0.000 seconds.
-      Tear down samplelayers.Layer1 in 0.000 seconds.
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     Total: 413 tests, 3 failures, 1 errors in N.NNN seconds.
     True
 
@@ -137,9 +111,10 @@ there'll be a summary of the errors at the end of the test:
     >>> testrunner.run(defaults)
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
     Running tests at level 1
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+    ...
       Running:
-     .................................................................................................
+    .................................................................................................
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_e)
     Failed doctest test for sample2.sampletests_e.eek
@@ -208,6 +183,7 @@ there'll be a summary of the errors at the end of the test:
     ................................................................................................
     <BLANKLINE>
       Ran 200 tests with 3 failures and 1 errors in 0.040 seconds.
+    ...
     <BLANKLINE>
     Tests with errors:
        test3 (sample2.sampletests_e.Test)
@@ -224,7 +200,8 @@ Similarly for progress output, the progress ticker will be interrupted:
     ...             ' -p').split()
     >>> testrunner.run(defaults)
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
         1/56 (1.8%)
     <BLANKLINE>
@@ -379,6 +356,8 @@ Similarly for progress output, the progress ticker will be interrupted:
                       \r
     <BLANKLINE>
       Ran 56 tests with 3 failures and 1 errors in 0.054 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     True
 
 If you also want a summary of errors at the end, ask for verbosity as well
@@ -393,7 +372,8 @@ examples in the same test to fail.  Each failure is reported:
 
     >>> sys.argv = 'test --tests-pattern ^sampletests_1$'.split()
     >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_1)
@@ -438,6 +418,8 @@ examples in the same test to fail.  Each failure is reported:
         NameError: name 'x' is not defined
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     True
 
 This can be a bit confusing, especially when there are enough tests
@@ -447,7 +429,8 @@ me the first failed example in a doctest" :)
 
     >>> sys.argv = 'test --tests-pattern ^sampletests_1$ -1'.split()
     >>> testrunner.run(defaults) # doctest:
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_1)
@@ -468,6 +451,8 @@ me the first failed example in a doctest" :)
         NameError: name 'y' is not defined
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.001 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     True
 
 The --hide-secondary-failures option is an alias for -1:
@@ -477,7 +462,8 @@ The --hide-secondary-failures option is an alias for -1:
     ...     ' --hide-secondary-failures'
     ...     ).split()
     >>> testrunner.run(defaults) # doctest:
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_1)
@@ -498,6 +484,8 @@ The --hide-secondary-failures option is an alias for -1:
         NameError: name 'y' is not defined
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.001 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     True
 
 The --show-secondary-failures option counters -1 (or it's alias),
@@ -510,7 +498,8 @@ command-line options in sys.argv.
     ...     ' --hide-secondary-failures --show-secondary-failures'
     ...     ).split()
     >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test eek (sample2.sampletests_1)
@@ -555,6 +544,8 @@ command-line options in sys.argv.
         NameError: name 'x' is not defined
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     True
 
 
@@ -568,7 +559,8 @@ kinds.
 
     >>> sys.argv = 'test --tests-pattern ^pledge$'.split()
     >>> _ = testrunner.run(defaults)
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test pledge (pledge)
@@ -591,6 +583,8 @@ kinds.
         It's soils, minerals, forests, waters, and wildlife.
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
 Here, the actual output uses the word "and" rather than the word "an",
 but it's a bit hard to pick this out.  We can use the various diff
@@ -605,7 +599,8 @@ caret marking the mismatching column positions.
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ --ndiff'.split()
     >>> _ = testrunner.run(defaults)
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test pledge (pledge)
@@ -625,12 +620,15 @@ caret marking the mismatching column positions.
           It's soils, minerals, forests, waters, and wildlife.
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.003 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
 The -udiff option requests a standard "unified" diff:
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ --udiff'.split()
     >>> _ = testrunner.run(defaults)
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test pledge (pledge)
@@ -649,12 +647,15 @@ The -udiff option requests a standard "unified" diff:
          the natural resources of my planet.
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
 The -cdiff option requests a standard "context" diff:
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ --cdiff'.split()
     >>> _ = testrunner.run(defaults)
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure in test pledge (pledge)
@@ -677,6 +678,8 @@ The -cdiff option requests a standard "context" diff:
           the natural resources of my planet.
     <BLANKLINE>
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
 
 Testing-Module Import Errors
@@ -765,13 +768,13 @@ Then run the tests:
       Tear down samplelayers.Layer122 in 0.000 seconds.
       Tear down samplelayers.Layer12 in 0.000 seconds.
       Tear down samplelayers.Layer1 in 0.000 seconds.
-    Total: 213 tests, 0 failures, 0 errors in N.NNN seconds.
     <BLANKLINE>
     Test-modules with import problems:
       sample2.sampletests_i
       sample2.sample21.sampletests_i
       sample2.sample22.sampletests_i
       sample2.sample23.sampletests_i
+    Total: 213 tests, 0 failures, 0 errors in N.NNN seconds.
     True
 
 
@@ -783,7 +786,8 @@ unicode and another not:
 
     >>> sys.argv = 'test --tests-pattern ^unicode$ -u'.split()
     >>> testrunner.run(defaults) # doctest: +REPORT_NDIFF
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
     Failure testrunner-ex/unicode.txt
@@ -808,6 +812,8 @@ unicode and another not:
         'xyz'
     <BLANKLINE>
       Ran 3 tests with 1 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     True
 
  
@@ -829,9 +835,12 @@ To use, specify the argument "--exit-with-status".
     ... else:
     ...     print 'sys.exit was not called'
     ... # doctest: +ELLIPSIS
-    Running unit tests:
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     ...
       Ran 1 tests with 1 failures and 0 errors in 0.002 seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     exited with code 1
 
 A passing test does not exit.
@@ -845,8 +854,16 @@ A passing test does not exit.
     ... else:
     ...     print 'sys.exit was not called'
     ... # doctest: +ELLIPSIS
-    Running unit tests:
+    Running samplelayers.Layer11 tests:
     ...
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Tear down samplelayers.Layer122 in N.NNN seconds.
+      Tear down samplelayers.Layer12 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Ran 160 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     Total: 364 tests, 0 failures, 0 errors in N.NNN seconds.
     ...
     sys.exit was not called
