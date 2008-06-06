@@ -22,7 +22,8 @@ try:
     from setuptools import setup
     extra = dict(
         namespace_packages=['zope',],
-        install_requires = ['setuptools'],
+        install_requires = ['setuptools',
+                            'zope.interface'],
         extras_require={'zope_tracebacks': 'zope.exceptions'},
         include_package_data = True,
         zip_safe = False,
