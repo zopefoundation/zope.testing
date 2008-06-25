@@ -21,7 +21,6 @@ import sys
 import unittest
 from zope.testing import doctest, testrunner
 
-
 def test_suite():
     return unittest.TestSuite((
         doctest.DocTestSuite('zope.testing.renormalizing'),
@@ -29,4 +28,5 @@ def test_suite():
         doctest.DocTestSuite('zope.testing.loggingsupport'),
         doctest.DocTestSuite('zope.testing.server'),
         doctest.DocFileSuite('setupstack.txt'),
+        doctest.DocFileSuite('module.txt'),
         ))

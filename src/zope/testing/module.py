@@ -27,7 +27,7 @@ class FakeModule:
         except KeyError:
             raise AttributeError(name)
 
-def setUp(test, name='README.txt'):
+def setUp(test, name='__main__'):
     dict = test.globs
     dict['__name__'] = name
     module = FakeModule(dict)
@@ -40,6 +40,7 @@ def setUp(test, name='README.txt'):
 def tearDown(test, name=None):
     if name is None:
         name = test.globs['__name__']
+    del test.globs['__name__']
     del sys.modules[name]
     if '.' in name:
         name = name.split('.')

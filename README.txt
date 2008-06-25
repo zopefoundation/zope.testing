@@ -76,6 +76,17 @@ New Features
 - Unified unit tests with the layer support by introducing a real unit test
   layer.
 
+- Added a doctest for ``zope.testing.module``. There were several bugs
+  that were fixed:
+  
+  * ``README.txt`` was a really bad default argument for the module
+    name, as it is not a proper dotted name. The code would
+    immediately fail as it would look for the ``txt`` module in the
+    ``README`` package. The default is now ``__main__``.
+
+  * The tearDown function did not clean up the ``__name__`` entry in the
+    global dictionary.
+
 3.5.1 (2007/08/14)
 ==================
 
