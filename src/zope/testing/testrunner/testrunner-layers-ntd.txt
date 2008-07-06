@@ -238,3 +238,22 @@ that is run as a subprocess:
 If you want to use pdb from a test in a layer that is run as a
 subprocess, then rerun the test runner selecting *just* that layer so
 that it's not run as a subprocess.
+
+
+If a test is run in a subprocess and it generates output on stderr (as
+stderrtest does), the output is ignored (but it doesn't cause a SubprocessError
+like it once did).
+
+    >>> sys.argv = [testrunner_script, '-s', 'sample2', '--tests-pattern', '(sampletests_ntd$|stderrtest)']
+    >>> testrunner.run(defaults)
+    Running sample2.sampletests_ntd.Layer tests:
+      Set up sample2.sampletests_ntd.Layer in 0.000 seconds.
+      Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
+    Running sample2.stderrtest.Layer tests:
+      Tear down sample2.sampletests_ntd.Layer ... not supported
+      Running in a subprocess.
+      Set up sample2.stderrtest.Layer in 0.000 seconds.
+      Ran 1 tests with 0 failures and 0 errors in 0.002 seconds.
+      Tear down sample2.stderrtest.Layer in 0.000 seconds.
+    Total: 2 tests, 0 failures, 0 errors in 0.197 seconds.
+    False
