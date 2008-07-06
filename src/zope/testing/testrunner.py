@@ -2501,7 +2501,12 @@ def get_options(args=None, defaults=None):
                           ])
 
     if options.package:
-        pkgmap = dict(options.test_path)
+        # DM 2008-06-25: filter out '--test-path' values as
+        #   they are not involved in package resolution
+        #pkgmap = dict(options.test_path)
+        pkgmap = dict([(path, '') for path in options.path]
+                      + (options.package_path or [])
+                      )
         options.package = [normalize_package(p, pkgmap)
                            for p in options.package]
 
@@ -2660,6 +2665,7 @@ def test_suite():
             sys.argv[:],
             sys.modules.copy(),
             gc.get_threshold(),
+            os.getcwd(),
             )
         test.globs['this_directory'] = os.path.split(__file__)[0]
         test.globs['testrunner_script'] = __file__
@@ -2669,6 +2675,7 @@ def test_suite():
         gc.set_threshold(*test.globs['saved-sys-info'][3])
         sys.modules.clear()
         sys.modules.update(test.globs['saved-sys-info'][2])
+        os.chdir(test.globs['saved-sys-info'][4])
 
     suites = [
         doctest.DocFileSuite(
@@ -2690,6 +2697,7 @@ def test_suite():
         'testrunner-repeat.txt',
         'testrunner-gc.txt',
         'testrunner-knit.txt',
+        'testrunner-package-normalization.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker),

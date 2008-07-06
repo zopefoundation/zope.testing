@@ -70,6 +70,15 @@ New Features
 
 - Added --no-progress and --auto-progress options.
 
+3.5.2 (2008/07/06)
+==================
+
+Bugs Fixed:
+-----------
+
+- Launchpad #242851: fixed package normalization
+
+
 3.5.1 (2007/08/14)
 ==================
 
