@@ -70,6 +70,16 @@ New Features
 
 - Added --no-progress and --auto-progress options.
 
+3.5.3 (2008/07/08)
+==================
+
+Bugs Fixed:
+-----------
+
+- Launchpad #242851: committed the missing testing part
+  of the patch
+
+
 3.5.2 (2008/07/06)
 ==================
 
