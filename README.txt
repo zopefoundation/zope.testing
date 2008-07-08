@@ -78,7 +78,7 @@ New Features
 
 - Added a doctest for ``zope.testing.module``. There were several bugs
   that were fixed:
-  
+
   * ``README.txt`` was a really bad default argument for the module
     name, as it is not a proper dotted name. The code would
     immediately fail as it would look for the ``txt`` module in the
@@ -86,6 +86,10 @@ New Features
 
   * The tearDown function did not clean up the ``__name__`` entry in the
     global dictionary.
+
+  * Fix a bug that caused a SubprocessError to be generated if a subprocess
+    sent any output to stderr.
+
 
 3.5.1 (2007/08/14)
 ==================
