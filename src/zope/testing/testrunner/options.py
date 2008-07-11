@@ -122,7 +122,7 @@ searching.add_option(
     help="Run tests at all levels.")
 
 searching.add_option(
-    '--list-tests', action="store_true", dest='list_tests', default=False,
+    '--list-tests', action="store_true", dest='list_tests',
     help="List all tests that matched your filters.  Do not run any tests.")
 
 parser.add_option_group(searching)
@@ -192,8 +192,7 @@ Colorize the output, but only when stdout is a terminal.
 """)
 
 reporting.add_option(
-    '--slow-test', type='float', dest='slow_test_threshold',
-    metavar='N', default=10,
+    '--slow-test', type='float', dest='slow_test_threshold', metavar='N',
     help="""\
 With -c and -vvv, highlight tests that take longer than N seconds (default:
 %default).
@@ -407,6 +406,13 @@ parser.add_option_group(setup)
 other = optparse.OptionGroup(parser, "Other", "Other options")
 
 other.add_option(
+    '--exit-with-status', action="store_true", dest='exitwithstatus',
+    help="""\
+Return an error exit status if the tests failed.  This can be useful for
+an invoking process that wants to monitor the result of a test run.
+""")
+
+other.add_option(
     '--keepbytecode', '-k', action="store_true", dest='keepbytecode',
     help="""\
 Normally, the test runner scans the test paths and the test
@@ -431,14 +437,21 @@ tests against a tree where the .py files have been removed after
 compilation to .pyc/.pyo.  Use of this option implies --keepbytecode.
 """)
 
-other.add_option(
-    '--exit-with-status', action="store_true", dest='exitwithstatus',
-    help="""\
-Return an error exit status if the tests failed.  This can be useful for
-an invoking process that wants to monitor the result of a test run.
-""")
-
 parser.add_option_group(other)
+
+######################################################################
+# Default values
+
+parser.set_defaults(
+    ignore_dir=['.svn', 'CVS', '{arch}', '.arch-ids', '_darcs'],
+    tests_pattern='^tests$',
+    at_level=1,
+    test_file_pattern='^test',
+    suite_name='test_suite',
+    list_tests=False,
+    slow_test_threshold=10,
+    )
+
 
 ######################################################################
 # Command-line processing
@@ -454,19 +467,6 @@ def merge_options(options, defaults):
     for name, value in defaults.__dict__.items():
         if (value is not None) and (odict[name] is None):
             odict[name] = value
-
-default_setup_args = [
-    '--tests-pattern', '^tests$',
-    '--at-level', '1',
-    '--ignore', '.svn',
-    '--ignore', 'CVS',
-    '--ignore', '{arch}',
-    '--ignore', '.arch-ids',
-    '--ignore', '_darcs',
-    '--test-file-pattern', '^test',
-    '--suite-name', 'test_suite',
-    ]
-
 
 def get_options(args=None, defaults=None):
     # Because we want to inspect stdout and decide to colorize or not, we
@@ -499,24 +499,17 @@ def get_options(args=None, defaults=None):
     apply_auto_progress(args)
     apply_auto_progress(defaults)
 
-    default_setup, _ = parser.parse_args(default_setup_args)
-    assert not _
     if defaults:
         defaults, _ = parser.parse_args(defaults)
         assert not _
-        merge_options(defaults, default_setup)
     else:
-        defaults = default_setup
+        defaults = None
 
     if args is None:
         args = sys.argv
 
-    original_testrunner_args = args
-    args = args[1:]
-
-    options, positional = parser.parse_args(args)
-    merge_options(options, defaults)
-    options.original_testrunner_args = original_testrunner_args
+    options, positional = parser.parse_args(args[1:], defaults)
+    options.original_testrunner_args = args
 
     if options.color:
         options.output = ColorfulOutputFormatter(options)
