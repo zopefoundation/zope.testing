@@ -410,7 +410,7 @@ def resume_tests(options, layer_name, layers, failures, errors):
             whole_suberr += line
             if not line:
                 raise SubprocessError(
-                    'No subprocess summary found', whole_suberr+suberr.read())
+                    'No subprocess summary found', repr(whole_suberr))
 
             try:
                 ran, nfail, nerr = map(int, line.strip().split())

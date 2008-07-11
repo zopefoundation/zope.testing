@@ -21,8 +21,6 @@ from zope.testing import doctest
 import sys
 
 
-sys.stderr.write('A message on stderr.\n')
-
 
 class Layer:
 
@@ -43,6 +41,9 @@ def test_something():
 
 
 def test_suite():
+    # Generate some text on stderr to be sure the test runner can handle it.
+    sys.stderr.write('A message on stderr.\n')
+
     suite = unittest.TestSuite()
     d = doctest.DocTestSuite()
     d.layer = Layer
