@@ -61,9 +61,6 @@ Releases
 3.6.0 (2008/07/10)
 ==================
 
-New Features
-------------
-
 - Added -j option to parallel tests run in subprocesses.
 
 - RENormalizer accepts plain Python callables.
@@ -89,10 +86,10 @@ New Features
   * The tearDown function did not clean up the ``__name__`` entry in the
     global dictionary.
 
-  * Fix a bug that caused a SubprocessError to be generated if a subprocess
-    sent any output to stderr.
+- Fix a bug that caused a SubprocessError to be generated if a subprocess
+  sent any output to stderr.
 
-  * Fix a bug that caused the unit tests to be skipped if run in a subprocess.
+- Fix a bug that caused the unit tests to be skipped if run in a subprocess.
 
 
 3.5.1 (2007/08/14)
