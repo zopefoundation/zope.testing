@@ -42,7 +42,8 @@ def test_something():
 
 def test_suite():
     # Generate some text on stderr to be sure the test runner can handle it.
-    sys.stderr.write('A message on stderr.\n')
+    sys.stderr.write('A message on stderr.'
+                     '  Please ignore (expected in test output).\n')
 
     suite = unittest.TestSuite()
     d = doctest.DocTestSuite()
