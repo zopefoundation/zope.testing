@@ -36,7 +36,7 @@ class Filter(zope.testing.testrunner.feature.Feature):
             # We start out assuming unit tests should run and look for reasons
             # why they shouldn't be run.
             should_run = True
-            if (not options.non_unit) and not options.resume_layer:
+            if (not options.non_unit):
                 if options.layer:
                     should_run = False
                     for pat in options.layer:

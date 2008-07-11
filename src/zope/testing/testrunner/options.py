@@ -413,6 +413,13 @@ an invoking process that wants to monitor the result of a test run.
 """)
 
 other.add_option(
+    '-j', action="store", type="int", dest='processes',
+    help="""\
+Use up to given number of parallel processes to execute tests.  May decrease
+test run time substantially.  Defaults to %default.
+""")
+
+other.add_option(
     '--keepbytecode', '-k', action="store_true", dest='keepbytecode',
     help="""\
 Normally, the test runner scans the test paths and the test
@@ -450,6 +457,7 @@ parser.set_defaults(
     suite_name='test_suite',
     list_tests=False,
     slow_test_threshold=10,
+    processes=1,
     )
 
 

@@ -16,12 +16,12 @@
 $Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
 """
 
-import re
 import cStringIO
 import gc
 import glob
 import os
 import pdb
+import re
 import sys
 import tempfile
 import threading
@@ -205,8 +205,10 @@ class Runner(object):
         """
         setup_layers = {}
         layers_to_run = list(self.ordered_layers())
+        should_resume = False
 
-        for layer_name, layer, tests in layers_to_run:
+        while layers_to_run:
+            layer_name, layer, tests = layers_to_run[0]
             for feature in self.features:
                 feature.layer_setup(layer)
             try:
@@ -216,11 +218,20 @@ class Runner(object):
                 self.failed = True
                 return
             except CanNotTearDown:
-                setup_layers = None
                 if not self.options.resume_layer:
-                    self.ran += resume_tests(self.options, layer_name, layers_to_run,
-                                             self.failures, self.errors)
+                    should_resume = True
                     break
+
+            layers_to_run.pop(0)
+            if self.options.processes > 1:
+                should_resume = True
+                break
+
+        if should_resume:
+            setup_layers = None
+            if layers_to_run:
+                self.ran += resume_tests(self.options, self.features,
+                    layers_to_run, self.failures, self.errors)
 
         if setup_layers:
             if self.options.resume_layer == None:
@@ -358,18 +369,13 @@ class SetUpLayerFailure(unittest.TestCase):
     def runTest(self):
         "Layer set up failure."
 
-def resume_tests(options, layer_name, layers, failures, errors):
-    output = options.output
-    layers = [l for (l, _, _) in layers]
-    layers = layers[layers.index(layer_name):]
-    rantotal = 0
-    resume_number = 0
-    for layer_name in layers:
+def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
+        failures, errors, resume_number):
+    try:
         args = [sys.executable,
                 sys.argv[0],
                 '--resume-layer', layer_name, str(resume_number),
                 ]
-        resume_number += 1
         for d in options.testrunner_defaults:
             args.extend(['--default', d])
 
@@ -386,19 +392,22 @@ def resume_tests(options, layer_name, layers, failures, errors):
                 for a in args[1:]
                 ])
 
+        for feature in features:
+            feature.layer_setup(layer)
+
         subin, subout, suberr = os.popen3(args)
         while True:
             try:
-                for l in subout:
-                    sys.stdout.write(l)
+                for line in subout:
+                    result.stdout.append(line)
             except IOError, e:
                 if e.errno == errno.EINTR:
-                    # If the subprocess dies before we finish reading its
-                    # output, a SIGCHLD signal can interrupt the reading.
-                    # The correct thing to to in that case is to retry.
+                    # If the reading the subprocess input is interruped (as
+                    # be caused by recieving SIGCHLD), then retry.
                     continue
-                output.error("Error reading subprocess output for %s" % layer_name)
-                output.info(str(e))
+                options.output.error(
+                    "Error reading subprocess output for %s" % layer_name)
+                options.output.info(str(e))
             else:
                 break
 
@@ -413,7 +422,7 @@ def resume_tests(options, layer_name, layers, failures, errors):
                     'No subprocess summary found', repr(whole_suberr))
 
             try:
-                ran, nfail, nerr = map(int, line.strip().split())
+                result.num_ran, nfail, nerr = map(int, line.strip().split())
                 break
             except KeyboardInterrupt:
                 raise
@@ -427,9 +436,58 @@ def resume_tests(options, layer_name, layers, failures, errors):
             nerr -= 1
             errors.append((suberr.readline().strip(), None))
 
-        rantotal += ran
+    finally:
+        result.done = True
 
-    return rantotal
+
+class SubprocessResult(object):
+    def __init__(self):
+        self.num_ran = 0
+        self.stdout = []
+        self.done = False
+
+
+def resume_tests(options, features, layers, failures, errors):
+    results = []
+    resume_number = int(options.processes > 1)
+    ready_threads = []
+    for layer_name, layer, tests in layers:
+        result = SubprocessResult()
+        results.append(result)
+        ready_threads.append(threading.Thread(
+            target=spawn_layer_in_subprocess,
+            args=(result, options, features, layer_name, layer, failures,
+                errors, resume_number)))
+        resume_number += 1
+
+    # Now start a few threads at a time.
+    running_threads = []
+    results_iter = iter(results)
+    current_result = results_iter.next()
+    while ready_threads or running_threads:
+        while len(running_threads) < options.processes and ready_threads:
+            thread = ready_threads.pop(0)
+            thread.start()
+            running_threads.append(thread)
+
+        for index, thread in reversed(list(enumerate(running_threads))):
+            if not thread.isAlive():
+                del running_threads[index]
+
+        # We want to display results in the order they would have been
+        # displayed, had the work not been done in parallel.
+        while current_result and current_result.done:
+            map(sys.stdout.write, current_result.stdout)
+
+            try:
+                current_result = results_iter.next()
+            except StopIteration:
+                current_result = None
+
+        time.sleep(0.01) # Keep the loop from being too tight.
+
+    # Return the total number of tests run.
+    return sum(r.num_ran for r in results)
 
 
 def tear_down_unneeded(options, needed, setup_layers, optional=False):
