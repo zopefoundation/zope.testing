@@ -58,11 +58,13 @@ to run the zope.testing test suite.
 Releases
 ********
 
-3.6.0 (????/??/??)
-============
+3.6.0 (unreleased)
+==================
 
 New Features
 ------------
+
+- Added -j option to parallel tests run in subprocesses.
 
 - RENormalizer accepts plain Python callables.
 
@@ -89,6 +91,8 @@ New Features
 
   * Fix a bug that caused a SubprocessError to be generated if a subprocess
     sent any output to stderr.
+
+  * Fix a bug that caused the unit tests to be skipped if run in a subprocess.
 
 
 3.5.1 (2007/08/14)
