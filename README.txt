@@ -58,18 +58,6 @@ to run the zope.testing test suite.
 Releases
 ********
 
-Next release
-============
-
-New Features
-------------
-
-- RENormalizer accepts plain Python callables.
-
-- Added --slow-test option.
-
-- Added --no-progress and --auto-progress options.
-
 3.5.3 (2008/07/08)
 ==================
 
@@ -91,6 +79,15 @@ Bugs Fixed:
 
 3.5.1 (2007/08/14)
 ==================
+
+New Features
+------------
+
+- RENormalizer accepts plain Python callables.
+
+- Added --slow-test option.
+
+- Added --no-progress and --auto-progress options.
 
 Bugs Fixed:
 -----------
