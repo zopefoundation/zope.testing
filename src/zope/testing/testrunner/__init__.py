@@ -47,3 +47,8 @@ if sys.version_info < (2, 4):
 
 # Install 2.4 TestSuite __iter__ into earlier versions
 ###############################################################################
+
+if __name__ == '__main__':
+    # allow people to try out the test runner with
+    # python -m zope.testing.testrunner --test-path .
+    run()
