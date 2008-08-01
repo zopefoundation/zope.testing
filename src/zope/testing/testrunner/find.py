@@ -32,6 +32,7 @@ class StartUpFailure(unittest.TestCase):
 
     def __init__(self, options, module, exc_info):
         if options.post_mortem:
+            from zope.testing.testrunner.runner import post_mortem
             post_mortem(exc_info)
         self.module = module
         self.exc_info = exc_info

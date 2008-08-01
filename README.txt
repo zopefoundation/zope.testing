@@ -58,6 +58,13 @@ to run the zope.testing test suite.
 Releases
 ********
 
+after 3.6.0
+===========
+
+- Fixed NameError in StartUpFailure.
+
+
+
 3.6.0 (2008/07/10)
 ==================
 
