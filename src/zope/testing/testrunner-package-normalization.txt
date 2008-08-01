@@ -1,0 +1,49 @@
+Package normalization
+=====================
+
+For backward compatibility, the testrunner allows directory paths
+to be used as arguments to its ``--package`` option.
+Such a directory path is normalized by ``normalizePackage`` into
+a Python dotted module path. Of course, this operation is tricky
+and indeed caused bad normalizations in a buildout environment
+where development eggs have been created with ``ZopeSkel``.
+
+This test and its supporting directory
+``packagenormalization`` partly reproduces the environment
+build by ``ZopeSkel`` and checks for correct normalization
+in this case.
+It is quite likely, however, that the normalization has
+considerably more bugs. We probably should get rid of it...
+
+Let's set the path to our problematic directory:
+
+>>> from os.path import join
+>>> pd = join(this_directory, 'packagenormalization')
+
+The following setup is usually done by the ``buildout`` development egg
+magic for a development egg in ``packagenormalization``.
+
+>>> from sys import path
+>>> path.insert(0, pd)
+
+When the problem occurs, we are in the same directory as
+the development egg. Emulate this.
+
+>>> from os import chdir
+>>> chdir(this_directory)
+
+Defaults like this are set by ``collective.recipe.z2testrunner``
+
+>>> defaults = [
+...   '--test-path',  pd,
+...   ]
+
+And now let the testrunner run
+
+>>> from zope.testing import testrunner
+>>> testrunner.run(defaults, 'test --package packagenormalization'.split())
+    Running unit tests:
+      Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
+    False
+
+
