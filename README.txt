@@ -67,7 +67,8 @@ Bugs Fixed:
 - Launchpad #242851: committed the last missing testing part
   of the patch
 
-- Launchpad #253959: added extra diagnostics.
+- Launchpad #253959: in some invoking running the test runner from inside a
+  test case could cause problems with layers.
 
 
 3.5.3 (2008/07/08)

@@ -972,172 +972,178 @@ def run_with_options(options, found_suites=None):
     """
 
     global _layer_name_cache
-    _layer_name_cache = {} # Reset to enforce test isolation
+    old_layer_name_cache = _layer_name_cache
+    try:
+        _layer_name_cache = {} # Reset to enforce test isolation
 
-    output = options.output
+        output = options.output
 
-    if options.resume_layer:
-        original_stderr = sys.stderr
-        sys.stderr = sys.stdout
-    elif options.verbose:
-        if options.all:
-            msg = "Running tests at all levels"
-        else:
-            msg = "Running tests at level %d" % options.at_level
-        output.info(msg)
+        if options.resume_layer:
+            original_stderr = sys.stderr
+            sys.stderr = sys.stdout
+        elif options.verbose:
+            if options.all:
+                msg = "Running tests at all levels"
+            else:
+                msg = "Running tests at level %d" % options.at_level
+            output.info(msg)
 
 
-    old_threshold = gc.get_threshold()
-    if options.gc:
-        if len(options.gc) > 3:
-            output.error("Too many --gc options")
-            sys.exit(1)
-        if options.gc[0]:
-            output.info("Cyclic garbage collection threshold set to: %s" %
-                        repr(tuple(options.gc)))
-        else:
-            output.info("Cyclic garbage collection is disabled.")
+        old_threshold = gc.get_threshold()
+        if options.gc:
+            if len(options.gc) > 3:
+                output.error("Too many --gc options")
+                sys.exit(1)
+            if options.gc[0]:
+                output.info("Cyclic garbage collection threshold set to: %s" %
+                            repr(tuple(options.gc)))
+            else:
+                output.info("Cyclic garbage collection is disabled.")
 
-        gc.set_threshold(*options.gc)
+            gc.set_threshold(*options.gc)
 
-    old_flags = gc.get_debug()
-    if options.gc_option:
-        new_flags = 0
-        for op in options.gc_option:
-            new_flags |= getattr(gc, op)
-        gc.set_debug(new_flags)
+        old_flags = gc.get_debug()
+        if options.gc_option:
+            new_flags = 0
+            for op in options.gc_option:
+                new_flags |= getattr(gc, op)
+            gc.set_debug(new_flags)
 
-    old_reporting_flags = doctest.set_unittest_reportflags(0)
-    reporting_flags = 0
-    if options.ndiff:
-        reporting_flags = doctest.REPORT_NDIFF
-    if options.udiff:
+        old_reporting_flags = doctest.set_unittest_reportflags(0)
+        reporting_flags = 0
+        if options.ndiff:
+            reporting_flags = doctest.REPORT_NDIFF
+        if options.udiff:
+            if reporting_flags:
+                output.error("Can only give one of --ndiff, --udiff, or --cdiff")
+                sys.exit(1)
+            reporting_flags = doctest.REPORT_UDIFF
+        if options.cdiff:
+            if reporting_flags:
+                output.error("Can only give one of --ndiff, --udiff, or --cdiff")
+                sys.exit(1)
+            reporting_flags = doctest.REPORT_CDIFF
+        if options.report_only_first_failure:
+            reporting_flags |= doctest.REPORT_ONLY_FIRST_FAILURE
+
         if reporting_flags:
-            output.error("Can only give one of --ndiff, --udiff, or --cdiff")
-            sys.exit(1)
-        reporting_flags = doctest.REPORT_UDIFF
-    if options.cdiff:
-        if reporting_flags:
-            output.error("Can only give one of --ndiff, --udiff, or --cdiff")
-            sys.exit(1)
-        reporting_flags = doctest.REPORT_CDIFF
-    if options.report_only_first_failure:
-        reporting_flags |= doctest.REPORT_ONLY_FIRST_FAILURE
+            doctest.set_unittest_reportflags(reporting_flags)
+        else:
+            doctest.set_unittest_reportflags(old_reporting_flags)
 
-    if reporting_flags:
-        doctest.set_unittest_reportflags(reporting_flags)
-    else:
+
+        # Add directories to the path
+        for path in options.path:
+            if path not in sys.path:
+                sys.path.append(path)
+
+        remove_stale_bytecode(options)
+
+        tests_by_layer_name = find_tests(options, found_suites)
+
+        ran = 0
+        failures = []
+        errors = []
+        nlayers = 0
+        import_errors = tests_by_layer_name.pop(None, None)
+
+        output.import_errors(import_errors)
+
+        if 'unit' in tests_by_layer_name:
+            tests = tests_by_layer_name.pop('unit')
+            if (not options.non_unit) and not options.resume_layer:
+                if options.layer:
+                    should_run = False
+                    for pat in options.layer:
+                        if pat('unit'):
+                            should_run = True
+                            break
+                else:
+                    should_run = True
+
+                if should_run:
+                    if options.list_tests:
+                        output.list_of_tests(tests, 'unit')
+                    else:
+                        output.info("Running unit tests:")
+                        nlayers += 1
+                        ran += run_tests(options, tests, 'unit', failures, errors)
+
+        setup_layers = {}
+
+        layers_to_run = list(ordered_layers(tests_by_layer_name))
+        if options.resume_layer is not None:
+            layers_to_run = [
+                (layer_name, layer, tests)
+                for (layer_name, layer, tests) in layers_to_run
+                if layer_name == options.resume_layer
+            ]
+        elif options.layer:
+            layers_to_run = [
+                (layer_name, layer, tests)
+                for (layer_name, layer, tests) in layers_to_run
+                if filter(None, [pat(layer_name) for pat in options.layer])
+            ]
+
+
+        if options.list_tests:
+            for layer_name, layer, tests in layers_to_run:
+                output.list_of_tests(tests, layer_name)
+            return True
+
+        start_time = time.time()
+
+        for layer_name, layer, tests in layers_to_run:
+            nlayers += 1
+            try:
+                ran += run_layer(options, layer_name, layer, tests,
+                                 setup_layers, failures, errors)
+            except CanNotTearDown:
+                setup_layers = None
+                if not options.resume_layer:
+                    ran += resume_tests(options, layer_name, layers_to_run,
+                                        failures, errors)
+                    break
+
+        if setup_layers:
+            if options.resume_layer == None:
+                output.info("Tearing down left over layers:")
+            tear_down_unneeded(options, (), setup_layers, True)
+
+        total_time = time.time() - start_time
+
+        if options.resume_layer:
+            sys.stdout.close()
+            # Communicate with the parent.  The protocol is obvious:
+            print >> original_stderr, ran, len(failures), len(errors)
+            for test, exc_info in failures:
+                print >> original_stderr, ' '.join(str(test).strip().split('\n'))
+            for test, exc_info in errors:
+                print >> original_stderr, ' '.join(str(test).strip().split('\n'))
+
+        else:
+            if options.verbose:
+                output.tests_with_errors(errors)
+                output.tests_with_failures(failures)
+
+            if nlayers != 1:
+                output.totals(ran, len(failures), len(errors), total_time)
+
+            output.modules_with_import_problems(import_errors)
+
         doctest.set_unittest_reportflags(old_reporting_flags)
 
+        if options.gc_option:
+            gc.set_debug(old_flags)
 
-    # Add directories to the path
-    for path in options.path:
-        if path not in sys.path:
-            sys.path.append(path)
+        if options.gc:
+            gc.set_threshold(*old_threshold)
 
-    remove_stale_bytecode(options)
-
-    tests_by_layer_name = find_tests(options, found_suites)
-
-    ran = 0
-    failures = []
-    errors = []
-    nlayers = 0
-    import_errors = tests_by_layer_name.pop(None, None)
-
-    output.import_errors(import_errors)
-
-    if 'unit' in tests_by_layer_name:
-        tests = tests_by_layer_name.pop('unit')
-        if (not options.non_unit) and not options.resume_layer:
-            if options.layer:
-                should_run = False
-                for pat in options.layer:
-                    if pat('unit'):
-                        should_run = True
-                        break
-            else:
-                should_run = True
-
-            if should_run:
-                if options.list_tests:
-                    output.list_of_tests(tests, 'unit')
-                else:
-                    output.info("Running unit tests:")
-                    nlayers += 1
-                    ran += run_tests(options, tests, 'unit', failures, errors)
-
-    setup_layers = {}
-
-    layers_to_run = list(ordered_layers(tests_by_layer_name))
-    if options.resume_layer is not None:
-        layers_to_run = [
-            (layer_name, layer, tests)
-            for (layer_name, layer, tests) in layers_to_run
-            if layer_name == options.resume_layer
-        ]
-    elif options.layer:
-        layers_to_run = [
-            (layer_name, layer, tests)
-            for (layer_name, layer, tests) in layers_to_run
-            if filter(None, [pat(layer_name) for pat in options.layer])
-        ]
-
-
-    if options.list_tests:
-        for layer_name, layer, tests in layers_to_run:
-            output.list_of_tests(tests, layer_name)
-        return True
-
-    start_time = time.time()
-
-    for layer_name, layer, tests in layers_to_run:
-        nlayers += 1
-        try:
-            ran += run_layer(options, layer_name, layer, tests,
-                             setup_layers, failures, errors)
-        except CanNotTearDown:
-            setup_layers = None
-            if not options.resume_layer:
-                ran += resume_tests(options, layer_name, layers_to_run,
-                                    failures, errors)
-                break
-
-    if setup_layers:
-        if options.resume_layer == None:
-            output.info("Tearing down left over layers:")
-        tear_down_unneeded(options, (), setup_layers, True)
-
-    total_time = time.time() - start_time
-
-    if options.resume_layer:
-        sys.stdout.close()
-        # Communicate with the parent.  The protocol is obvious:
-        print >> original_stderr, ran, len(failures), len(errors)
-        for test, exc_info in failures:
-            print >> original_stderr, ' '.join(str(test).strip().split('\n'))
-        for test, exc_info in errors:
-            print >> original_stderr, ' '.join(str(test).strip().split('\n'))
-
-    else:
-        if options.verbose:
-            output.tests_with_errors(errors)
-            output.tests_with_failures(failures)
-
-        if nlayers != 1:
-            output.totals(ran, len(failures), len(errors), total_time)
-
-        output.modules_with_import_problems(import_errors)
-
-    doctest.set_unittest_reportflags(old_reporting_flags)
-
-    if options.gc_option:
-        gc.set_debug(old_flags)
-
-    if options.gc:
-        gc.set_threshold(*old_threshold)
-
-    return not bool(import_errors or failures or errors)
+        return not bool(import_errors or failures or errors)
+    finally:
+        # restore old value to prevent cleaning the global cache when one of
+        # the tests decides to invoke testrunner.run() inside itself.
+        _layer_name_cache = old_layer_name_cache
 
 
 def run_tests(options, tests, name, failures, errors):
@@ -2707,6 +2713,7 @@ def test_suite():
         'testrunner-gc.txt',
         'testrunner-knit.txt',
         'testrunner-package-normalization.txt',
+        'testrunner-reentrancy.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker),

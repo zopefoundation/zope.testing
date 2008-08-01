@@ -1,0 +1,40 @@
+Using the testrunner recursively
+================================
+
+It's pretty obvious that the tests that are run by the testrunner can
+themselves invoke the testrunner.  That's how the testrunner is tested,
+after all!
+
+However there's a corner case that used to break.  We have a set of tests
+split into unit tests (no layer) and layered tests (where the layer cannot be
+accessed directly by importing the module and taking the attribute named by
+layer.__name__ in that module).  The first test in the unit test layer
+imports zope.testing.testrunner and runs it recursively.  It should work:
+
+    >>> import os.path, sys
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex-r')
+    >>> defaults = [
+    ...     '--path', directory_with_tests,
+    ...     '--tests-pattern', '^outertests$',
+    ...     ]
+
+    >>> sys.argv = []
+    >>> from zope.testing import testrunner
+    >>> testrunner.run(defaults)
+    Running unit tests:
+    -- inner test run starts --
+    Running unit tests:
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    -- inner test run ends --
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Running outertests.HardToAccessTestLayer tests:
+      Set up outertests.HardToAccessTestLayer in N.NNN seconds.
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down outertests.HardToAccessTestLayer in N.NNN seconds.
+    Total: 2 tests, 0 failures, 0 errors in N.NNN seconds.
+    False
+
+https://bugs.launchpad.net/zope.testing/+bug/253959 was caused by the
+inner test runner clearing the global layer name cache that was needed
+by the outer test runner.
