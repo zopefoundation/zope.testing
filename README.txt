@@ -58,6 +58,18 @@ to run the zope.testing test suite.
 Releases
 ********
 
+3.5.4 (unreleased)
+==================
+
+Bugs Fixed:
+-----------
+
+- Launchpad #242851: committed the last missing testing part
+  of the patch
+
+- Launchpad #253959: added extra diagnostics.
+
+
 3.5.3 (2008/07/08)
 ==================
 
