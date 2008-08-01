@@ -1564,7 +1564,16 @@ def layer_from_name(layer_name):
         return _layer_name_cache[layer_name]
     layer_names = layer_name.split('.')
     layer_module, module_layer_name = layer_names[:-1], layer_names[-1]
-    return getattr(import_name('.'.join(layer_module)), module_layer_name)
+    module_name = '.'.join(layer_module)
+    module = import_name(module_name)
+    try:
+        return getattr(module, module_layer_name)
+    except AttributeError, e:
+        # the default error is very uninformative:
+        #   AttributeError: 'module' object has no attribute 'DemoLayer'
+        # it doesn't say *which* module
+        raise AttributeError('module %r has no attribute %r'
+                             % (module_name, module_layer_name))
 
 def order_by_bases(layers):
     """Order the layers from least to most specific (bottom to top)
