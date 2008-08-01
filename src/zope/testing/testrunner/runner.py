@@ -647,7 +647,6 @@ def layer_from_name(layer_name):
        to allow locating layers in cases where it would otherwise be
        impossible.
     """
-    global _layer_name_cache
     if _layer_name_cache.has_key(layer_name):
         return _layer_name_cache[layer_name]
     layer_names = layer_name.split('.')
