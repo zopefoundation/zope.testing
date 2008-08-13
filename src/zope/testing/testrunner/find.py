@@ -23,19 +23,57 @@ import sys
 
 import zope.testing.testrunner.feature
 import zope.testing.testrunner.layer
+import zope.testing.testrunner.debug
 
 identifier = re.compile(r'[_a-zA-Z]\w*$').match
 
 
 class StartUpFailure(unittest.TestCase):
-    """Empty test case added to the test suite to indicate import failures."""
+    """Empty test case added to the test suite to indicate import failures.
+
+    >>> class Options(object):
+    ...    post_mortem = False
+    >>> options = Options()
+    
+    Normally the StartUpFailure just acts as an emtpy test suite to satisfy
+    the test runner and statistics:
+    
+    >>> StartUpFailure(options, None, None)
+    <StartUpFailure module=None>
+
+    The post mortem debugger needs real exception information:
+
+    >>> import sys
+    >>> try:
+    ...    raise Exception()
+    ... except:
+    ...     exc_info = sys.exc_info()
+
+    If the post mortem option is enabled the StartUpFailure will start
+    the debugger and stop the test run after the debugger quits:
+
+    >>> from zope.testing.testrunner.runner import FakeInputContinueGenerator
+    >>> old_stdin = sys.stdin
+
+    >>> options.post_mortem = True
+    >>> sys.stdin = FakeInputContinueGenerator()
+    >>> try:
+    ...     StartUpFailure(options, None, exc_info)
+    ... finally:
+    ...    sys.stdin = old_stdin
+    Traceback (most recent call last):
+    EndRun
+
+    """
 
     def __init__(self, options, module, exc_info):
         if options.post_mortem:
-            from zope.testing.testrunner.runner import post_mortem
-            post_mortem(exc_info)
+            zope.testing.testrunner.debug.post_mortem(exc_info)
         self.module = module
         self.exc_info = exc_info
+
+    def __repr__(self):
+        return '<StartUpFailure module=%s>' % self.module
 
 
 def find_tests(options, found_suites=None):

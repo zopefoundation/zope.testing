@@ -23,6 +23,14 @@ $Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
 import zope.interface
 
 
+class EndRun(Exception):
+    """Indicate that the existing run call should stop
+
+    Used to prevent additional test output after post-mortem debugging.
+
+    """
+
+
 class IFeature(zope.interface.Interface):
     """Features extend the test runners functionality in a pipe-lined
     order.

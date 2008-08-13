@@ -109,7 +109,8 @@ def test_suite():
         checker=checker),
         doctest.DocTestSuite('zope.testing.testrunner'),
         doctest.DocTestSuite('zope.testing.testrunner.coverage'),
-        doctest.DocTestSuite('zope.testing.testrunner.options')
+        doctest.DocTestSuite('zope.testing.testrunner.options'),
+        doctest.DocTestSuite('zope.testing.testrunner.find'),
         ]
 
     if sys.platform == 'win32':

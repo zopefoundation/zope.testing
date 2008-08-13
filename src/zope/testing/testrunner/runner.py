@@ -20,7 +20,6 @@ import cStringIO
 import gc
 import glob
 import os
-import pdb
 import re
 import sys
 import tempfile
@@ -45,7 +44,8 @@ import zope.testing.testrunner.garbagecollection
 import zope.testing.testrunner.listing
 import zope.testing.testrunner.statistics
 import zope.testing.testrunner.subprocess
-
+import zope.testing.testrunner.interfaces
+import zope.testing.testrunner.debug
 
 PYREFCOUNT_PATTERN = re.compile('\[[0-9]+ refs\]')
 
@@ -64,14 +64,6 @@ class SubprocessError(Exception):
 
 class CanNotTearDown(Exception):
     "Couldn't tear down a test"
-
-
-class EndRun(Exception):
-    """Indicate that the existing run call should stop
-
-    Used to prevent additional test output after post-mortem debugging.
-
-    """
 
 
 class Runner(object):
@@ -214,7 +206,7 @@ class Runner(object):
             try:
                 self.ran += run_layer(self.options, layer_name, layer, tests,
                                       setup_layers, self.failures, self.errors)
-            except EndRun:
+            except zope.testing.testrunner.interfaces.EndRun:
                 self.failed = True
                 return
             except CanNotTearDown:
@@ -353,7 +345,7 @@ def run_layer(options, layer_name, layer, tests, setup_layers,
 
     try:
         setup_layer(options, layer, setup_layers)
-    except EndRun:
+    except zope.testing.testrunner.interfaces.EndRun:
         raise
     except Exception:
         f = cStringIO.StringIO()
@@ -537,7 +529,8 @@ def setup_layer(options, layer, setup_layers):
                             % options.resume_layer)
                         raise
                     else:
-                        post_mortem(sys.exc_info())
+                        zope.testing.testrunner.debug.post_mortem(
+                            sys.exc_info())
                 else:
                     raise
 
@@ -608,7 +601,7 @@ class TestResult(unittest.TestResult):
                                                       " when running a layer"
                                                       " as a subprocess!")
             else:
-                post_mortem(exc_info)
+                zope.testing.testrunner.debug.post_mortem(exc_info)
 
     def addFailure(self, test, exc_info):
         self.options.output.test_failure(test, time.time() - self._start_time,
@@ -619,7 +612,7 @@ class TestResult(unittest.TestResult):
         if self.options.post_mortem:
             # XXX: mgedmin: why isn't there a resume_layer check here like
             # in addError?
-            post_mortem(exc_info)
+            zope.testing.testrunner.debug.post_mortem(exc_info)
 
     def stopTest(self, test):
         self.testTearDown()
@@ -688,42 +681,6 @@ def gather_layers(layer, result):
         result.append(layer)
     for b in layer.__bases__:
         gather_layers(b, result)
-
-
-def post_mortem(exc_info):
-    err = exc_info[1]
-    if isinstance(err, (doctest.UnexpectedException, doctest.DocTestFailure)):
-
-        if isinstance(err, doctest.UnexpectedException):
-            exc_info = err.exc_info
-
-            # Print out location info if the error was in a doctest
-            if exc_info[2].tb_frame.f_code.co_filename == '<string>':
-                print_doctest_location(err)
-
-        else:
-            print_doctest_location(err)
-            # Hm, we have a DocTestFailure exception.  We need to
-            # generate our own traceback
-            try:
-                exec ('raise ValueError'
-                      '("Expected and actual output are different")'
-                      ) in err.test.globs
-            except:
-                exc_info = sys.exc_info()
-
-    print "%s:" % (exc_info[0], )
-    print exc_info[1]
-    pdb.post_mortem(exc_info[2])
-    raise EndRun
-
-
-def print_doctest_location(err):
-    # This mimics pdb's output, which gives way cool results in emacs :)
-    filename = err.test.filename
-    if filename.endswith('.pyc'):
-        filename = filename[:-1]
-    print "> %s(%s)_()" % (filename, err.test.lineno+err.example.lineno+1)
 
 
 class FakeInputContinueGenerator:
