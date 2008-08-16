@@ -35,13 +35,22 @@ class StartUpFailure(unittest.TestCase):
     ...    post_mortem = False
     >>> options = Options()
     
-    Normally the StartUpFailure just acts as an emtpy test suite to satisfy
+    Normally the StartUpFailure just acts as an empty test suite to satisfy
     the test runner and statistics:
     
-    >>> StartUpFailure(options, None, None)
-    <StartUpFailure module=None>
+    >>> s = StartUpFailure(options, None, None)
+    >>> isinstance(s,unittest.TestCase)
+    True
 
-    The post mortem debugger needs real exception information:
+    However, if the post mortem option is enabled:
+
+    >>> options.post_mortem = True
+
+    ...then the the StartUpFailure will start the debugger and stop
+    the test run after the debugger quits.
+    
+    To simulate this, we need an exception and its associated
+    exc_info: 
 
     >>> import sys
     >>> try:
@@ -49,14 +58,17 @@ class StartUpFailure(unittest.TestCase):
     ... except:
     ...     exc_info = sys.exc_info()
 
-    If the post mortem option is enabled the StartUpFailure will start
-    the debugger and stop the test run after the debugger quits:
-
+    To simulate the user pressing 'c' and hitting return in the
+    debugger, we use a FakeInputContinueGenerator:
+    
     >>> from zope.testing.testrunner.runner import FakeInputContinueGenerator
     >>> old_stdin = sys.stdin
-
-    >>> options.post_mortem = True
     >>> sys.stdin = FakeInputContinueGenerator()
+
+    Now we can see the EndRun exception that is raised by the
+    postmortem debugger to indicate that debugging is finished and the
+    test run should be terminated:
+    
     >>> try:
     ...     StartUpFailure(options, None, exc_info)
     ... finally:
@@ -64,10 +76,24 @@ class StartUpFailure(unittest.TestCase):
     Traceback (most recent call last):
     EndRun
 
+    Annoyingly, sometimes StartupFailures occur when postmortem debugging
+    is enabled but no exc_info is passed. In this case, we raise a
+    sensible exception rather than letting the debugger barf with an
+    AttributeError:
+
+    >>> options.post_mortem = True
+    >>> StartUpFailure(options, None, exc_info[:2]+(None,))
+    Traceback (most recent call last):
+    ...
+    TypeError: If post_mortem is specified, full exc_info must be passed!
     """
 
     def __init__(self, options, module, exc_info):
         if options.post_mortem:
+            for item in exc_info:
+                if item is None:
+                    raise TypeError('If post_mortem is specified, '
+                                    'full exc_info must be passed!')
             zope.testing.testrunner.debug.post_mortem(exc_info)
         self.module = module
         self.exc_info = exc_info
