@@ -136,10 +136,6 @@ class Coverage(zope.testing.testrunner.feature.Feature):
         self.directory = os.path.join(os.getcwd(), self.runner.options.coverage)
         self.tracer = TestTrace(self.runner.test_directories,
                                 trace=False, count=True)
-
-    def late_setup(self):
-        """Executed once right before the actual tests get executed and after
-        all global setups have happened."""
         self.tracer.start()
 
     def early_teardown(self):

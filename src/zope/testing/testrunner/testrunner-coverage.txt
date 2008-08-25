@@ -18,50 +18,66 @@ directory name given as the parameter will be used to hold the reports.
     >>> testrunner.run(defaults)
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
-      Ran 9 tests with 0 failures and 0 errors in 0.003 seconds.
+      Ran 9 tests with 0 failures and 0 errors in 0.000 seconds.
     Running samplelayers.Layer11 tests:
       Set up samplelayers.Layer11 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.029 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.125 seconds.
     Running samplelayers.Layer111 tests:
       Set up samplelayers.Layerx in 0.000 seconds.
       Set up samplelayers.Layer111 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.024 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.125 seconds.
     Running samplelayers.Layer112 tests:
       Tear down samplelayers.Layer111 in 0.000 seconds.
       Set up samplelayers.Layer112 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.024 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.125 seconds.
     Running samplelayers.Layer12 tests:
       Tear down samplelayers.Layer112 in 0.000 seconds.
       Tear down samplelayers.Layerx in 0.000 seconds.
       Tear down samplelayers.Layer11 in 0.000 seconds.
       Set up samplelayers.Layer12 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.026 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.140 seconds.
     Running samplelayers.Layer121 tests:
       Set up samplelayers.Layer121 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.025 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.125 seconds.
     Running samplelayers.Layer122 tests:
       Tear down samplelayers.Layer121 in 0.000 seconds.
       Set up samplelayers.Layer122 in 0.000 seconds.
-      Ran 34 tests with 0 failures and 0 errors in 0.025 seconds.
+      Ran 34 tests with 0 failures and 0 errors in 0.125 seconds.
     Running zope.testing.testrunner.layer.UnitTests tests:
-      Tear down samplelayers.Layer122 in N.NNN seconds.
-      Tear down samplelayers.Layer12 in N.NNN seconds.
-      Tear down samplelayers.Layer1 in N.NNN seconds.
-      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
-      Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down samplelayers.Layer122 in 0.000 seconds.
+      Tear down samplelayers.Layer12 in 0.000 seconds.
+      Tear down samplelayers.Layer1 in 0.000 seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in 0.000 seconds.
+      Ran 192 tests with 0 failures and 0 errors in 0.687 seconds.
     Tearing down left over layers:
-      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+      Tear down zope.testing.testrunner.layer.UnitTests in 0.000 seconds.
     lines   cov%   module   (path)
-    ...
-       52    92%   sample1.sampletests.test1   (testrunner-ex/sample1/sampletests/test1.py)
-       78    94%   sample1.sampletests.test11   (testrunner-ex/sample1/sampletests/test11.py)
-       78    94%   sample1.sampletests.test111   (testrunner-ex/sample1/sampletests/test111.py)
-       78    94%   sample1.sampletests.test112   (testrunner-ex/sample1/sampletests/test112.py)
-       78    94%   sample1.sampletests.test12   (testrunner-ex/sample1/sampletests/test12.py)
-       78    94%   sample1.sampletests.test121   (testrunner-ex/sample1/sampletests/test121.py)
-       78    94%   sample1.sampletests.test122   (testrunner-ex/sample1/sampletests/test122.py)
-    ...
-    Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
+       82    78%   sample1.sample11.sampletests   (testrunner-ex\sample1\sample11\sampletests.py)
+       52    92%   sample1.sample13.sampletests   (testrunner-ex\sample1\sample13\sampletests.py)
+       52    92%   sample1.sampletests.test1   (testrunner-ex\sample1\sampletests\test1.py)
+       78    94%   sample1.sampletests.test11   (testrunner-ex\sample1\sampletests\test11.py)
+       78    94%   sample1.sampletests.test111   (testrunner-ex\sample1\sampletests\test111.py)
+       78    94%   sample1.sampletests.test112   (testrunner-ex\sample1\sampletests\test112.py)
+       78    94%   sample1.sampletests.test12   (testrunner-ex\sample1\sampletests\test12.py)
+       78    94%   sample1.sampletests.test121   (testrunner-ex\sample1\sampletests\test121.py)
+       78    94%   sample1.sampletests.test122   (testrunner-ex\sample1\sampletests\test122.py)
+       52    92%   sample1.sampletests.test_one   (testrunner-ex\sample1\sampletests\test_one.py)
+       52    92%   sample1.sampletestsf   (testrunner-ex\sample1\sampletestsf.py)
+       52    92%   sample2.sample21.sampletests   (testrunner-ex\sample2\sample21\sampletests.py)
+       52    92%   sample2.sampletests.test_1   (testrunner-ex\sample2\sampletests\test_1.py)
+       52    92%   sample2.sampletests.testone   (testrunner-ex\sample2\sampletests\testone.py)
+       52    92%   sample3.sampletests   (testrunner-ex\sample3\sampletests.py)
+       96    75%   samplelayers   (testrunner-ex\samplelayers.py)
+       52    92%   sampletests.test1   (testrunner-ex\sampletests\test1.py)
+       78    94%   sampletests.test11   (testrunner-ex\sampletests\test11.py)
+       78    94%   sampletests.test111   (testrunner-ex\sampletests\test111.py)
+       80    95%   sampletests.test112   (testrunner-ex\sampletests\test112.py)
+       78    94%   sampletests.test12   (testrunner-ex\sampletests\test12.py)
+       78    94%   sampletests.test121   (testrunner-ex\sampletests\test121.py)
+       78    94%   sampletests.test122   (testrunner-ex\sampletests\test122.py)
+       52    92%   sampletests.test_one   (testrunner-ex\sampletests\test_one.py)
+      122    87%   sampletestsf   (testrunner-ex\sampletestsf.py)
+    Total: 405 tests, 0 failures, 0 errors in 1.641 seconds.
     False
 
 The directory specified with the --coverage option will have been created and
