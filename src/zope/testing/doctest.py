@@ -2074,7 +2074,7 @@ def testfile(filename, module_relative=True, name=None, package=None,
         runner = DocTestRunner(verbose=verbose, optionflags=optionflags)
 
     # Read the file, convert it to a test, and run it.
-    s = open(filename).read()
+    s = open(filename, 'U').read()
     if encoding is None:
         encoding = pep263_encoding(s)
     if encoding is not None:
@@ -2517,7 +2517,7 @@ def DocFileTest(path, module_relative=True, package=None,
 
     # Find the file and read it.
     name = os.path.basename(path)
-    doc = open(path).read()
+    doc = open(path, 'U').read()
 
     # If an encoding is specified, use it to convert the file to unicode
     if encoding is None:

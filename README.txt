@@ -63,6 +63,8 @@ after 3.6.0
 
 - Fixed NameError in StartUpFailure.
 
+- Open doctest files in universal mode, so that packages released in Windoes
+  can be tested in Linux, for example.
 
 
 3.6.0 (2008/07/10)

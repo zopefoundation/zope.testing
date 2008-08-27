@@ -23,10 +23,11 @@ from zope.testing import doctest, testrunner
 
 def test_suite():
     return unittest.TestSuite((
-        doctest.DocTestSuite('zope.testing.renormalizing'),
-        doctest.DocFileSuite('formparser.txt'),
         doctest.DocTestSuite('zope.testing.loggingsupport'),
+        doctest.DocTestSuite('zope.testing.renormalizing'),
         doctest.DocTestSuite('zope.testing.server'),
-        doctest.DocFileSuite('setupstack.txt'),
+        doctest.DocFileSuite('doctest.txt'),
+        doctest.DocFileSuite('formparser.txt'),
         doctest.DocFileSuite('module.txt'),
+        doctest.DocFileSuite('setupstack.txt'),
         ))
