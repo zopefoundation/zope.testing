@@ -58,6 +58,15 @@ to run the zope.testing test suite.
 Releases
 ********
 
+3.5.5 (unreleased)
+==================
+
+Bugs Fixed:
+-----------
+
+- Launchpad #261734: include the unit test time in the total time reported.
+
+
 3.5.4 (2008/08/01)
 ==================
 

@@ -1041,6 +1041,8 @@ def run_with_options(options, found_suites=None):
 
         tests_by_layer_name = find_tests(options, found_suites)
 
+        start_time = time.time()
+
         ran = 0
         failures = []
         errors = []
@@ -1090,8 +1092,6 @@ def run_with_options(options, found_suites=None):
             for layer_name, layer, tests in layers_to_run:
                 output.list_of_tests(tests, layer_name)
             return True
-
-        start_time = time.time()
 
         for layer_name, layer, tests in layers_to_run:
             nlayers += 1
