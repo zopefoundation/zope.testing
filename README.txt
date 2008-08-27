@@ -58,7 +58,7 @@ to run the zope.testing test suite.
 Releases
 ********
 
-3.5.5 (unreleased)
+3.5.5 (2008/08/27)
 ==================
 
 Bugs Fixed:
