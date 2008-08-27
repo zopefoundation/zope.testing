@@ -28,6 +28,7 @@ def test_suite():
         doctest.DocTestSuite('zope.testing.server'),
         testrunner.test_suite(),
         doctest.DocFileSuite('setupstack.txt'),
+        doctest.DocFileSuite('doctest.txt'),
         ))
 
 if __name__ == '__main__':
