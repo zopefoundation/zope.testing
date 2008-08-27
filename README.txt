@@ -61,6 +61,8 @@ Releases
 after 3.6.0
 ===========
 
+- Added support to bootstrap on Jython.
+
 - Fixed NameError in StartUpFailure.
 
 - Open doctest files in universal mode, so that packages released in Windoes
