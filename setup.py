@@ -45,7 +45,7 @@ chapters = '\n'.join([
 
 # The following seems to cause weird unicode in the output: :(
 ##     'testrunner-errors.txt',
-    
+
     'testrunner-debugging.txt',
     'testrunner-layers-ntd.txt',
     'testrunner-coverage.txt',
@@ -71,7 +71,7 @@ open('documentation.txt', 'w').write(long_description)
 
 setup(
     name='zope.testing',
-    version='3.5.6dev',
+    version='3.5.6',
     url='http://www.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing framework, including the testrunner script.',
