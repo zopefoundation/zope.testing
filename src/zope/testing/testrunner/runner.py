@@ -49,6 +49,7 @@ import zope.testing.testrunner.debug
 
 PYREFCOUNT_PATTERN = re.compile('\[[0-9]+ refs\]')
 
+is_jython = sys.platform.startswith('java')
 
 class SubprocessError(Exception):
     """An error occurred when running a subprocess
@@ -178,8 +179,13 @@ class Runner(object):
         self.features.append(zope.testing.testrunner.coverage.Coverage(self))
         self.features.append(zope.testing.testrunner.doctest.DocTest(self))
         self.features.append(zope.testing.testrunner.profiling.Profiling(self))
-        self.features.append(zope.testing.testrunner.garbagecollection.Threshold(self))
-        self.features.append(zope.testing.testrunner.garbagecollection.Debug(self))
+        if is_jython:
+            # Jython GC support is not yet implemented
+            pass
+        else:
+            self.features.append(zope.testing.testrunner.garbagecollection.Threshold(self))
+            self.features.append(zope.testing.testrunner.garbagecollection.Debug(self))
+
         self.features.append(zope.testing.testrunner.find.Find(self))
         self.features.append(zope.testing.testrunner.subprocess.SubProcess(self))
         self.features.append(zope.testing.testrunner.filter.Filter(self))
@@ -240,8 +246,12 @@ def run_tests(options, tests, name, failures, errors):
 
     output = options.output
 
-    gc.collect()
-    lgarbage = len(gc.garbage)
+    if is_jython:
+        # Jython has no GC suppport - set count to 0
+        lgarbage = 0
+    else:
+        gc.collect()
+        lgarbage = len(gc.garbage)
 
     sumrc = 0
     if options.report_refcounts:
@@ -301,10 +311,13 @@ def run_tests(options, tests, name, failures, errors):
         output.summary(result.testsRun, len(result.failures), len(result.errors), t)
         ran = result.testsRun
 
-        gc.collect()
-        if len(gc.garbage) > lgarbage:
-            output.garbage(gc.garbage[lgarbage:])
-            lgarbage = len(gc.garbage)
+        if is_jython:
+            lgarbage = 0
+        else:
+            gc.collect()
+            if len(gc.garbage) > lgarbage:
+                output.garbage(gc.garbage[lgarbage:])
+                lgarbage = len(gc.garbage)
 
         if options.report_refcounts:
 
@@ -618,10 +631,13 @@ class TestResult(unittest.TestResult):
         self.testTearDown()
         self.options.output.stop_test(test)
 
-        if gc.garbage:
-            self.options.output.test_garbage(test, gc.garbage)
-            # TODO: Perhaps eat the garbage here, so that the garbage isn't
-            #       printed for every subsequent test.
+        if is_jython:
+            pass
+        else:
+            if gc.garbage:
+                self.options.output.test_garbage(test, gc.garbage)
+                # TODO: Perhaps eat the garbage here, so that the garbage isn't
+                #       printed for every subsequent test.
 
         # Did the test leave any new threads behind?
         new_threads = [t for t in threading.enumerate()
