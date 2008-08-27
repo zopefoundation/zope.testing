@@ -61,6 +61,8 @@ Releases
 after 3.6.0
 ===========
 
+- Added support for Jython, when a garbage collector call is sent.
+
 - Added support to bootstrap on Jython.
 
 - Fixed NameError in StartUpFailure.
