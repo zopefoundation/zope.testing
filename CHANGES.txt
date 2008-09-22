@@ -1,8 +1,8 @@
 zope.testing Changelog
 **********************
 
-after 3.6.0 (unreleased)
-========================
+3.7.0 (2008-09-22)
+==================
 
 - Added an alterate setuptools / distutils commands for running all tests
   using our testrunner.  See 'zope.testing.testrunner.eggsupport:ftest'.
