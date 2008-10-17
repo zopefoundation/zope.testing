@@ -79,7 +79,7 @@ open('documentation.txt', 'w').write(long_description)
 
 setup(
     name='zope.testing',
-    version='3.7.0',
+    version='3.7.1',
     url='http://pypi.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing framework, including the testrunner script.',
