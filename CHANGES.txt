@@ -1,6 +1,12 @@
 zope.testing Changelog
 **********************
 
+3.7.1 (2008-10-17)
+==================
+
+- The setupstack temporary-directory support now properly handles
+  read-only files by making them writable before removing them.
+
 3.7.0 (2008-09-22)
 ==================
 
