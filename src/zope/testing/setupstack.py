@@ -16,7 +16,7 @@
 See setupstack.txt
 """
 
-import os, shutil, tempfile
+import os, stat, tempfile
 
 key = '__' + __name__
 
@@ -34,9 +34,19 @@ def tearDown(test):
 
 def setUpDirectory(test):
     tmp = tempfile.mkdtemp()
-    register(test, shutil.rmtree, tmp)
+    register(test, rmtree, tmp)
     here = os.getcwd()
     register(test, os.chdir, here)
     os.chdir(tmp)
 
+def rmtree(path):
+    for path, dirs, files in os.walk(path, False):
+        for fname in files:
+            fname = os.path.join(path, fname)
+            os.chmod(fname, stat.S_IWUSR)
+            os.remove(fname)
+        for dname in dirs:
+            dname = os.path.join(path, dname)
+            os.rmdir(dname)
+    os.rmdir(path)
     

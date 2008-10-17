@@ -80,6 +80,13 @@ We can create files to out heart's content:
     >>> os.path.exists('Data.fs')
     True
 
+We'll make the file read-only. This can cause problems on Windows, but
+setupstack takes care of that by making files writable before trying
+to remove them.
+
+    >>> import stat
+    >>> os.chmod('Data.fs', stat.S_IREAD)
+
 When tearDown is called:
 
     >>> zope.testing.setupstack.tearDown(test)
