@@ -14,14 +14,22 @@ cleanup.py
 doctest.py
   Enhanced version of python's standard doctest.py.
   Better test count (one per block instead of one per docstring).
+  See doctest.txt.
 
   (We need to merge this with the standard doctest module.)
+
+doctestunit.py
+  Provides a pprint function that always sorts dictionary entries
+  (pprint.pprint from the standard library doesn't sort very short ones,
+  sometimes causing test failures when the internal order changes).
 
 formparser.py
   An HTML parser that extracts form information.
 
   This is intended to support functional tests that need to extract
   information from HTML forms returned by the publisher.
+
+  See formparser.txt.
 
 loggingsupport.py
   Support for testing logging code
@@ -32,17 +40,26 @@ loggingsupport.py
 loghandler.py
   Logging handler for tests that check logging output.
 
+module.py
+  Lets a doctest pretend to be a Python module.
+
+  See module.txt.
+
 renormalizing.py
   Regular expression pattern normalizing output checker.
   Useful for doctests.
 
-setupstack
+server.py
+  Provides a simple HTTP server compatible with the zope.app.testing
+  functional testing API.  Lets you interactively play with the system
+  under test.  Helpful in debugging functional doctest failures.
+
+setupstack.py
   A simple framework for automating doctest set-up and tear-down.
   See setupstack.txt.
 
-
-testrunner.py
-  The test runner module.  This is typically wrapped by a test.py script that
+testrunner
+  The test runner package.  This is typically wrapped by a test.py script that
   sets up options to run a particular set of tests.
 
 
