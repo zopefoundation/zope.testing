@@ -1,0 +1,107 @@
+=============
+Import checks
+=============
+
+Import checks are intended to help finding imports of classes and
+functions that have been moved and are still referred to by their old
+location. We usually re-import them at their old location to keep code
+working, but for cleaning up, it's nice to get a heads-up where we still
+refer to the old locations.
+
+Note: Only objects that support `__module__` can be checked for indirect
+reports. This is especially *not* true for instances.
+
+Test-runner integration
+=======================
+
+This test (as it is a test for the test runner) assumes that the test
+runner has the import check enabled. We extend Python's search path to
+include some example modules that trigger the import checker:
+
+>>> import sys, os.path
+>>> import zope.testing.testrunner
+>>> sys.path.insert(0, os.path.join(os.path.dirname(
+...     zope.testing.testrunner.__file__), 'importchecker-fixtures'))
+
+When importing a function or a class from a module that isn't its
+original place of definition, a warning will be printed:
+
+>>> import impcheck0
+>>> import impcheck0a
+>>> import impcheck0b
+WARNING: indirect import of type `impcheck0a.X` (originally defined at `impcheck0`)
+caused at ...impcheck0b.py:NNN
+WARNING: indirect import of function `impcheck0a.y` (originally defined at `impcheck0`)
+caused at ...impcheck0b.py:NNN
+
+
+Heuristics for ignoring re-imports
+==================================
+
+Indirect imports in the standard library
+----------------------------------------
+
+The standard library uses reimports to hide some lower level modules which is
+ok for us.
+
+The types in the `type` module come originally from `__builtin__`. This is ok
+for us and we ignore that:
+
+>>> from types import NoneType
+>>> NoneType.__module__
+'__builtin__'
+
+The `os` module tends to reimport from locations like `posix`:
+
+>>> from os import unlink
+>>> unlink.__module__
+'posix'
+
+The `re` module imports its content from the `sre` module:
+
+>>> from re import match
+
+
+Indirect imports due to the testing environment
+-----------------------------------------------
+
+The test runner and `doctest` redirect the stdout temporarily, so sys.stdout
+can be ignored as well:
+
+>>> from sys import stdout
+>>> stdout.__module__
+'zope.testing.doctest'
+
+
+Indirect imports from packages and their sub-modules
+----------------------------------------------------
+
+We allow indirect imports for the sake of providing an API within a package
+that hides its (sub-)modules. E.g. the following structure is ok, as X is
+defined in module `impcheck1.sub1` and re-imported from `impcheck1`:
+
+>>> from impcheck1 import X
+>>> from impcheck1.sub1 import X
+
+
+However, we do not allow re-imports from sibling modules:
+
+>>> from impcheck1.sub2 import X
+WARNING: indirect import of type `impcheck1.sub2.X` (originally defined at `impcheck1.sub1`)
+caused at <doctest importcheck.txt[15]>:1
+
+
+Also, we only allow one level of re-importing via modules:
+
+>>> from impcheck1 import Y
+WARNING: indirect import of type `impcheck1.Y` (originally defined at `impcheck1.sub3.sub3a`)
+caused at <doctest importcheck.txt[16]>:1
+
+
+Indirect imports from C-modules
+-------------------------------
+
+Often there are indirect imports from modules that are written in C to provide
+a nicer API for it. We ignore symbols that are re-imported from C:
+
+>>> from curses import setupterm

@@ -1,6 +1,13 @@
 zope.testing Changelog
 **********************
 
+3.7.2 (unreleased)
+==================
+
+- Added feature that warns about re-imports of symbols that originate
+  from a different location. This allows detecting when classes and
+  functions get moved from one module to another.
+
 3.7.1 (2008-10-17)
 ==================
 

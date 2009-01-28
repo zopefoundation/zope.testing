@@ -46,6 +46,8 @@ import zope.testing.testrunner.statistics
 import zope.testing.testrunner.subprocess
 import zope.testing.testrunner.interfaces
 import zope.testing.testrunner.debug
+import zope.testing.testrunner.importcheck
+
 
 PYREFCOUNT_PATTERN = re.compile('\[[0-9]+ refs\]')
 
@@ -191,6 +193,7 @@ class Runner(object):
         self.features.append(zope.testing.testrunner.filter.Filter(self))
         self.features.append(zope.testing.testrunner.listing.Listing(self))
         self.features.append(zope.testing.testrunner.statistics.Statistics(self))
+        self.features.append(zope.testing.testrunner.importcheck.ImportChecker(self))
 
         # Remove all features that aren't activated
         self.features = [f for f in self.features if f.active]

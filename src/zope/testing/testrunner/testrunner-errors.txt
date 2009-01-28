@@ -703,11 +703,12 @@ Then run the tests:
     >>> sys.argv = ('test --tests-pattern ^sampletests(f|_i)?$ --layer 1 '
     ...            ).split()
     >>> testrunner.run(defaults)
-    ... # doctest: +NORMALIZE_WHITESPACE
+    ... # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
     Test-module import failures:
     <BLANKLINE>
     Module: sample2.sampletests_i
     <BLANKLINE>
+    ...
       File "testrunner-ex/sample2/sampletests_i.py", line 1
         importx unittest
                        ^
@@ -717,9 +718,11 @@ Then run the tests:
     Module: sample2.sample21.sampletests_i
     <BLANKLINE>
     Traceback (most recent call last):
+      ...
       File "testrunner-ex/sample2/sample21/sampletests_i.py", line 15, in ?
         import zope.testing.huh
-    ImportError: No module named huh
+      ...
+    ImportError: No module named zope.testing.huh
     <BLANKLINE>
     <BLANKLINE>
     Module: sample2.sample22.sampletests_i
@@ -730,6 +733,7 @@ Then run the tests:
     Module: sample2.sample23.sampletests_i
     <BLANKLINE>
     Traceback (most recent call last):
+      ...
       File "testrunner-ex/sample2/sample23/sampletests_i.py", line 18, in ?
         class Test(unittest.TestCase):
       File "testrunner-ex/sample2/sample23/sampletests_i.py", line 23, in Test

@@ -89,7 +89,7 @@ module in that dotted name::
   >>> import zope.testing.unlikelymodulename
   Traceback (most recent call last):
     ...
-  ImportError: No module named unlikelymodulename
+  ImportError: No module named zope.testing.unlikelymodulename
 
 This only works for packages that already exist::
  

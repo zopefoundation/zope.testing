@@ -517,6 +517,7 @@ def get_options(args=None, defaults=None):
         args = sys.argv
 
     options, positional = parser.parse_args(args[1:], defaults)
+
     options.original_testrunner_args = args
 
     if options.color:
