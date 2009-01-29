@@ -2,6 +2,8 @@
 # Copyright (c) 2008 gocept gmbh & co. kg
 # See also LICENSE.txt
 
+# XXX: Is there *any* way to detect instances that are shuffled around?
+
 import ihooks
 import os.path
 import sys
@@ -11,10 +13,97 @@ import inspect
 
 
 WHITELIST = [('re', 'match', 'sre'),
+             ('new', 'module', '__builtin__'),
              ('os', 'error', 'exceptions')]
 
 wrapper_cache = {}
 seen = set()
+
+
+def guess_package_name(frame):
+    """Guess which package a code frame originated from."""
+    if '__name__' in frame.f_globals:
+        return frame.f_globals['__name__']
+    filename = frame.f_globals['__file__']
+    for mod in sys.modules.values():
+        if not hasattr(mod, '__file__'):
+            continue
+        if os.path.dirname(mod.__file__) == os.path.dirname(filename):
+            return mod.__name__
+    raise RuntimeError("Can't guess module name for %r" % frame)
+
+
+def rule_whitelist(import_mod, name, real_mod):
+    # No warning for things on the whitelist.
+    return (import_mod, name, real_mod) in WHITELIST
+
+
+def rule_doctest(import_mod, name, real_mod):
+    # doctest regularly sticks stuff somewhere else. We
+    # ignore those.
+    return real_mod in ['doctest', 'zope.testing.doctest']
+
+
+def rule_stdlib_and_builtins(import_mod, name, real_mod):
+    # Some builtins are redirected within the stdlib (and vice versa)
+    if import_mod == 'sys' and name in ['stdin', 'stdout']:
+        return True
+    if import_mod == 'os' and real_mod == 'posix':
+        return True
+    if name == '__class__' and real_mod == '__builtin__':
+        return True
+    if import_mod == '__builtin__' and real_mod == 'exceptions':
+        return True
+    if (import_mod == 'types' or
+          import_mod.startswith('xml.dom')) and real_mod == '__builtin__':
+        # No warning for the types from the type module that
+        # really originate from builtins
+        return True
+
+
+def rule_intra_package_reimport(import_mod, name, real_mod):
+    # Don't warn if the package of a module re-exports a symbol.
+    return import_mod.split('.') == real_mod.split('.')[:-1]
+
+
+def rule_intra_package_reimport2(import_mod, name, real_mod):
+    # Don't warn if symbols of an underscore module are reimported
+    # by a module belonging to the same package.
+    real_path = real_mod.split('.')
+    real_module = real_path[-1]
+    base = '.'.join(real_path[:-1]) + '.'
+    return real_module.startswith('_') and import_mod.startswith(base)
+
+
+def rule_unclean_c_module(import_mod, name, real_mod):
+    # The real module seems to be a C-Module which is regularly masked using
+    # another Python module in front of it.
+    if (real_mod in sys.modules and
+            hasattr(sys.modules[real_mod], '__file__')):
+        real_file = sys.modules[real_mod].__file__
+        extension = os.path.splitext(real_file)[1]
+        if not extension.startswith('.py'):
+            return True
+    if real_mod.startswith('_') and real_mod == import_mod.split('.')[-1]:
+        # Looks like a C-module which doesn't declare its
+        # package path correctly.
+        return True
+
+
+def rule_zope_deferredimport(import_mod, name, real_mod):
+    if real_mod == 'zope.deferredimport.deferredmodule':
+        return True
+
+
+def rule_internal_underscore_reimport(import_mod, name, real_mod):
+    # Looks like an internal module, prefixed with _ was exported to the same
+    # module name without an _
+    return real_mod.split('.')[-1] == '_' + import_mod.split('.')[-1]
+
+
+
+RULES = [func for name, func in locals().items()
+         if name.startswith('rule_')]
 
 
 class IndirectAttributeAccessChecker(types.ModuleType):
@@ -22,6 +111,12 @@ class IndirectAttributeAccessChecker(types.ModuleType):
     def __init__(self, module, options):
         self.__import_checker_module = module
         self.__import_checker_options = options
+
+    def __eq__(self, other):
+        if isinstance(other, IndirectAttributeAccessChecker):
+            other = (
+                other._IndirectAttributeAccessChecker__import_checker_module)
+        return other == self._IndirectAttributeAccessChecker__import_checker_module
 
     def __setattr__(self, name, value):
         if name.startswith('_IndirectAttributeAccessChecker__import_checker_'):
@@ -35,7 +130,8 @@ class IndirectAttributeAccessChecker(types.ModuleType):
             return object.__getattribute__(self, name.replace('_IndirectAttributeAccessChecker', ''))
         module = self.__import_checker_module
         attr = getattr(module, name)
-        if getattr(attr, '__module__', None) is None:
+        if not isinstance(attr,
+                (types.ClassType, types.TypeType, types.FunctionType)):
             return attr
         if attr.__module__ == module.__name__:
             return attr
@@ -44,7 +140,7 @@ class IndirectAttributeAccessChecker(types.ModuleType):
         show_only_from = self.__import_checker_options.indirect_source
         if show_only_from:
             for include in show_only_from:
-                if frame.f_globals['__name__'].startswith(include):
+                if guess_package_name(frame).startswith(include):
                     break
             else:
                 # This warning was caused in a module not under the
@@ -52,42 +148,11 @@ class IndirectAttributeAccessChecker(types.ModuleType):
                 return attr
 
         import_mod, real_mod = module.__name__, attr.__module__
-        if (import_mod, name, real_mod) in WHITELIST:
-            # No warning for things on the whitelist.
-            pass
-        elif real_mod in ['doctest', 'zope.testing.doctest']:
-            # doctest regularly sticks stuff somewhere else. We
-            # ignore those.
-            pass
-        elif import_mod == 'sys' and name in ['stdin', 'stdout']:
-            # Those are redirected regularly.
-            pass
-        elif import_mod == 'os' and real_mod == 'posix':
-            pass
-        elif name == '__class__' and real_mod == '__builtin__':
-            pass
-        elif (import_mod == 'types' or
-              import_mod.startswith('xml.dom')) and real_mod == '__builtin__':
-            # No warning for the types from the type module that
-            # really originate from builtins
-            pass
-        elif import_mod.split('.') == real_mod.split('.')[:-1]:
-            # Don't warn if the package of a module re-exports a
-            # symbol.
-            pass
-        elif real_mod in sys.modules and hasattr(sys.modules[real_mod], '__file__') and not sys.modules[real_mod].__file__.endswith('.py'):
-            # The real module seems to be a C-Module which is
-            # regularly masked using another Python module in front
-            # of it.
-            pass
-        elif real_mod.split('.')[-1] == '_' + import_mod.split('.')[-1]:
-            # Looks like an internal module, prefixed with _ was
-            # exported to the same module name without an _
-            pass
-        elif real_mod.startswith('_') and real_mod == import_mod.split('.')[-1]:
-            # Looks like a C-module which doesn't declare its
-            # package path correctly.
-            pass
+        for rule in RULES:
+            # Warning suppression rules: if no rule matches, we display
+            # a warning.
+            if rule(import_mod, name, real_mod):
+                break
         else:
             attr_type = type(attr).__name__
             file = frame.f_code.co_filename
@@ -98,6 +163,7 @@ class IndirectAttributeAccessChecker(types.ModuleType):
                         % (attr_type, import_mod, name, real_mod))
                 print "caused at %s:%s" % (file, line)
                 seen.add(signature)
+
         return attr
 
 
