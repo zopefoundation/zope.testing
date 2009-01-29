@@ -40,6 +40,10 @@ class IndirectAttributeAccessChecker(types.ModuleType):
             if (import_mod, name, real_mod) in WHITELIST:
                 # No warning for things on the whitelist.
                 pass
+            elif real_mod in ['doctest', 'zope.testing.doctest']:
+                # doctest regularly sticks stuff somewhere else. We
+                # ignore those.
+                pass
             elif import_mod == 'sys' and name in ['stdin', 'stdout']:
                 # Those are redirected regularly.
                 pass
@@ -89,13 +93,14 @@ class IndirectImportWarner(ihooks.ModuleImporter):
             fromlist=None):
         result = ihooks.ModuleImporter.import_module(
             self, name, globals=globals, locals=locals, fromlist=fromlist)
-        if result.__name__ not in wrapper_cache:
+        if id(result) not in wrapper_cache:
             checker = IndirectAttributeAccessChecker(result)
             if not hasattr(result, '__all__'):
+                # Support * imports
                 checker.__all__ = [x for x in dir(result) if not
                         x.startswith('_')]
-            wrapper_cache[result.__name__] = checker
-        return wrapper_cache[result.__name__]
+            wrapper_cache[id(result)] = checker
+        return wrapper_cache[id(result)]
 
     def import_it(self, partname, fqname, parent, force_load=0):
         result = ihooks.ModuleImporter.import_it(self, partname, fqname,
