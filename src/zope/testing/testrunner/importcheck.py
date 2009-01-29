@@ -13,6 +13,8 @@ import inspect
 WHITELIST = [('re', 'match', 'sre'),
              ('os', 'error', 'exceptions')]
 
+wrapper_cache = {}
+seen = set()
 
 class IndirectAttributeAccessChecker(types.ModuleType):
 
@@ -69,12 +71,15 @@ class IndirectAttributeAccessChecker(types.ModuleType):
                 pass
             else:
                 attr_type = type(attr).__name__
-                print ("WARNING: indirect import of %s `%s.%s` (originally defined at `%s`)"
-                        % (attr_type, import_mod, name, real_mod))
                 frame = sys._getframe(1)
                 file = frame.f_code.co_filename
                 line = frame.f_lineno
-                print "caused at %s:%s" % (file, line)
+                signature = (import_mod, name, real_mod, file, line)
+                if signature not in seen:
+                    print ("WARNING: indirect import of %s `%s.%s` (originally defined at `%s`)"
+                            % (attr_type, import_mod, name, real_mod))
+                    print "caused at %s:%s" % (file, line)
+                    seen.add(signature)
         return attr
 
 
@@ -84,11 +89,13 @@ class IndirectImportWarner(ihooks.ModuleImporter):
             fromlist=None):
         result = ihooks.ModuleImporter.import_module(
             self, name, globals=globals, locals=locals, fromlist=fromlist)
-        checker = IndirectAttributeAccessChecker(result)
-        if not hasattr(result, '__all__'):
-            checker.__all__ = [x for x in dir(result) if not
-                    x.startswith('_')]
-        return checker
+        if result.__name__ not in wrapper_cache:
+            checker = IndirectAttributeAccessChecker(result)
+            if not hasattr(result, '__all__'):
+                checker.__all__ = [x for x in dir(result) if not
+                        x.startswith('_')]
+            wrapper_cache[result.__name__] = checker
+        return wrapper_cache[result.__name__]
 
     def import_it(self, partname, fqname, parent, force_load=0):
         result = ihooks.ModuleImporter.import_it(self, partname, fqname,
@@ -99,6 +106,24 @@ class IndirectImportWarner(ihooks.ModuleImporter):
                 # attached to its path.
                 result.__file__ = os.path.join(result.__file__, '__init__.py')
         return result
+
+    def determine_parent(self, globals):
+        if not globals or not "__name__" in globals:
+            return None
+        pname = globals['__name__']
+        if "__path__" in globals:
+            parent = self.modules[pname]
+            # XXX The original class used to use an `assert` here which
+            # conflicts with doctest creating copys of the globs.
+            # assert globals is parent.__dict__
+            return parent
+        if '.' in pname:
+            i = pname.rfind('.')
+            pname = pname[:i]
+            parent = self.modules[pname]
+            assert parent.__name__ == pname
+            return parent
+        return None
 
 
 class ImportChecker(zope.testing.testrunner.feature.Feature):
