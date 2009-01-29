@@ -314,6 +314,20 @@ analysis.add_option(
 Run the tests under pychecker
 """)
 
+analysis.add_option(
+    '--indirect-imports', '-i', action="store_true", dest='indirect_imports',
+    help="""\
+Inject an import hook and report usage of indirectly imported classes
+and functions.
+""")
+
+analysis.add_option(
+    '--indirect-source', action="append", dest='indirect_source',
+    help="""\
+Only report indirect imports that originated in the given package or
+module (or one of its sub-packages or sub-modules).
+""")
+
 parser.add_option_group(analysis)
 
 ######################################################################
