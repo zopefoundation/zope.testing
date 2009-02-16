@@ -4,7 +4,7 @@ Additional doctest Tests
 
 Most `doctest` module tests are located within the module. This file only
 tests a few additional features not covered by the module tests, so that the
-changes to the `doctest` module -- which is forked from the Python stanadrd
+changes to the `doctest` module -- which is forked from the Python standard
 library -- are minimized.
 
 Working with Carriage Returns
@@ -12,7 +12,7 @@ Working with Carriage Returns
 
 Due to the way releases are made on different platforms, we sometimes test
 files on a *nix system with Windows file endings. Unfortunately, that leaves
-some the tests broken:
+some of the test files broken:
 
   >>> import tempfile
   >>> fn = tempfile.mktemp()

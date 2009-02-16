@@ -17,9 +17,10 @@ $Id$
 """
 
 import os
+import re
 import sys
 import unittest
-from zope.testing import doctest, testrunner
+from zope.testing import doctest, testrunner, renormalizing
 
 def test_suite():
     return unittest.TestSuite((
@@ -28,6 +29,15 @@ def test_suite():
         doctest.DocTestSuite('zope.testing.server'),
         doctest.DocFileSuite('doctest.txt'),
         doctest.DocFileSuite('formparser.txt'),
-        doctest.DocFileSuite('module.txt'),
+        doctest.DocFileSuite(
+            'module.txt',
+            # when this test is run in isolation, the error message shows the
+            # module name as fully qualified; when it is run as part of the
+            # full test suite, the error message shows the module name as
+            # relative.
+            checker=renormalizing.RENormalizing([
+                (re.compile('No module named zope.testing.unlikelymodulename'),
+                 'No module named unlikelymodulename')])),
         doctest.DocFileSuite('setupstack.txt'),
+        doctest.DocTestSuite(doctest, optionflags=doctest.INTERPRET_FOOTNOTES),
         ))
