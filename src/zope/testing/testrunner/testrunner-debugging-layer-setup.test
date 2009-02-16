@@ -101,6 +101,7 @@ a subprocess:
     ...     zope.testing.testrunner.run(
     ...       ['--path', dir, '-Dvv', '--tests-pattern', 'tests2'])
     ... finally: sys.stdin = real_stdin
+    ... # doctest: +ELLIPSIS +REPORT_NDIFF
     Running tests at level 1
     Running tests2.Layer1 tests:
       Set up tests2.Layer1 in 0.000 seconds.
