@@ -426,8 +426,6 @@ def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
             nerr -= 1
             errors.append((erriter.next().strip(), None))
 
-
-#        result.stdout.extend(subout.splitlines())
         result.stdout.append(subout)
 
     finally:
