@@ -108,7 +108,8 @@ def test_suite():
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker),
         doctest.DocTestSuite('zope.testing.testrunner'),
-        doctest.DocTestSuite('zope.testing.testrunner.coverage'),
+        doctest.DocTestSuite('zope.testing.testrunner.coverage',
+            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE),
         doctest.DocTestSuite('zope.testing.testrunner.options'),
         doctest.DocTestSuite('zope.testing.testrunner.find'),
         ]

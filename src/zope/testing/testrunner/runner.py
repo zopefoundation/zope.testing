@@ -16,6 +16,12 @@
 $Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
 """
 
+# unfortunately there is a zope.testing.testrunner.subprocess module that we
+# need to avoid; also, we want to support Python 2.4, which doesn't have
+# # from __future__ import absolute_import, so we use a hack instead
+import imp
+subprocess = imp.load_module('subprocess', *imp.find_module('subprocess'))
+
 import cStringIO
 import gc
 import glob
@@ -400,46 +406,29 @@ def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
         for feature in features:
             feature.layer_setup(layer)
 
-        subin, subout, suberr = os.popen3(args)
-        while True:
+        child = subprocess.Popen(args, shell=False, stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+        subout, suberr = child.communicate()
+
+        erriter = iter(suberr.splitlines())
+        for line in erriter:
             try:
-                for line in subout:
-                    result.stdout.append(line)
-            except IOError, e:
-                if e.errno == errno.EINTR:
-                    # If the reading the subprocess input is interruped (as
-                    # be caused by recieving SIGCHLD), then retry.
-                    continue
-                options.output.error(
-                    "Error reading subprocess output for %s" % layer_name)
-                options.output.info(str(e))
+                result.num_ran, nfail, nerr = map(int, line.strip().split())
+            except ValueError:
+                continue
             else:
                 break
 
-        # The subprocess may have spewed any number of things to stderr, so
-        # we'll keep looking until we find the information we're looking for.
-        whole_suberr = ''
-        while True:
-            line = suberr.readline()
-            whole_suberr += line
-            if not line:
-                raise SubprocessError(
-                    'No subprocess summary found', repr(whole_suberr))
-
-            try:
-                result.num_ran, nfail, nerr = map(int, line.strip().split())
-                break
-            except KeyboardInterrupt:
-                raise
-            except:
-                continue
-
         while nfail > 0:
             nfail -= 1
-            failures.append((suberr.readline().strip(), None))
+            failures.append((erriter.next().strip(), None))
         while nerr > 0:
             nerr -= 1
-            errors.append((suberr.readline().strip(), None))
+            errors.append((erriter.next().strip(), None))
+
+
+#        result.stdout.extend(subout.splitlines())
+        result.stdout.append(subout)
 
     finally:
         result.done = True
