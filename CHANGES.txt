@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.7.2 (2008-10-17)
+3.7.2 (2009-04-13)
 ==================
 
 - fix test failure on Python 2.4 because of slight difference in the way
