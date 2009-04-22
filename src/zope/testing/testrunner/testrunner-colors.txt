@@ -52,7 +52,7 @@ Successful test
 A successful test run soothes the developer with warm green colors:
 
     >>> sys.argv = 'test --layer 122 -c'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     {normal}Running samplelayers.Layer122 tests:{normal}
       Set up samplelayers.Layer1 in {green}0.000{normal} seconds.
       Set up samplelayers.Layer12 in {green}0.000{normal} seconds.
@@ -71,7 +71,7 @@ Failed test
 A failed test run highlights the failures in red:
 
     >>> sys.argv = 'test -c --tests-pattern ^sampletests(f|_e|_f)?$ '.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     {normal}Running samplelayers.Layer1 tests:{normal}
       Set up samplelayers.Layer1 in {green}0.000{normal} seconds.
     {normal}  Ran {green}9{normal} tests with {green}0{normal} failures and {green}0{normal} errors in {green}0.001{normal} seconds.{normal}
@@ -186,7 +186,7 @@ The expected and actual outputs of failed doctests are shown in different
 colors:
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ -c'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     {normal}Running zope.testing.testrunner.layer.UnitTests tests:{normal}
       Set up zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
     <BLANKLINE>
@@ -218,7 +218,7 @@ Diffs are highlighted so you can easily tell the context and the mismatches
 apart:
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ --ndiff -c'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     {normal}Running zope.testing.testrunner.layer.UnitTests tests:{normal}
       Set up zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
     <BLANKLINE>
@@ -250,7 +250,7 @@ Timing individual tests
 At very high verbosity levels you can see the time taken by each test
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch -c -vvv'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     {normal}Running tests at level 1{normal}
     {normal}Running zope.testing.testrunner.layer.UnitTests tests:{normal}
       Set up zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
@@ -272,7 +272,7 @@ Instead of creating a test that waits 10 seconds, let's lower the slow test thre
 in the test runner to 0 seconds to make all of the tests seem slow.
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch -c -vvv --slow-test 0'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     {normal}Running tests at level 1{normal}
     {normal}Running zope.testing.testrunner.layer.UnitTests tests:{normal}
       Set up zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
@@ -298,7 +298,7 @@ a test runner wrapper script), but no colorized output is desired, the -C or
 --no-color options will disable colorized output:
 
     >>> sys.argv = 'test --layer 122 -c -C'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Set up samplelayers.Layer12 in 0.000 seconds.
@@ -311,7 +311,7 @@ a test runner wrapper script), but no colorized output is desired, the -C or
     False
 
     >>> sys.argv = 'test --layer 122 -c --no-color'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Set up samplelayers.Layer12 in 0.000 seconds.
@@ -332,7 +332,7 @@ colors, and only enable colorized output if so.  Our ``Terminal`` wrapper
 pretends it is a terminal, but the curses module will realize it isn't:
 
     >>> sys.argv = 'test --layer 122 --auto-color'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Set up samplelayers.Layer12 in 0.000 seconds.
@@ -356,7 +356,7 @@ We can fake it
     >>> sys.modules['curses'] = FakeCurses()
 
     >>> sys.argv = 'test --layer 122 --auto-color'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     {normal}Running samplelayers.Layer122 tests:{normal}
       Set up samplelayers.Layer1 in {green}0.000{normal} seconds.
       Set up samplelayers.Layer12 in {green}0.000{normal} seconds.
@@ -375,7 +375,7 @@ The real stdout is not a terminal in a doctest:
     >>> sys.stdout = real_stdout
 
     >>> sys.argv = 'test --layer 122 --auto-color'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Set up samplelayers.Layer12 in 0.000 seconds.

@@ -42,7 +42,7 @@ Now run the tests in the copy:
     ...     '-vv',
     ...     ]
     >>> sys.argv = ['test']
-    >>> testrunner.run(mydefaults)
+    >>> testrunner.run_internal(mydefaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -66,7 +66,7 @@ delete the compiled Python files too:
     ...    for f in files:
     ...        if f.endswith(".py"):
     ...            os.remove(os.path.join(root, f))
-    >>> testrunner.run(mydefaults, ["test", "--keepbytecode"])
+    >>> testrunner.run_internal(mydefaults, ["test", "--keepbytecode"])
     Running tests at level 1
     Total: 0 tests, 0 failures, 0 errors in N.NNN seconds.
     False
@@ -77,7 +77,7 @@ output is the same as when running with .py source above.  The absence
 of "removing stale bytecode ..." messages shows that ``--usecompiled``
 also implies ``--keepbytecode``:
 
-    >>> testrunner.run(mydefaults, ["test", "--usecompiled"])
+    >>> testrunner.run_internal(mydefaults, ["test", "--usecompiled"])
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.

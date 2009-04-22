@@ -14,7 +14,7 @@ runner will just note that the tear down couldn't be done:
     ...     ]
 
     >>> sys.argv = 'test -ssample2 --tests-pattern sampletests_ntd$'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running sample2.sampletests_ntd.Layer tests:
       Set up sample2.sampletests_ntd.Layer in 0.000 seconds.
       Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
@@ -27,7 +27,7 @@ layers to run, the test runner will restart itself as a new process,
 resuming tests where it left off:
 
     >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntd$']
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running sample1.sampletests_ntd.Layer tests:
       Set up sample1.sampletests_ntd.Layer in N.NNN seconds.
       Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -85,7 +85,7 @@ Note that debugging doesn't work when running tests in a subprocess:
 
     >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntd$',
     ...             '-D', ]
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running sample1.sampletests_ntd.Layer tests:
       Set up sample1.sampletests_ntd.Layer in N.NNN seconds.
       Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -159,7 +159,7 @@ Similarly, pdb.set_trace doesn't work when running tests in a layer
 that is run as a subprocess:
 
     >>> sys.argv = [testrunner_script, '--tests-pattern', 'sampletests_ntds']
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running sample1.sampletests_ntds.Layer tests:
       Set up sample1.sampletests_ntds.Layer in 0.000 seconds.
       Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
@@ -246,7 +246,7 @@ like it once did).
 
     >>> sys.argv = [testrunner_script, '-s', 'sample2', '--tests-pattern',
     ...     '(sampletests_ntd$|stderrtest)']
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running sample2.sampletests_ntd.Layer tests:
       Set up sample2.sampletests_ntd.Layer in 0.000 seconds.
       Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.

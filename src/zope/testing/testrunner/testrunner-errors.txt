@@ -24,7 +24,7 @@ be read only):
     ...     ]
 
     >>> sys.argv = 'test --tests-pattern ^sampletests(f|_e|_f)?$ '.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     ... # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
     Running samplelayers.Layer1 tests:
     ...
@@ -108,7 +108,7 @@ If we ask for verbosity, the dotted output will be interrupted, and
 there'll be a summary of the errors at the end of the test:
 
     >>> sys.argv = 'test --tests-pattern ^sampletests(f|_e|_f)?$ -uv'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
@@ -198,7 +198,7 @@ Similarly for progress output, the progress ticker will be interrupted:
 
     >>> sys.argv = ('test --tests-pattern ^sampletests(f|_e|_f)?$ -u -ssample2'
     ...             ' -p').split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -371,7 +371,7 @@ Often, when a doctest example fails, the failure will cause later
 examples in the same test to fail.  Each failure is reported:
 
     >>> sys.argv = 'test --tests-pattern ^sampletests_1$'.split()
-    >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
+    >>> testrunner.run_internal(defaults) # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -428,7 +428,7 @@ failure.  This can be accomplished with the -1 option (for "just show
 me the first failed example in a doctest" :)
 
     >>> sys.argv = 'test --tests-pattern ^sampletests_1$ -1'.split()
-    >>> testrunner.run(defaults) # doctest:
+    >>> testrunner.run_internal(defaults) # doctest:
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -461,7 +461,7 @@ The --hide-secondary-failures option is an alias for -1:
     ...     'test --tests-pattern ^sampletests_1$'
     ...     ' --hide-secondary-failures'
     ...     ).split()
-    >>> testrunner.run(defaults) # doctest:
+    >>> testrunner.run_internal(defaults) # doctest:
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -497,7 +497,7 @@ command-line options in sys.argv.
     ...     'test --tests-pattern ^sampletests_1$'
     ...     ' --hide-secondary-failures --show-secondary-failures'
     ...     ).split()
-    >>> testrunner.run(defaults) # doctest: +NORMALIZE_WHITESPACE
+    >>> testrunner.run_internal(defaults) # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -558,7 +558,7 @@ see differences when expected and actual output differ.  The --ndiff,
 kinds.
 
     >>> sys.argv = 'test --tests-pattern ^pledge$'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -598,7 +598,7 @@ across lines. For example, if a line of expected output contains digit
 caret marking the mismatching column positions.
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ --ndiff'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -626,7 +626,7 @@ caret marking the mismatching column positions.
 The -udiff option requests a standard "unified" diff:
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ --udiff'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -653,7 +653,7 @@ The -udiff option requests a standard "unified" diff:
 The -cdiff option requests a standard "context" diff:
 
     >>> sys.argv = 'test --tests-pattern ^pledge$ --cdiff'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -702,7 +702,7 @@ Then run the tests:
 
     >>> sys.argv = ('test --tests-pattern ^sampletests(f|_i)?$ --layer 1 '
     ...            ).split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     ... # doctest: +NORMALIZE_WHITESPACE
     Test-module import failures:
     <BLANKLINE>
@@ -785,7 +785,7 @@ There was a bug preventing decent error reporting when a result contained
 unicode and another not:
 
     >>> sys.argv = 'test --tests-pattern ^unicode$ -u'.split()
-    >>> testrunner.run(defaults) # doctest: +REPORT_NDIFF
+    >>> testrunner.run_internal(defaults) # doctest: +REPORT_NDIFF
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
@@ -820,14 +820,15 @@ unicode and another not:
 Reporting Errors to Calling Processes
 -------------------------------------
 
-The testrunner can return an error status, indicating that the tests
+The testrunner returns the error status, indicating that the tests
 failed.  This can be useful for an invoking process that wants to
 monitor the result of a test run.
 
-To use, specify the argument "--exit-with-status".
+This is applied when invoking the testrunner using the ``run()`` function
+instead of ``run_internal()``:
 
     >>> sys.argv = (
-    ...     'test --exit-with-status --tests-pattern ^sampletests_1$'.split())
+    ...     'test --tests-pattern ^sampletests_1$'.split())
     >>> try:
     ...     testrunner.run(defaults)
     ... except SystemExit, e:
@@ -843,14 +844,14 @@ To use, specify the argument "--exit-with-status".
       Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     exited with code 1
 
-A passing test does not exit.
+Passing tests exit with code 0 according to UNIX practices:
 
     >>> sys.argv = (
-    ...     'test --exit-with-status --tests-pattern ^sampletests$'.split())
+    ...     'test --tests-pattern ^sampletests$'.split())
     >>> try:
     ...     testrunner.run(defaults)
     ... except SystemExit, e2:
-    ...     print 'oops'
+    ...     print 'exited with code', e2.code
     ... else:
     ...     print 'sys.exit was not called'
     ... # doctest: +ELLIPSIS
@@ -865,8 +866,7 @@ A passing test does not exit.
     Tearing down left over layers:
       Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     Total: 364 tests, 0 failures, 0 errors in N.NNN seconds.
-    ...
-    sys.exit was not called
+    exited with code 0
 
 And remove the temporary directory:
 

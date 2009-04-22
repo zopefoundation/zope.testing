@@ -15,7 +15,7 @@ levels of verbosity.
 
     >>> sys.argv = 'test --layer 122 -p'.split()
     >>> from zope.testing import testrunner
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Set up samplelayers.Layer12 in 0.000 seconds.
@@ -89,7 +89,7 @@ output, but only if they fit in the terminal width.  The default
 width, when the terminal width can't be determined, is 80:
 
 >>> sys.argv = 'test --layer 122 -pv'.split()
->>> testrunner.run(defaults)
+>>> testrunner.run_internal(defaults)
 Running tests at level 1
 Running samplelayers.Layer122 tests:
   Set up samplelayers.Layer1 in 0.000 seconds.
@@ -166,7 +166,7 @@ that, we'll provide a fake curses module:
     ...         return 60
     >>> old_curses = sys.modules.get('curses')
     >>> sys.modules['curses'] = FakeCurses()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -239,7 +239,7 @@ If a second or third level of verbosity are added, we get additional
 information.
 
     >>> sys.argv = 'test --layer 122 -pvv -t !txt'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -306,7 +306,7 @@ Note that, in this example, we used a test-selection pattern starting
 with '!' to exclude tests containing the string "txt".
 
     >>> sys.argv = 'test --layer 122 -pvvv -t!(txt|NotMuch)'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -383,7 +383,7 @@ Let's pretend we have a terminal
     >>> sys.stdout = Terminal(sys.stdout)
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch --auto-progress'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Running:
@@ -411,7 +411,7 @@ Let's stop pretending
     >>> sys.stdout = real_stdout
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch --auto-progress'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Ran 6 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -428,7 +428,7 @@ wrapper script) but you do not desire progress indication, you can switch it off
 --no-progress:
 
     >>> sys.argv = 'test -u -t test_one.TestNotMuch -p --no-progress'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Ran 6 tests with 0 failures and 0 errors in N.NNN seconds.

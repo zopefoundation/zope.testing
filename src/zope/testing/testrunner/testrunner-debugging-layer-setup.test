@@ -43,7 +43,7 @@ setup.
     >>> sys.argv = [testrunner_script]
     >>> import zope.testing.testrunner
     >>> try:
-    ...     zope.testing.testrunner.run(['--path', dir, '-D'])
+    ...     zope.testing.testrunner.run_internal(['--path', dir, '-D'])
     ... finally: sys.stdin = real_stdin
     ... # doctest: +ELLIPSIS
     Running tests.Layer tests:
@@ -98,7 +98,7 @@ a subprocess:
 
     >>> import sys
     >>> try:
-    ...     zope.testing.testrunner.run(
+    ...     zope.testing.testrunner.run_internal(
     ...       ['--path', dir, '-Dvv', '--tests-pattern', 'tests2'])
     ... finally: sys.stdin = real_stdin
     ... # doctest: +ELLIPSIS +REPORT_NDIFF

@@ -22,7 +22,7 @@ affecting the Python path:
     ...     '--tests-pattern', '^sampletestsf?$',
     ...     ]
     >>> sys.argv = ['test']
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     ... # doctest: +ELLIPSIS
     Test-module import failures:
     <BLANKLINE>
@@ -33,7 +33,7 @@ affecting the Python path:
 
     >>> sys.path.append(directory_with_tests)
     >>> sys.argv = ['test']
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     ... # doctest: +ELLIPSIS
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -71,7 +71,7 @@ Using pdb.set_trace in a function called by an ordinary test:
     ...     sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace2').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +ELLIPSIS
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -89,7 +89,7 @@ Using pdb.set_trace in a function called by a doctest in a doc string:
     >>> sys.stdin = Input('n\np x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace4').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
@@ -110,7 +110,7 @@ Using pdb in a docstring-based doctest
     >>> sys.stdin = Input('n\np x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace3').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
@@ -132,7 +132,7 @@ Using pdb.set_trace in a doc file:
     >>> sys.stdin = Input('n\np x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace5').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
@@ -155,7 +155,7 @@ Using pdb.set_trace in a function called by a doctest in a doc file:
     >>> sys.stdin = Input('n\np x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace6').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     Running zope.testing.testrunner.layer.UnitTests tests:...
     --Return--
@@ -176,7 +176,7 @@ Post-mortem debugging function called from ordinary test:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem2 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -206,7 +206,7 @@ Post-mortem debugging docstring-based doctest:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem3 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -238,7 +238,7 @@ Post-mortem debugging function called from docstring-based doctest:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem4 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -270,7 +270,7 @@ Post-mortem debugging file-based doctest:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem5 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -304,7 +304,7 @@ Post-mortem debugging function called from file-based doctest:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem6 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -338,7 +338,7 @@ Post-mortem debugging of a docstring doctest failure:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem_failure2 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -373,7 +373,7 @@ Post-mortem debugging of a docfile doctest failure:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem_failure.txt -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
@@ -405,7 +405,7 @@ Post-mortem debugging of a docfile doctest failure:
 Post-mortem debugging with triple verbosity
 
     >>> sys.argv = 'test --layer samplelayers.Layer1$ -vvv -D'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -430,7 +430,7 @@ Test Suites with None for suites or tests
     >>> sys.argv = ['test',
     ...             '--tests-pattern', '^sampletests_none_suite$',
     ...     ]
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Test-module import failures:
     <BLANKLINE>
     Module: sample1.sampletests_none_suite
@@ -448,7 +448,7 @@ Test Suites with None for suites or tests
     >>> sys.argv = ['test',
     ...             '--tests-pattern', '^sampletests_none_test$',
     ...     ]
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Test-module import failures:
     <BLANKLINE>
     Module: sample1.sampletests_none_test
@@ -469,7 +469,7 @@ It is an error to specify --report-refcounts (-r) without specifying a
 repeat count greater than 1
 
     >>> sys.argv = 'test -r'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
             You must use the --repeat (-N) option to specify a repeat
             count greater than 1 when using the --report_refcounts (-r)
             option.
@@ -477,7 +477,7 @@ repeat count greater than 1
     True
 
     >>> sys.argv = 'test -r -N1'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
             You must use the --repeat (-N) option to specify a repeat
             count greater than 1 when using the --report_refcounts (-r)
             option.

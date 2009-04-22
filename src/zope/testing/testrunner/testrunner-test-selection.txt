@@ -13,7 +13,7 @@ other ways we can select tests.  We can select tests by package:
 
     >>> sys.argv = 'test --layer 122 -ssample1 -vv'.split()
     >>> from zope.testing import testrunner
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -43,7 +43,7 @@ other ways we can select tests.  We can select tests by package:
 You can specify multiple packages:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -ssample2'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -163,7 +163,7 @@ tab-completion):
     >>> subdir = os.path.join(directory_with_tests, 'sample1')
     >>> sys.argv = ('test --layer 122 -s %s -vv' % subdir).split()
     >>> from zope.testing import testrunner
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -193,7 +193,7 @@ tab-completion):
 We can select by test module name using the --module (-m) option:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m_one -mtest1'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -233,7 +233,7 @@ We can select by test module name using the --module (-m) option:
 and by test within the module using the --test (-t) option:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m_one -mtest1 -tx0 -ty0'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -253,7 +253,7 @@ and by test within the module using the --test (-t) option:
 
 
     >>> sys.argv = 'test -u  -vv -ssample1 -ttxt'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -274,7 +274,7 @@ regular expressions specified begin with '!', then tests that don't
 match the regular expression are selected:
 
     >>> sys.argv = 'test -u  -vv -ssample1 -m!sample1[.]sample1'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -328,7 +328,7 @@ Module and test filters can also be given as positional arguments:
 
 
     >>> sys.argv = 'test -u  -vv -ssample1 !sample1[.]sample1'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -379,7 +379,7 @@ Module and test filters can also be given as positional arguments:
 
 
     >>> sys.argv = 'test -u  -vv -ssample1 . txt'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -403,7 +403,7 @@ level.  For example, with the following options:
 
 
     >>> sys.argv = 'test -u  -vv -t test_y1 -t test_y0'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -454,7 +454,7 @@ We get run 36 tests.  If we specify a level of 2, we get some
 additional tests:
 
     >>> sys.argv = 'test -u  -vv -a 2 -t test_y1 -t test_y0'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 2
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -506,7 +506,7 @@ additional tests:
 We can use the --all option to run tests at all levels:
 
     >>> sys.argv = 'test -u  -vv --all -t test_y1 -t test_y0'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at all levels
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -564,7 +564,7 @@ pattern you specified, it is convenient to see which tests match your
 specifications.
 
     >>> sys.argv = 'test --all -m sample1 -t test_y0 --list-tests'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Listing samplelayers.Layer11 tests:
       test_y0 (sample1.sampletests.test11.TestA)
       test_y0 (sample1.sampletests.test11)

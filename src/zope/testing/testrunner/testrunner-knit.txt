@@ -41,7 +41,7 @@ package name and file path.
     >>> from zope.testing import testrunner
     
     >>> sys.argv = 'test --layer Layer111 -vv'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer111 tests:
       Set up samplelayers.Layerx in 0.000 seconds.
@@ -69,7 +69,7 @@ the products directory.  As usual, we can select the knit-in packages
 or individual packages within knit-in packages:
 
     >>> sys.argv = 'test --package sample4.products -vv'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer111 tests:
       Set up samplelayers.Layerx in 0.000 seconds.
@@ -87,7 +87,7 @@ or individual packages within knit-in packages:
       Tear down samplelayers.Layer1 in 0.000 seconds.
 
     >>> sys.argv = 'test --package sample4.products.more -vv'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer111 tests:
       Set up samplelayers.Layerx in 0.000 seconds.

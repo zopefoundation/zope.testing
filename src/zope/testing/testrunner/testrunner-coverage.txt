@@ -15,7 +15,7 @@ directory name given as the parameter will be used to hold the reports.
     >>> sys.argv = 'test --coverage=coverage_dir'.split()
 
     >>> from zope.testing import testrunner
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Ran 9 tests with 0 failures and 0 errors in 0.000 seconds.

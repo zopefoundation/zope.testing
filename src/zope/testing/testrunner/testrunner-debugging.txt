@@ -32,7 +32,7 @@ runner will enter pdb at that point:
 
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t set_trace1').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +ELLIPSIS
     Running zope.testing.testrunner.layer.UnitTests tests:
@@ -58,7 +58,7 @@ option:
     >>> sys.stdin = Input('p x\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem1 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
     Running zope.testing.testrunner.layer.UnitTests tests:
@@ -87,7 +87,7 @@ converted to errors and can be debugged the same way:
     >>> sys.stdin = Input('up\np x\np y\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem_failure1 -D').split()
-    >>> try: testrunner.run(defaults)
+    >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
     Running zope.testing.testrunner.layer.UnitTests tests:

@@ -12,7 +12,7 @@ We can select which layers to run using the --layer option:
 
     >>> sys.argv = 'test --layer 112 --layer Unit'.split()
     >>> from zope.testing import testrunner
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer112 tests:
       Set up samplelayers.Layerx in N.NNN seconds.
       Set up samplelayers.Layer1 in N.NNN seconds.
@@ -35,7 +35,7 @@ We can select which layers to run using the --layer option:
 We can also specify that we want to run only the unit tests:
 
     >>> sys.argv = 'test -u'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -47,7 +47,7 @@ We can also specify that we want to run only the unit tests:
 Or that we want to run all of the tests except for the unit tests:
 
     >>> sys.argv = 'test -f'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in N.NNN seconds.
       Ran 9 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -85,7 +85,7 @@ Or that we want to run all of the tests except for the unit tests:
 Or we can explicitly say that we want both unit and non-unit tests.
 
     >>> sys.argv = 'test -uf'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in N.NNN seconds.
       Ran 9 tests with 0 failures and 0 errors in N.NNN seconds.
@@ -127,7 +127,7 @@ Or we can explicitly say that we want both unit and non-unit tests.
 It is possible to force the layers to run in subprocesses and parallelize them.
 
     >>> sys.argv = [testrunner_script, '-j2']
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in N.NNN seconds.
       Ran 9 tests with 0 failures and 0 errors in N.NNN seconds.

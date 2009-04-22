@@ -23,16 +23,26 @@ import unittest
 import zope.testing.testrunner.interfaces
 
 
-
 def run(defaults=None, args=None):
-    # This function is here to make the whole test runner compatible before
-    # the large refactoring.
+    """Main runner function which can be and is being used from main programs.
+
+    Will execute the tests and exit the process according to the test result.
+
+    """
+    failed = run_internal(defaults, args)
+    sys.exit(int(failed))
+
+
+def run_internal(defaults=None, args=None):
+    """Execute tests.
+
+    Returns whether errors or failures occured during testing.
+
+    """
     # XXX Bah. Lazy import to avoid circular/early import problems
     from zope.testing.testrunner.runner import Runner
     runner = Runner(defaults, args)
     runner.run()
-    if runner.failed and runner.options.exitwithstatus:
-        sys.exit(1)
     return runner.failed
 
 

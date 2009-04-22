@@ -14,7 +14,7 @@ themselves.
 
     >>> sys.argv = 'test --layer 112 --layer UnitTests --repeat 3'.split()
     >>> from zope.testing import testrunner
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer112 tests:
       Set up samplelayers.Layerx in 0.000 seconds.
       Set up samplelayers.Layer1 in 0.000 seconds.

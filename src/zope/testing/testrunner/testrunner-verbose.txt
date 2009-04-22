@@ -15,7 +15,7 @@ test:
     ...     ]
     >>> sys.argv = 'test --layer 122 -v'.split()
     >>> from zope.testing import testrunner
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -34,7 +34,7 @@ If there are more than 50 tests, the dots are printed in groups of
 50:
 
     >>> sys.argv = 'test -uv'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
@@ -49,7 +49,7 @@ If the --verbose (-v) option is used twice, then the name and location of
 each test is printed as it is run:
 
     >>> sys.argv = 'test --layer 122 -vv'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -93,7 +93,7 @@ if the --verbose (-v) option is used three times, then individual
 test-execution times are printed:
 
     >>> sys.argv = 'test --layer 122 -vvv'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running tests at level 1
     Running samplelayers.Layer122 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
@@ -145,7 +145,7 @@ the default verbosity is non-zero:
     ...     '-v'
     ...     ]
     >>> sys.argv = 'test -q -u'.split()
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Ran 192 tests with 0 failures and 0 errors in 0.034 seconds.

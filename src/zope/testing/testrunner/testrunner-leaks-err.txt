@@ -15,7 +15,7 @@ get an error message:
     >>> from zope.testing import testrunner
     
     >>> sys.argv = 'test -r -N6'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
             The Python you are running was not configured
             with --with-pydebug. This is required to use
             the --report-refcounts option.

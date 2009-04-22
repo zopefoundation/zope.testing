@@ -475,7 +475,6 @@ def resume_tests(options, features, layers, failures, errors):
                 current_result = results_iter.next()
             except StopIteration:
                 current_result = None
-
         time.sleep(0.01) # Keep the loop from being too tight.
 
     # Return the total number of tests run.

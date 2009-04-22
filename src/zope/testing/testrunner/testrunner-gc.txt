@@ -17,7 +17,7 @@ using the --gc option with a value of zero.
     >>> from zope.testing import testrunner
 
     >>> sys.argv = 'test --tests-pattern ^gc0$ --gc 0 -vv'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Cyclic garbage collection is disabled.
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
@@ -34,7 +34,7 @@ related problem, you can cause garbage collection to happen more often
 by providing a low threshold:
     
     >>> sys.argv = 'test --tests-pattern ^gc1$ --gc 1 -vv'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Cyclic garbage collection threshold set to: (1,)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
@@ -51,7 +51,7 @@ values:
     
     >>> sys.argv = ('test --tests-pattern ^gcset$ --gc 701 --gc 11 --gc 9 -vv'
     ...             .split())
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Cyclic garbage collection threshold set to: (701, 11, 9)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
@@ -79,7 +79,7 @@ The output statistics are written to standard error.
     >>> sys.argv = ('test --tests-pattern ^gcstats$ -G DEBUG_STATS'
     ...             ' -G DEBUG_COLLECTABLE -vv'
     ...             .split())
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.

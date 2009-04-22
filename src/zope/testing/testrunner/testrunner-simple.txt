@@ -46,7 +46,7 @@ Now, if we run the tests, without any other options:
     >>> from zope.testing import testrunner
     >>> import sys
     >>> sys.argv = ['test']
-    >>> testrunner.run(defaults)
+    >>> testrunner.run_internal(defaults)
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in N.NNN seconds.
       Ran 9 tests with 0 failures and 0 errors in N.NNN seconds.
