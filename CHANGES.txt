@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.7.3 (unreleased)
+3.7.3 (2009-04-22)
 ==================
 
 - Better deal with rogue threads by always exiting with status so even
