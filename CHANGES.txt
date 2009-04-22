@@ -1,6 +1,14 @@
 zope.testing Changelog
 **********************
 
+3.7.3 (unreleased)
+==================
+
+- Better deal with rogue threads by always exiting with status so even
+  spinning daemon threads won't block the runner from exiting. This deprecated
+  the ``--with-exit-status`` option.
+
+
 3.7.2 (2009-04-13)
 ==================
 
