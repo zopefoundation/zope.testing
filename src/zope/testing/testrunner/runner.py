@@ -16,11 +16,7 @@
 $Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
 """
 
-# unfortunately there is a zope.testing.testrunner.subprocess module that we
-# need to avoid; also, we want to support Python 2.4, which doesn't have
-# # from __future__ import absolute_import, so we use a hack instead
-import imp
-subprocess = imp.load_module('subprocess', *imp.find_module('subprocess'))
+import subprocess
 
 import cStringIO
 import gc
@@ -49,7 +45,7 @@ import zope.testing.testrunner.filter
 import zope.testing.testrunner.garbagecollection
 import zope.testing.testrunner.listing
 import zope.testing.testrunner.statistics
-import zope.testing.testrunner.subprocess
+import zope.testing.testrunner.process
 import zope.testing.testrunner.interfaces
 import zope.testing.testrunner.debug
 
@@ -193,7 +189,7 @@ class Runner(object):
             self.features.append(zope.testing.testrunner.garbagecollection.Debug(self))
 
         self.features.append(zope.testing.testrunner.find.Find(self))
-        self.features.append(zope.testing.testrunner.subprocess.SubProcess(self))
+        self.features.append(zope.testing.testrunner.process.SubProcess(self))
         self.features.append(zope.testing.testrunner.filter.Filter(self))
         self.features.append(zope.testing.testrunner.listing.Listing(self))
         self.features.append(zope.testing.testrunner.statistics.Statistics(self))
