@@ -117,7 +117,7 @@ Using pdb in a docstring-based doctest
     > doctest.py(351)set_trace()->None
     -> pdb.Pdb.set_trace(self)
     (Pdb) n
-    > <doctest sample3.sampletests_d.set_trace3[1]>(3)...()
+    > <doctest sample3.sampletests_d.set_trace3[line 3, example 1]>(3)...()
     -> y = x
     (Pdb) p x
     1
@@ -139,7 +139,7 @@ Using pdb.set_trace in a doc file:
     > doctest.py(351)set_trace()->None
     -> pdb.Pdb.set_trace(self)
     (Pdb) n
-    > <doctest set_trace5.txt[1]>(3)...()
+    > <doctest set_trace5.txt[line 2, example 1]>(3)...()
     -> y = x
     (Pdb) p x
     1
@@ -227,7 +227,7 @@ Post-mortem debugging docstring-based doctest:
     <BLANKLINE>
     exceptions.ValueError:
     <BLANKLINE>
-    > <doctest sample3.sampletests_d.post_mortem3[1]>(1)...()
+    > <doctest sample3.sampletests_d.post_mortem3[line 3, example 1]>(1)...()
     (Pdb) p x
     1
     (Pdb) c
@@ -292,7 +292,7 @@ Post-mortem debugging file-based doctest:
     <BLANKLINE>
     exceptions.ValueError:
     <BLANKLINE>
-    > <doctest post_mortem5.txt[1]>(1)...()
+    > <doctest post_mortem5.txt[line 2, example 1]>(1)...()
     (Pdb) p x
     1
     (Pdb) c

@@ -118,7 +118,7 @@ A failed test run highlights the failures in red:
     {red}    Traceback (most recent call last):{normal}
     {red}      File ".../doctest.py", line 1356, in __run{normal}
     {red}        compileflags, 1) in test.globs{normal}
-    {red}      File "<doctest sample2.sampletests_e.eek[0]>", line 1, in ?{normal}
+    {red}      File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?{normal}
     {red}        f(){normal}
     {red}      File "testrunner-ex/sample2/sampletests_e.py", line 19, in f{normal}
     {red}        g(){normal}
@@ -154,9 +154,9 @@ A failed test run highlights the failures in red:
     {red}    Traceback (most recent call last):{normal}
     {red}      File ".../doctest.py", line 1356, in __run{normal}
     {red}        compileflags, 1) in test.globs{normal}
-    {red}      File "<doctest e.txt[1]>", line 1, in ?{normal}
+    {red}      File "<doctest e.txt[line 4, example 1]>", line 1, in ?{normal}
     {red}        f(){normal}
-    {red}      File "<doctest e.txt[0]>", line 2, in f{normal}
+    {red}      File "<doctest e.txt[line 1, example 0]>", line 2, in f{normal}
     {red}        return x{normal}
     {red}    NameError: global name 'x' is not defined{normal}
     <BLANKLINE>

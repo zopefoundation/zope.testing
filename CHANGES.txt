@@ -4,7 +4,11 @@ zope.testing Changelog
 3.7.4 (unreleased)
 ==================
 
-- ...
+- Filenames of doctest examples now contain the line number and not
+  only the example number. So a stack trace in pdb tells the exact
+  line number of the current example. This fixes
+  https://bugs.launchpad.net/bugs/339813
+
 
 3.7.3 (2009-04-22)
 ==================

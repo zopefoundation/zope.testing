@@ -16,7 +16,7 @@ be read only):
     ...     for f in files:
     ...         shutil.copy(os.path.join(root, f),
     ...                     os.path.join(directory_with_tests, root[n:], f))
-    
+
     >>> from zope.testing import testrunner
     >>> defaults = [
     ...     '--path', directory_with_tests,
@@ -44,7 +44,7 @@ be read only):
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_e.eek[0]>", line 1, in ?
+          File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?
             f()
           File "testrunner-ex/sample2/sampletests_e.py", line 19, in f
             g()
@@ -78,9 +78,9 @@ be read only):
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest e.txt[1]>", line 1, in ?
+          File "<doctest e.txt[line 4, example 1]>", line 1, in ?
             f()
-          File "<doctest e.txt[0]>", line 2, in f
+          File "<doctest e.txt[line 1, example 0]>", line 2, in f
             return x
         NameError: global name 'x' is not defined
     <BLANKLINE>
@@ -129,7 +129,7 @@ there'll be a summary of the errors at the end of the test:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_e.eek[0]>", line 1, in ?
+          File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?
             f()
           File "testrunner-ex/sample2/sampletests_e.py", line 19, in f
             g()
@@ -164,9 +164,9 @@ there'll be a summary of the errors at the end of the test:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest e.txt[1]>", line 1, in ?
+          File "<doctest e.txt[line 4, example 1]>", line 1, in ?
             f()
-          File "<doctest e.txt[0]>", line 2, in f
+          File "<doctest e.txt[line 1, example 0]>", line 2, in f
             return x
         NameError: global name 'x' is not defined
     <BLANKLINE>
@@ -218,7 +218,7 @@ Similarly for progress output, the progress ticker will be interrupted:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_e.eek[0]>", line 1, in ?
+          File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?
             f()
           File "testrunner-ex/sample2/sampletests_e.py", line 19, in f
             g()
@@ -260,9 +260,9 @@ Similarly for progress output, the progress ticker will be interrupted:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest e.txt[1]>", line 1, in ?
+          File "<doctest e.txt[line 4, example 1]>", line 1, in ?
             f()
-          File "<doctest e.txt[0]>", line 2, in f
+          File "<doctest e.txt[line 1, example 0]>", line 2, in f
             return x
         NameError: global name 'x' is not defined
     <BLANKLINE>
@@ -389,7 +389,7 @@ examples in the same test to fail.  Each failure is reported:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
         NameError: name 'y' is not defined
     ----------------------------------------------------------------------
@@ -401,7 +401,7 @@ examples in the same test to fail.  Each failure is reported:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[1]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 4, example 1]>", line 1, in ?
             x
         NameError: name 'x' is not defined
     ----------------------------------------------------------------------
@@ -413,7 +413,7 @@ examples in the same test to fail.  Each failure is reported:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[2]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 7, example 2]>", line 1, in ?
             z = x + 1
         NameError: name 'x' is not defined
     <BLANKLINE>
@@ -446,7 +446,7 @@ me the first failed example in a doctest" :)
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
         NameError: name 'y' is not defined
     <BLANKLINE>
@@ -479,7 +479,7 @@ The --hide-secondary-failures option is an alias for -1:
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
         NameError: name 'y' is not defined
     <BLANKLINE>
@@ -515,7 +515,7 @@ command-line options in sys.argv.
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[0]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
         NameError: name 'y' is not defined
     ----------------------------------------------------------------------
@@ -527,7 +527,7 @@ command-line options in sys.argv.
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[1]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 4, example 1]>", line 1, in ?
             x
         NameError: name 'x' is not defined
     ----------------------------------------------------------------------
@@ -539,7 +539,7 @@ command-line options in sys.argv.
         Traceback (most recent call last):
           File ".../doctest.py", line 1256, in __run
             compileflags, 1) in test.globs
-          File "<doctest sample2.sampletests_1.eek[2]>", line 1, in ?
+          File "<doctest sample2.sampletests_1.eek[line 7, example 2]>", line 1, in ?
             z = x + 1
         NameError: name 'x' is not defined
     <BLANKLINE>
@@ -816,7 +816,7 @@ unicode and another not:
       Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     True
 
- 
+
 Reporting Errors to Calling Processes
 -------------------------------------
 

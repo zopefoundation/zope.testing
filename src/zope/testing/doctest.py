@@ -357,7 +357,7 @@ class _OutputRedirectingPdb(pdb.Pdb):
         try:
 	    pdb.Pdb.__init__(self, stdin=sys.stdin, stdout=out)
         except TypeError:
-            pdb.Pdb.__init__(self) 
+            pdb.Pdb.__init__(self)
 
     def set_trace(self):
         self.__debugger_used = True
@@ -1345,7 +1345,10 @@ class DocTestRunner:
             # Use a special filename for compile(), so we can retrieve
             # the source code during interactive debugging (see
             # __patched_linecache_getlines).
-            filename = '<doctest %s[%d]>' % (test.name, examplenum)
+            # Line number counting starts with 0 so we add one to get
+            # the real line number.
+            filename = '<doctest %s[line %d, example %d]>' % (
+                test.name, example.lineno+1, examplenum)
 
             # Run the example in the given context (globs), and record
             # any exception that gets raised.  (But don't intercept
@@ -1428,9 +1431,10 @@ class DocTestRunner:
         self.failures += f
         self.tries += t
 
-    __LINECACHE_FILENAME_RE = re.compile(r'<doctest '
-                                         r'(?P<name>[\w\.]+)'
-                                         r'\[(?P<examplenum>\d+)\]>$')
+    __LINECACHE_FILENAME_RE = re.compile(
+        r'<doctest (?P<name>[\w\.]+)\[line \d+, example (?P<examplenum>\d+)\]>$'
+        )
+
     def __patched_linecache_getlines(self, filename, module_globals=None):
         m = self.__LINECACHE_FILENAME_RE.match(filename)
         if m and m.group('name') == self.test.name:
