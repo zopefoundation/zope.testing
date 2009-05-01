@@ -9,6 +9,8 @@ zope.testing Changelog
   line number of the current example. This fixes
   https://bugs.launchpad.net/bugs/339813
 
+- Colorization of doctest output correctly handles blank lines.
+
 
 3.7.3 (2009-04-22)
 ==================

@@ -584,12 +584,15 @@ class ColorfulOutputFormatter(OutputFormatter):
                         self.color('normal'), '\n'])
                 else:
                     print line
-            elif line.startswith('    '):
+            elif line.startswith('    ') or line.strip() == '':
                 if colorize_diff and len(line) > 4:
                     color = self.diff_color.get(line[4], color_of_indented_text)
                     print self.colorize(color, line)
                 else:
-                    print self.colorize(color_of_indented_text, line)
+                    if line.strip() != '':
+                        print self.colorize(color_of_indented_text, line)
+                    else:
+                        print line
             else:
                 colorize_diff = False
                 if line.startswith('Failed example'):

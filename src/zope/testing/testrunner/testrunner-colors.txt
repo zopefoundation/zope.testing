@@ -243,6 +243,36 @@ apart:
     {normal}Tearing down left over layers:{normal}
       Tear down zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
 
+Even test failures that have actual blank lines (as opposed to <BLANKLINE>) in
+them are highlighted correctly.
+
+    >>> import zope.testing.testrunner.formatter
+    >>> formatter = zope.testing.testrunner.formatter.ColorfulOutputFormatter(None)
+    >>> formatter.print_doctest_failure("""\
+    ...     File "sometest.txt", line 221, in sometest.txt
+    ... Failed example:
+    ...     foo()
+    ... Expected:
+    ...     Output that contains
+    ...
+    ...     blank lines.
+    ... Got:
+    ...     Output that still contains
+    ...
+    ...     blank lines.""")
+    {normal}    File "sometest.txt", line 221, in sometest.txt{normal}
+    Failed example:
+    {cyan}    foo(){normal}
+    Expected:
+    {green}    Output that contains{normal}
+    <BLANKLINE>
+    {green}    blank lines.{normal}
+    Got:
+    {red}    Output that still contains{normal}
+    <BLANKLINE>
+    {red}    blank lines.{normal}
+    <BLANKLINE>
+
 
 Timing individual tests
 -----------------------
