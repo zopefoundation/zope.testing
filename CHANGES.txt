@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.7.4 (unreleased)
+3.7.4 (2009-05-01)
 ==================
 
 - Filenames of doctest examples now contain the line number and not
