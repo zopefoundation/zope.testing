@@ -1,6 +1,12 @@
 zope.testing Changelog
 **********************
 
+3.7.5 (unreleased)
+==================
+
+- Fix bug when running subprocesses on Windows
+
+
 3.7.4 (2009-05-01)
 ==================
 

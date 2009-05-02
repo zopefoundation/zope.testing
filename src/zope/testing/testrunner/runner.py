@@ -403,7 +403,8 @@ def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
             feature.layer_setup(layer)
 
         child = subprocess.Popen(args, shell=False, stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            close_fds=not sys.platform.startswith('win'))
         subout, suberr = child.communicate()
 
         erriter = iter(suberr.splitlines())
