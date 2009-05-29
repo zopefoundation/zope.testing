@@ -26,4 +26,4 @@ def eek(self):
     """
         
 def test_suite():
-    return doctest.DocTestSuite()
+    return doctest.DocTestSuite(optionflags=doctest.REPORT_NDIFF)

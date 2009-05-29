@@ -2309,6 +2309,9 @@ class DocTestCase(unittest.TestCase):
             # so add the default reporting flags
             optionflags |= _unittest_reportflags
 
+        if _unittest_reportflags & REPORT_ONLY_FIRST_FAILURE:
+            optionflags |= REPORT_ONLY_FIRST_FAILURE
+
         runner = DocTestRunner(optionflags=optionflags,
                                checker=self._dt_checker, verbose=False)
         def write(value):
