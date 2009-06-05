@@ -8,6 +8,8 @@ zope.testing Changelog
 - The option REPORT_ONLY_FIRST_FAILURE (command line option "-1") is now
   respected even when a doctest declares its own REPORTING_FLAGS, such as
   REPORT_NDIFF.
+- Fixed bug that broke readline with pdb when using doctest
+  (see http://bugs.python.org/issue5727).
 
 
 3.7.4 (2009-05-01)

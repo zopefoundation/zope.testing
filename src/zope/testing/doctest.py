@@ -358,6 +358,8 @@ class _OutputRedirectingPdb(pdb.Pdb):
 	    pdb.Pdb.__init__(self, stdin=sys.stdin, stdout=out)
         except TypeError:
             pdb.Pdb.__init__(self)
+        # enable readline
+        self.use_rawinput = 1
 
     def set_trace(self):
         self.__debugger_used = True
