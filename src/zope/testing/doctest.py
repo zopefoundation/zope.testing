@@ -355,7 +355,7 @@ class _OutputRedirectingPdb(pdb.Pdb):
         self.__out = out
         self.__debugger_used = False
         try:
-	    pdb.Pdb.__init__(self, stdin=sys.stdin, stdout=out)
+            pdb.Pdb.__init__(self, stdin=sys.stdin, stdout=out)
         except TypeError:
             pdb.Pdb.__init__(self)
         # enable readline
