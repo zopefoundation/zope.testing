@@ -4,13 +4,16 @@ zope.testing Changelog
 3.7.5 (unreleased)
 ==================
 
-- Fix bug when running subprocesses on Windows
+- Fix bug when running subprocesses on Windows.
+
 - The option REPORT_ONLY_FIRST_FAILURE (command line option "-1") is now
   respected even when a doctest declares its own REPORTING_FLAGS, such as
   REPORT_NDIFF.
+
 - Fixed bug that broke readline with pdb when using doctest
   (see http://bugs.python.org/issue5727).
-- make tests pass on win and linux at the same time
+
+- Made tests pass on Windows and Linux at the same time.
 
 
 3.7.4 (2009-05-01)
