@@ -4,8 +4,9 @@ zope.testing Changelog
 3.7.6 (unreleased)
 ==================
 
-- Nothing changed yet.
-
+- Add zope-testrunner console_scripts entry point. This exposes a
+  zope-testrunner binary with default installs allowing the testrunner to be
+  run from the command line.
 
 3.7.5 (2009-06-08)
 ==================
