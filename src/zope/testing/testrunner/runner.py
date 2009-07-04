@@ -31,7 +31,6 @@ import traceback
 import unittest
 
 from zope.testing import doctest
-from zope.testing.testrunner.find import find_tests, test_dirs
 from zope.testing.testrunner.find import StartUpFailure, import_name
 from zope.testing.testrunner.find import name_from_layer, _layer_name_cache
 from zope.testing.testrunner.refcount import TrackRefs
@@ -172,9 +171,6 @@ class Runner(object):
         options.resume_number = resume_number
 
         self.options = options
-
-        # XXX I moved this here mechanically. Move to find feature?
-        self.test_directories = test_dirs(self.options, {})
 
         self.features.append(zope.testing.testrunner.selftest.SelfTest(self))
         self.features.append(zope.testing.testrunner.logsupport.Logging(self))

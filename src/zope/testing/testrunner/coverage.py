@@ -22,6 +22,7 @@ import os.path
 import threading
 
 import zope.testing.testrunner.feature
+from zope.testing.testrunner.find import test_dirs
 
 
 # For some reason, the doctest module resets the trace callable randomly, thus
@@ -134,7 +135,9 @@ class Coverage(zope.testing.testrunner.feature.Feature):
     def global_setup(self):
         """Executed once when the test runner is being set up."""
         self.directory = os.path.join(os.getcwd(), self.runner.options.coverage)
-        self.tracer = TestTrace(self.runner.test_directories,
+
+        # FIXME: This shouldn't rely on the find feature directly.
+        self.tracer = TestTrace(test_dirs(self.runner.options, {}),
                                 trace=False, count=True)
         self.tracer.start()
 
