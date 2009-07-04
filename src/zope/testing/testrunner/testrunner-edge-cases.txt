@@ -50,9 +50,28 @@ affecting the Python path:
     Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 
+Bug #251759: The test runner's protection against descending into non-package
+directories was ineffective, e.g. picking up tests from eggs that were stored
+close by:
+
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex-251759')
+
+    >>> defaults = [
+    ...     '--test-path', directory_with_tests,
+    ...     ]
+    >>> testrunner.run_internal(defaults)
+    Total: 0 tests, 0 failures, 0 errors in 0.000 seconds.
+    False
+
+
 Debugging Edge Cases
 --------------------
 
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
+    >>> defaults = [
+    ...     '--test-path', directory_with_tests,
+    ...     '--tests-pattern', '^sampletestsf?$',
+    ...     ]
     >>> class Input:
     ...     def __init__(self, src):
     ...         self.lines = src.split('\n')
@@ -483,3 +502,4 @@ repeat count greater than 1
             option.
     <BLANKLINE>
     True
+

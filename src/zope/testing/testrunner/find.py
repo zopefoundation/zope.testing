@@ -204,7 +204,10 @@ def find_test_files_(options):
     for (p, package) in test_dirs(options, {}):
         for dirname, dirs, files in walk_with_symlinks(options, p):
             if dirname != p and not contains_init_py(options, files):
-                continue    # not a plausible test directory
+                # This is not a plausible test directory. Avoid descending
+                # further.
+                del dirs[:]
+                continue
             root2ext = {}
             dirs[:] = filter(identifier, dirs)
             d = os.path.split(dirname)[1]

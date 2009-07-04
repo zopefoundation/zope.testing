@@ -4,6 +4,9 @@ zope.testing Changelog
 3.7.7 (unreleased)
 ==================
 
+- Fix #251759: Test runner descended into directories that aren't Python
+  packages.
+
 - Code cleanups.
 
 
