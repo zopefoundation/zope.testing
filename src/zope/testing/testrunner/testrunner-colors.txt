@@ -124,6 +124,7 @@ A failed test run highlights the failures in red:
     {red}        g(){normal}
     {red}      File "testrunner-ex/sample2/sampletests_e.py", line 24, in g{normal}
     {red}        x = y + 1{normal}
+    {red}       - __traceback_info__: I don't know what Y should be.{normal}
     {red}    NameError: global name 'y' is not defined{normal}
     <BLANKLINE>
     <BLANKLINE>

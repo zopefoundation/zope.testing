@@ -50,6 +50,7 @@ be read only):
             g()
           File "testrunner-ex/sample2/sampletests_e.py", line 24, in g
             x = y + 1
+           - __traceback_info__: I don't know what Y should be.
         NameError: global name 'y' is not defined
     <BLANKLINE>
     <BLANKLINE>
@@ -136,6 +137,7 @@ there'll be a summary of the errors at the end of the test:
             g()
           File "testrunner-ex/sample2/sampletests_e.py", line 24, in g
             x = y + 1
+           - __traceback_info__: I don't know what Y should be.
         NameError: global name 'y' is not defined
     <BLANKLINE>
     ...
@@ -226,6 +228,7 @@ Similarly for progress output, the progress ticker will be interrupted:
             g()
           File "testrunner-ex/sample2/sampletests_e.py", line 24, in g
             x = y + 1
+           - __traceback_info__: I don't know what Y should be.
         NameError: global name 'y' is not defined
     <BLANKLINE>
         2/56 (3.6%)##r##

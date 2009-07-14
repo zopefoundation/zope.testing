@@ -16,7 +16,9 @@
 $Id: __init__.py 68482 2006-06-04 14:58:55Z jim $
 """
 
+import StringIO
 import os
+import sys
 import traceback
 import zope.exceptions.exceptionformatter
 import zope.testing.testrunner.feature
@@ -28,6 +30,12 @@ def format_exception(t, v, tb, limit=None):
     return fmt.formatException(t, v, tb)
 
 
+def print_exception(t, v, tb, limit=None, file=None):
+    if file is None:
+        file = sys.stdout
+    file.writelines(format_exception(t, v, tb, limit))
+
+
 class Traceback(zope.testing.testrunner.feature.Feature):
 
     active = True
@@ -36,5 +44,9 @@ class Traceback(zope.testing.testrunner.feature.Feature):
         self.old_format = traceback.format_exception
         traceback.format_exception = format_exception
 
+        self.old_print = traceback.print_exception
+        traceback.print_exception = print_exception
+
     def global_teardown(self):
         traceback.format_exception = self.old_format
+        traceback.print_exception = self.old_print
