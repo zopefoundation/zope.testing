@@ -4,6 +4,10 @@ zope.testing Changelog
 3.7.7 (unreleased)
 ==================
 
+- Clean up support for displaying tracebacks with supplements by turning it
+  into an always-enabled feature and making the dependency on zope.exceptions
+  explicit.
+
 - Fix #251759: Test runner descended into directories that aren't Python
   packages.
 

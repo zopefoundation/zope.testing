@@ -21,6 +21,7 @@ def f():
 def g():
     x = 1
     x = x + 1
+    __traceback_info__ = "I don't know what Y should be."
     x = y + 1
     x = x + 1
 

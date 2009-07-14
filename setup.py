@@ -23,8 +23,8 @@ try:
     extra = dict(
         namespace_packages=['zope',],
         install_requires = ['setuptools',
+                            'zope.exceptions',
                             'zope.interface'],
-        extras_require={'zope_tracebacks': 'zope.exceptions'},
         entry_points = {'console_scripts': ['zope-testrunner = zope.testing.testrunner:run',]},
         include_package_data = True,
         zip_safe = False,
