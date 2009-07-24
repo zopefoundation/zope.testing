@@ -153,7 +153,15 @@ def find_suites(options):
                         )
                 else:
                     try:
-                        suite = getattr(module, options.suite_name)()
+                        if hasattr(module, options.suite_name):
+                            suite = getattr(module, options.suite_name)()
+                        else:
+                            suite = unittest.defaultTestLoader.loadTestsFromModule(module)
+                            if suite.countTestCases() == 0:
+                                raise TypeError(
+                                    "Module %s does not define any tests"
+                                    % module_name)
+
                         if isinstance(suite, unittest.TestSuite):
                             check_suite(suite, module_name)
                         else:

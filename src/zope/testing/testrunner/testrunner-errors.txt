@@ -728,12 +728,6 @@ Then run the tests:
     ImportError: No module named huh
     <BLANKLINE>
     <BLANKLINE>
-    Module: sample2.sample22.sampletests_i
-    <BLANKLINE>
-    Traceback (most recent call last):
-    AttributeError: 'module' object has no attribute 'test_suite'
-    <BLANKLINE>
-    <BLANKLINE>
     Module: sample2.sample23.sampletests_i
     <BLANKLINE>
     Traceback (most recent call last):
@@ -779,7 +773,6 @@ Then run the tests:
     Test-modules with import problems:
       sample2.sampletests_i
       sample2.sample21.sampletests_i
-      sample2.sample22.sampletests_i
       sample2.sample23.sampletests_i
     Total: 213 tests, 0 failures, 0 errors in N.NNN seconds.
     True
