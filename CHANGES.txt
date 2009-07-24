@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.7.8 (unreleased)
+3.8.0 (2009-07-24)
 ==================
 
 - Testrunner automatically picks up descendants of unittest.TestCase in test
