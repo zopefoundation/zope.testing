@@ -20,18 +20,14 @@ import subprocess
 
 import cStringIO
 import gc
-import glob
-import os
 import re
 import sys
-import tempfile
 import threading
 import time
 import traceback
 import unittest
 
-from zope.testing import doctest
-from zope.testing.testrunner.find import StartUpFailure, import_name
+from zope.testing.testrunner.find import import_name
 from zope.testing.testrunner.find import name_from_layer, _layer_name_cache
 from zope.testing.testrunner.refcount import TrackRefs
 from zope.testing.testrunner.options import get_options
@@ -53,6 +49,7 @@ import zope.testing.testrunner.tb_format
 PYREFCOUNT_PATTERN = re.compile('\[[0-9]+ refs\]')
 
 is_jython = sys.platform.startswith('java')
+
 
 class SubprocessError(Exception):
     """An error occurred when running a subprocess
@@ -183,14 +180,17 @@ class Runner(object):
             # Jython GC support is not yet implemented
             pass
         else:
-            self.features.append(zope.testing.testrunner.garbagecollection.Threshold(self))
-            self.features.append(zope.testing.testrunner.garbagecollection.Debug(self))
+            self.features.append(
+                zope.testing.testrunner.garbagecollection.Threshold(self))
+            self.features.append(
+                zope.testing.testrunner.garbagecollection.Debug(self))
 
         self.features.append(zope.testing.testrunner.find.Find(self))
         self.features.append(zope.testing.testrunner.process.SubProcess(self))
         self.features.append(zope.testing.testrunner.filter.Filter(self))
         self.features.append(zope.testing.testrunner.listing.Listing(self))
-        self.features.append(zope.testing.testrunner.statistics.Statistics(self))
+        self.features.append(
+            zope.testing.testrunner.statistics.Statistics(self))
         self.features.append(zope.testing.testrunner.tb_format.Traceback(self))
 
         # Remove all features that aren't activated
@@ -309,7 +309,8 @@ def run_tests(options, tests, name, failures, errors):
         output.stop_tests()
         failures.extend(result.failures)
         errors.extend(result.errors)
-        output.summary(result.testsRun, len(result.failures), len(result.errors), t)
+        output.summary(result.testsRun, len(result.failures),
+            len(result.errors), t)
         ran = result.testsRun
 
         if is_jython:
@@ -355,7 +356,7 @@ def run_layer(options, layer_name, layer, tests, setup_layers,
     tear_down_unneeded(options, needed, setup_layers)
 
     if options.resume_layer != None:
-        output.info_suboptimal( "  Running in a subprocess.")
+        output.info_suboptimal("  Running in a subprocess.")
 
     try:
         setup_layer(options, layer, setup_layers)
@@ -370,10 +371,12 @@ def run_layer(options, layer_name, layer, tests, setup_layers,
     else:
         return run_tests(options, tests, layer_name, failures, errors)
 
+
 class SetUpLayerFailure(unittest.TestCase):
 
     def runTest(self):
         "Layer set up failure."
+
 
 def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
         failures, errors, resume_number):
@@ -389,14 +392,13 @@ def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
 
         # this is because of a bug in Python (http://www.python.org/sf/900092)
         if (options.profile == 'hotshot'
-            and sys.version_info[:3] <= (2,4,1)):
+            and sys.version_info[:3] <= (2, 4, 1)):
             args.insert(1, '-O')
 
         if sys.platform.startswith('win'):
             args = args[0] + ' ' + ' '.join([
                 ('"' + a.replace('\\', '\\\\').replace('"', '\\"') + '"')
-                for a in args[1:]
-                ])
+                for a in args[1:]])
 
         for feature in features:
             feature.layer_setup(layer)
@@ -430,6 +432,7 @@ def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
 
 
 class SubprocessResult(object):
+
     def __init__(self):
         self.num_ran = 0
         self.stdout = []
@@ -504,6 +507,7 @@ cant_pm_in_subprocess_message = """
 Can't post-mortem debug when running a layer as a subprocess!
 Try running layer %r by itself.
 """
+
 
 def setup_layer(options, layer, setup_layers):
     assert layer is not object
@@ -639,7 +643,7 @@ def layer_from_name(layer_name):
        to allow locating layers in cases where it would otherwise be
        impossible.
     """
-    if _layer_name_cache.has_key(layer_name):
+    if layer_name in _layer_name_cache:
         return _layer_name_cache[layer_name]
     layer_names = layer_name.split('.')
     layer_module, module_layer_name = layer_names[:-1], layer_names[-1]
