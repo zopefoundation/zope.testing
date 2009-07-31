@@ -407,6 +407,7 @@ def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
         subout, suberr = child.communicate()
 
         erriter = iter(suberr.splitlines())
+        nfail = nerr = 0
         for line in erriter:
             try:
                 result.num_ran, nfail, nerr = map(int, line.strip().split())
