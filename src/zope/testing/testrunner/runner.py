@@ -417,6 +417,10 @@ def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
                 continue
             else:
                 break
+        else:
+            output = options.output
+            output.error_with_banner("Could not communicate with subprocess:\n"
+                                     "\n" + suberr)
 
         while nfail > 0:
             nfail -= 1
