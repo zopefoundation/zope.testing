@@ -77,11 +77,12 @@ class Runner(object):
     """
 
     def __init__(self, defaults=None, args=None, found_suites=None,
-                 options=None):
+                 options=None, script_parts=None):
         self.defaults = defaults
         self.args = args
         self.found_suites = found_suites
         self.options = options
+        self.script_parts = script_parts
         self.failed = True
 
         self.ran = 0
@@ -147,7 +148,6 @@ class Runner(object):
     def configure(self):
         if self.args is None:
             self.args = sys.argv[:]
-
         # Check to see if we are being run as a subprocess. If we are,
         # then use the resume-layer and defaults passed in.
         if len(self.args) > 1 and self.args[1] == '--resume-layer':
@@ -229,7 +229,7 @@ class Runner(object):
         if should_resume:
             setup_layers = None
             if layers_to_run:
-                self.ran += resume_tests(self.options, self.features,
+                self.ran += resume_tests(self.script_parts, self.options, self.features,
                     layers_to_run, self.failures, self.errors)
 
         if setup_layers:
@@ -378,13 +378,15 @@ class SetUpLayerFailure(unittest.TestCase):
         "Layer set up failure."
 
 
-def spawn_layer_in_subprocess(result, options, features, layer_name, layer,
+def spawn_layer_in_subprocess(result, script_parts, options, features, layer_name, layer,
         failures, errors, resume_number):
     try:
-        args = [sys.executable,
-                sys.argv[0],
-                '--resume-layer', layer_name, str(resume_number),
-                ]
+        # BBB
+        if script_parts is None:
+            script_parts = sys.argv[0:1]
+        args = [sys.executable]
+        args.extend(script_parts)
+        args.extend(['--resume-layer', layer_name, str(resume_number)])
         for d in options.testrunner_defaults:
             args.extend(['--default', d])
 
@@ -443,7 +445,7 @@ class SubprocessResult(object):
         self.done = False
 
 
-def resume_tests(options, features, layers, failures, errors):
+def resume_tests(script_parts, options, features, layers, failures, errors):
     results = []
     resume_number = int(options.processes > 1)
     ready_threads = []
@@ -452,7 +454,7 @@ def resume_tests(options, features, layers, failures, errors):
         results.append(result)
         ready_threads.append(threading.Thread(
             target=spawn_layer_in_subprocess,
-            args=(result, options, features, layer_name, layer, failures,
+            args=(result, script_parts, options, features, layer_name, layer, failures,
                 errors, resume_number)))
         resume_number += 1
 

@@ -4,6 +4,9 @@ zope.testing Changelog
 3.8.1 (unreleased)
 ==================
 
+- Avoid to hardcode sys.argv[0] as script; 
+  allow for instance Zope 2 `bin/instance test` (LP#407916).
+
 - Produce a clear error message when subprocess doesn't follow the
   zope.testing.testrunner protocol (LP#407916).
 
