@@ -31,7 +31,13 @@ class SubProcess(zope.testing.testrunner.feature.Feature):
     def global_setup(self):
         self.original_stderr = sys.stderr
         sys.stderr = sys.stdout
-        self.runner.options.verbose = False
+        if self.runner.options.processes > 1:
+            # If we only have one subprocess, there's absolutely
+            # no reason to squelch.  We will let the messages through in a
+            # timely manner, if they have been requested. On the other hand, if
+            # there are multiple processes, we do squelch to 0.
+            self.runner.options.verbose = 0
+        self.progress = False
 
     def report(self):
         sys.stdout.close()

@@ -65,7 +65,8 @@ class Filter(zope.testing.testrunner.feature.Feature):
                     # No pattern matched this name so we remove it
                     layers.pop(name)
 
-        if self.runner.options.verbose:
+        if (self.runner.options.verbose and
+            not self.runner.options.resume_layer):
             if self.runner.options.all:
                 msg = "Running tests at all levels"
             else:

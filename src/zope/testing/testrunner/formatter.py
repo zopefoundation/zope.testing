@@ -52,6 +52,9 @@ class OutputFormatter(object):
 
     progress = property(lambda self: self.options.progress)
     verbose = property(lambda self: self.options.verbose)
+    in_subprocess = property(
+        lambda self: self.options.resume_layer is not None and
+                     self.options.processes > 1)
 
     def compute_max_width(self):
         """Try to determine the terminal width."""
@@ -263,6 +266,12 @@ class OutputFormatter(object):
 
         elif self.verbose == 1:
             sys.stdout.write('.' * test.countTestCases())
+        
+        elif self.in_subprocess:
+            sys.stdout.write('.' * test.countTestCases())
+            # Give the parent process a new line so it sees the progress
+            # in a timely manner.
+            sys.stdout.write('\n')
 
         if self.verbose > 1:
             s = str(test)

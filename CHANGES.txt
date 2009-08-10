@@ -4,11 +4,21 @@ zope.testing Changelog
 3.8.1 (unreleased)
 ==================
 
-- Avoid to hardcode sys.argv[0] as script; 
-  allow for instance Zope 2 `bin/instance test` (LP#407916).
+- Avoid hardcoding sys.argv[0] as script; 
+  allow, for instance, Zope 2's `bin/instance test` (LP#407916).
 
-- Produce a clear error message when subprocess doesn't follow the
+- Produce a clear error message when a subprocess doesn't follow the
   zope.testing.testrunner protocol (LP#407916).
+
+- Do not unnecessarily squelch verbose output in a subprocess when there are
+  not multiple subprocesses.
+
+- Do not unnecessarily batch subprocess output, which can stymie automated and
+  human processes for identifying hung tests.
+
+- Include incremental output when there are multiple subprocesses and a
+  verbosity of -vv or greater is requested.  This again is not batched,
+  supporting automated processes and humans looking for hung tests. 
 
 
 3.8.0 (2009-07-24)
