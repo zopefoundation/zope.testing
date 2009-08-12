@@ -1,6 +1,12 @@
 zope.testing Changelog
 **********************
 
+3.8.2 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 3.8.1 (2009-08-12)
 ==================
 
