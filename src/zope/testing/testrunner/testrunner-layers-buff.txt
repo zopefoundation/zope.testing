@@ -62,7 +62,7 @@ That second suite has two tests.  Both sleep for half a second each.
 
 Now we actually check the results we care about.  We should see that there are
 two pauses of about half a second, one around the first test and one around the
-second.  Before the change that this test verfies, there was a single pause of
+second.  Before the change that this test verifies, there was a single pause of
 more than a second after the second suite ran.
 
     >>> pause = datetime.timedelta(seconds=0.3)
