@@ -1,10 +1,16 @@
 Profiling
 =========
-
-The testrunner includes the ability to profile the test execution with hotshot
-via the --profile option.
+The testrunner supports hotshot and cProfile profilers. Hotshot profiler
+support does not work with python2.6
 
     >>> import os.path, sys
+    >>> profiler = '--profile=hotshot'
+    >>> if sys.hexversion >= 0x02060000:
+    ...     profiler = '--profile=cProfile'
+
+The testrunner includes the ability to profile the test execution with hotshot
+via the --profile option, if it a python <= 2.6
+
     >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
     >>> sys.path.append(directory_with_tests)
 
@@ -13,7 +19,7 @@ via the --profile option.
     ...     '--tests-pattern', '^sampletestsf?$',
     ...     ]
 
-    >>> sys.argv = [testrunner_script, '--profile=hotshot']
+    >>> sys.argv = [testrunner_script, profiler]
 
 When the tests are run, we get profiling output.
 
@@ -32,7 +38,7 @@ When the tests are run, we get profiling output.
 
 Profiling also works across layers.
 
-    >>> sys.argv = [testrunner_script, '-ssample2', '--profile=hotshot',
+    >>> sys.argv = [testrunner_script, '-ssample2', profiler,
     ...             '--tests-pattern', 'sampletests_ntd']
     >>> testrunner.run_internal(defaults)
     Running...

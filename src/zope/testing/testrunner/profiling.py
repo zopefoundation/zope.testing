@@ -55,34 +55,38 @@ else:
 
 
 # some Linux distributions don't include the profiler, which hotshot uses
-try:
-    import hotshot
-    import hotshot.stats
-except ImportError:
-    pass
-else:
-    class HotshotProfiler(object):
-        """hotshot interface"""
+if not sys.hexversion >= 0x02060000:
+    # Hotshot is not maintained any longer in 2.6. It does not support 
+    # merging to hotshot files. Thus we won't use it in python2.6 and
+    # onwards
+    try:
+        import hotshot
+        import hotshot.stats
+    except ImportError:
+        pass
+    else:
+        class HotshotProfiler(object):
+            """hotshot interface"""
 
-        def __init__(self, filepath):
-            self.profiler = hotshot.Profile(filepath)
-            self.enable = self.profiler.start
-            self.disable = self.profiler.stop
+            def __init__(self, filepath):
+                self.profiler = hotshot.Profile(filepath)
+                self.enable = self.profiler.start
+                self.disable = self.profiler.stop
+ 
+            def finish(self):
+                self.profiler.close()
 
-        def finish(self):
-            self.profiler.close()
+            def loadStats(self, prof_glob):
+                stats = None
+                for file_name in glob.glob(prof_glob):
+                    loaded = hotshot.stats.load(file_name)
+                    if stats is None:
+                        stats = loaded
+                    else:
+                        stats.add(loaded)
+                return stats
 
-        def loadStats(self, prof_glob):
-            stats = None
-            for file_name in glob.glob(prof_glob):
-                loaded = hotshot.stats.load(file_name)
-                if stats is None:
-                    stats = loaded
-                else:
-                    stats.add(loaded)
-            return stats
-
-    available_profilers['hotshot'] = HotshotProfiler
+        available_profilers['hotshot'] = HotshotProfiler
 
 
 class Profiling(zope.testing.testrunner.feature.Feature):
