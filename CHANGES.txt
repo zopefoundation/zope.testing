@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.8.2 (unreleased)
+3.8.2 (2009-09-15)
 ==================
 
 - Removing hotshot profiler when using Python 2.6. That makes zope.testing
