@@ -4,6 +4,8 @@ zope.testing Changelog
 3.8.3 (unreleased)
 ==================
 
+- Avoid a split() call or we get test failures when running from a directory
+  with spaces in it.
 
 3.8.2 (2009-09-15)
 ==================

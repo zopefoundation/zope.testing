@@ -161,7 +161,7 @@ You can specify directory names instead of packages (useful for
 tab-completion):
 
     >>> subdir = os.path.join(directory_with_tests, 'sample1')
-    >>> sys.argv = ('test --layer 122 -s %s -vv' % subdir).split()
+    >>> sys.argv = ['test', '--layer', '122', '-s', subdir, '-vv']
     >>> from zope.testing import testrunner
     >>> testrunner.run_internal(defaults)
     Running tests at level 1
