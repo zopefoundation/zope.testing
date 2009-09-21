@@ -7,6 +7,9 @@ zope.testing Changelog
 - Avoid a split() call or we get test failures when running from a directory
   with spaces in it.
 
+- Fix testrunner behavior on Windows for -j2 (or greater) combined with -v
+  (or greater).
+
 3.8.2 (2009-09-15)
 ==================
 
@@ -17,7 +20,7 @@ zope.testing Changelog
 3.8.1 (2009-08-12)
 ==================
 
-- Avoid hardcoding sys.argv[0] as script; 
+- Avoid hardcoding sys.argv[0] as script;
   allow, for instance, Zope 2's `bin/instance test` (LP#407916).
 
 - Produce a clear error message when a subprocess doesn't follow the
@@ -31,7 +34,7 @@ zope.testing Changelog
 
 - Include incremental output when there are multiple subprocesses and a
   verbosity of -vv or greater is requested.  This again is not batched,
-  supporting automated processes and humans looking for hung tests. 
+  supporting automated processes and humans looking for hung tests.
 
 
 3.8.0 (2009-07-24)

@@ -495,7 +495,7 @@ class ImmediateSubprocessResult(AbstractSubprocessResult):
         sys.stdout.flush()
 
 
-_is_dots = re.compile(r'\.+\n').match
+_is_dots = re.compile(r'\.+(\r\n?|\n)').match # Windows sneaks in a \r\n.
 class KeepaliveSubprocessResult(AbstractSubprocessResult):
     "Keeps stdout for later processing; sends marks to queue to show activity."
 
