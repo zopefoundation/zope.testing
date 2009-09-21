@@ -480,7 +480,7 @@ class AbstractSubprocessResult(object):
 
 class DeferredSubprocessResult(AbstractSubprocessResult):
     """Keeps stdout around for later processing,"""
-    
+
     def write(self, out):
         if not _is_dots(out):
             self.stdout.append(out)
@@ -505,7 +505,7 @@ class KeepaliveSubprocessResult(AbstractSubprocessResult):
         self._done = value
         assert value, 'Internal error: unexpectedly setting done to False'
         self.queue.put((self.layer_name, ' LAYER FINISHED'))
-    done = property(lambda self: self._done, _set_done) 
+    done = property(lambda self: self._done, _set_done)
 
     def write(self, out):
         if _is_dots(out):

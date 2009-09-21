@@ -68,13 +68,13 @@ more than a second after the second suite ran.
     >>> pause = datetime.timedelta(seconds=0.3)
     >>> last_line, last_time = record.pop(0)
     >>> for line, time in record:
-    ...     if (time-last_time >= pause and
-    ...         line != '  Running in a subprocess.\n'):
+    ...     if time-last_time >= pause:
     ...         # We paused!
     ...         print 'PAUSE FOUND BETWEEN THESE LINES:'
     ...         print ''.join([last_line, line, '-'*70])
     ...     last_line, last_time = line, time
-    PAUSE FOUND BETWEEN THESE LINES:
+    ... # doctest: +ELLIPSIS
+    PAUSE FOUND BETWEEN THESE LINES:...
       Running:
      test_something (sampletests_buffering.TestSomething2)
     ----------------------------------------------------------------------
@@ -126,13 +126,13 @@ before, the progress output is not buffered.
 
     >>> last_line, last_time = record.pop(0)
     >>> for line, time in record:
-    ...     if (time-last_time >= pause and
-    ...         line != '  Running in a subprocess.\n'):
+    ...     if time-last_time >= pause:
     ...         # We paused!
     ...         print 'PAUSE FOUND BETWEEN THIS OUTPUT:'
     ...         print '\n'.join([last_line, line, '-'*70])
     ...     last_line, last_time = line, time
-    PAUSE FOUND BETWEEN THIS OUTPUT:
+    ... # doctest: +ELLIPSIS
+    PAUSE FOUND BETWEEN THIS OUTPUT:...
     .
     .
     ----------------------------------------------------------------------

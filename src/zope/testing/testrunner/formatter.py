@@ -266,7 +266,7 @@ class OutputFormatter(object):
 
         elif self.verbose == 1:
             sys.stdout.write('.' * test.countTestCases())
-        
+
         elif self.in_subprocess:
             sys.stdout.write('.' * test.countTestCases())
             # Give the parent process a new line so it sees the progress
