@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.8.3 (unreleased)
+3.8.3 (2009-09-21)
 ==================
 
 - Avoid a split() call or we get test failures when running from a directory
