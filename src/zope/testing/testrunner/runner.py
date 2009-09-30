@@ -19,6 +19,7 @@ $Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
 import subprocess
 
 import cStringIO
+import errno
 import gc
 import Queue
 import re
