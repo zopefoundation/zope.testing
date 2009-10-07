@@ -16,7 +16,6 @@
 $Id: __init__.py 86218 2008-05-03 14:17:26Z ctheune $
 """
 
-import time
 import zope.testing.testrunner.feature
 
 

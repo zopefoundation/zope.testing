@@ -25,7 +25,6 @@ import logging
 import logging.config
 import os.path
 
-from zope.testing import doctest
 import zope.testing.testrunner.feature
 
 

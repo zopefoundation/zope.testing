@@ -62,6 +62,25 @@ values:
     Tearing down left over layers:
       Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
+Specifying more than 3 --gc options is not allowed:
+
+
+    >>> from StringIO import StringIO
+    >>> out = StringIO()
+    >>> stdout = sys.stdout
+    >>> sys.stdout = out
+
+    >>> sys.argv = ('test --tests-pattern ^gcset$ --gc 701 --gc 42 --gc 11 --gc 9 -vv'
+    ...             .split())
+    >>> _ = testrunner.run_internal(defaults)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+
+    >>> sys.stdout = stdout
+
+    >>> print out.getvalue()
+    Too many --gc options
 
 Garbage Collection Statistics
 -----------------------------

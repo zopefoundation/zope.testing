@@ -384,6 +384,8 @@ class SetUpLayerFailure(unittest.TestCase):
 def spawn_layer_in_subprocess(result, script_parts, options, features,
                               layer_name, layer, failures, errors,
                               resume_number):
+    output = options.output
+
     try:
         # BBB
         if script_parts is None:
@@ -449,9 +451,7 @@ def spawn_layer_in_subprocess(result, script_parts, options, features,
             else:
                 break
         else:
-            output = options.output
-            output.error_with_banner("Could not communicate with subprocess:\n"
-                                     "\n" + suberr)
+            output.error_with_banner("Could not communicate with subprocess")
 
         while nfail > 0:
             nfail -= 1

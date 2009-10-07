@@ -686,6 +686,26 @@ The -cdiff option requests a standard "context" diff:
     Tearing down left over layers:
       Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
 
+Specifying more than one diff option at once causes an error:
+
+    >>> sys.argv = 'test --tests-pattern ^pledge$ --cdiff --udiff'.split()
+    >>> _ = testrunner.run_internal(defaults)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+
+    >>> sys.argv = 'test --tests-pattern ^pledge$ --cdiff --ndiff'.split()
+    >>> _ = testrunner.run_internal(defaults)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+
+    >>> sys.argv = 'test --tests-pattern ^pledge$ --udiff --ndiff'.split()
+    >>> _ = testrunner.run_internal(defaults)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+
 
 Testing-Module Import Errors
 ----------------------------

@@ -12,9 +12,8 @@
 #
 ##############################################################################
 
+import unittest
 import zope.testing.huh
-
-from zope.testing import doctest
 
 class Test(unittest.TestCase):
 

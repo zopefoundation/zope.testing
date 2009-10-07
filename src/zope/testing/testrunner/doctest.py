@@ -16,6 +16,7 @@
 $Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
 """
 
+import sys
 from zope.testing import doctest
 import zope.testing.testrunner.feature
 
@@ -26,6 +27,7 @@ class DocTest(zope.testing.testrunner.feature.Feature):
 
     def global_setup(self):
         options = self.runner.options
+        output = options.output
 
         self.old_reporting_flags = doctest.set_unittest_reportflags(0)
 

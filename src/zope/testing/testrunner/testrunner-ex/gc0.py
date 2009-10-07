@@ -11,7 +11,6 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-import unittest
 from zope.testing import doctest
 
 def make_sure_gc_is_disabled():

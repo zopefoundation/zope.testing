@@ -16,11 +16,9 @@
 $Id$
 """
 
-import os
 import re
-import sys
 import unittest
-from zope.testing import doctest, testrunner, renormalizing
+from zope.testing import doctest, renormalizing
 
 def test_suite():
     return unittest.TestSuite((

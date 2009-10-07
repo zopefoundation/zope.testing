@@ -140,3 +140,96 @@ before, the progress output is not buffered.
     .
      LAYER FINISHED
     ----------------------------------------------------------------------
+
+
+Fake an IOError reading the output of the subprocess to exercise the
+reporting of that error:
+
+    >>> class FakeStdout(object):
+    ...     raised = False
+    ...     def __init__(self, msg):
+    ...         self.msg = msg
+    ...     def readline(self):
+    ...         if not self.raised:
+    ...             self.raised = True
+    ...             raise IOError(self.msg)
+
+    >>> class FakeStderr(object):
+    ...     def __init__(self, msg):
+    ...         self.msg = msg
+    ...     def read(self):
+    ...         return self.msg
+
+    >>> class FakeProcess(object):
+    ...     def __init__(self, out, err):
+    ...         self.stdout = FakeStdout(out)
+    ...         self.stderr = FakeStderr(err)
+
+    >>> class FakePopen(object):
+    ...     def __init__(self, out, err):
+    ...         self.out = out
+    ...         self.err = err
+    ...     def __call__(self, *args, **kw):
+    ...         return FakeProcess(self.out, self.err)
+
+    >>> import subprocess
+    >>> Popen = subprocess.Popen
+    >>> subprocess.Popen = FakePopen(
+    ...      "Failure triggered to verify error reporting",
+    ...      "0 0 0")
+
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
+    >>> from zope.testing import testrunner
+    >>> defaults = [
+    ...     '--path', directory_with_tests,
+    ...     ]
+    >>> argv = [sys.argv[0],
+    ...         '-vv', '--tests-pattern', '^sampletests_buffering.*']
+
+    >>> _ = testrunner.run_internal(defaults, argv)
+    Running tests at level 1
+    Running sampletests_buffering.Layer1 tests:
+      Set up sampletests_buffering.Layer1 in N.NNN seconds.
+      Running:
+     test_something (sampletests_buffering.TestSomething1)
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Running sampletests_buffering.Layer2 tests:
+      Tear down sampletests_buffering.Layer1 ... not supported
+    Error reading subprocess output for sampletests_buffering.Layer2
+    Failure triggered to verify error reporting
+    Total: 1 tests, 0 failures, 0 errors in N.NNN seconds.
+
+Now fake an empty stderr to test reporting a failure when
+communicating with the subprocess:
+
+    >>> subprocess.Popen = FakePopen(
+    ...      "Failure triggered to verify error reporting",
+    ...      "")
+
+    >>> directory_with_tests = os.path.join(this_directory, 'testrunner-ex')
+    >>> from zope.testing import testrunner
+    >>> defaults = [
+    ...     '--path', directory_with_tests,
+    ...     ]
+    >>> argv = [sys.argv[0],
+    ...         '-vv', '--tests-pattern', '^sampletests_buffering.*']
+
+    >>> _ = testrunner.run_internal(defaults, argv)
+    Running tests at level 1
+    Running sampletests_buffering.Layer1 tests:
+      Set up sampletests_buffering.Layer1 in N.NNN seconds.
+      Running:
+     test_something (sampletests_buffering.TestSomething1)
+      Ran 1 tests with 0 failures and 0 errors in N.NNN seconds.
+    Running sampletests_buffering.Layer2 tests:
+      Tear down sampletests_buffering.Layer1 ... not supported
+    Error reading subprocess output for sampletests_buffering.Layer2
+    Failure triggered to verify error reporting
+    <BLANKLINE>
+    **********************************************************************
+    Could not communicate with subprocess
+    **********************************************************************
+    <BLANKLINE>
+    Total: 1 tests, 0 failures, 0 errors in N.NNN seconds.
+
+    >>> subprocess.Popen = Popen

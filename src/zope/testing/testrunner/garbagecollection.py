@@ -17,7 +17,7 @@ $Id: __init__.py 86218 2008-05-03 14:17:26Z ctheune $
 """
 
 import gc
-import time
+import sys
 import zope.testing.testrunner.feature
 
 
@@ -32,7 +32,7 @@ class Threshold(zope.testing.testrunner.feature.Feature):
             return
 
         if len(self.threshold) > 3:
-            output.error("Too many --gc options")
+            self.runner.options.output.error("Too many --gc options")
             sys.exit(1)
 
     def global_setup(self):

@@ -19,7 +19,6 @@ $Id: __init__.py 86218 2008-05-03 14:17:26Z ctheune $
 """
 
 import pdb
-from zope.testing import doctest
 import zope.testing.testrunner.feature
 
 real_pdb_set_trace = pdb.set_trace

@@ -19,9 +19,6 @@ tests to unit tests.
 $Id$
 """
 
-from doctest import DocFileSuite, DocTestSuite
-from doctest import debug_src, debug
-
 def pprint():
     from pprint import PrettyPrinter
     def pprint(ob, **opts):

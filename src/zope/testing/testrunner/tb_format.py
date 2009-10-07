@@ -16,8 +16,6 @@
 $Id: __init__.py 68482 2006-06-04 14:58:55Z jim $
 """
 
-import StringIO
-import os
 import sys
 import traceback
 import zope.exceptions.exceptionformatter

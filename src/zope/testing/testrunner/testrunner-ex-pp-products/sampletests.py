@@ -13,7 +13,6 @@
 ##############################################################################
 
 import unittest
-from zope.testing import doctest
 
 class Test(unittest.TestCase):
 

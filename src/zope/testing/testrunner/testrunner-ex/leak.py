@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-import unittest, sys, time
+import unittest, time
 
 class ClassicLeakable:
     def __init__(self):
