@@ -2212,16 +2212,15 @@ def set_unittest_reportflags(flags):
     The old flag is returned so that a runner could restore the old
     value if it wished to:
 
-      >>> old = _unittest_reportflags
+      >>> import doctest
+      >>> old = doctest._unittest_reportflags
       >>> set_unittest_reportflags(REPORT_NDIFF |
       ...                          REPORT_ONLY_FIRST_FAILURE) == old
       True
 
-# XXX this test fails and I didn't do it, so just commenting it out (JBY).
-#      >>> import doctest
-#      >>> doctest._unittest_reportflags == (REPORT_NDIFF |
-#      ...                                   REPORT_ONLY_FIRST_FAILURE)
-#      True
+      >>> doctest._unittest_reportflags == (REPORT_NDIFF |
+      ...                                   REPORT_ONLY_FIRST_FAILURE)
+      True
 
     Only reporting flags can be set:
 
