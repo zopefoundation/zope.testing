@@ -220,6 +220,28 @@ The difference would show us that:
         + <BLANKLINE>
           options:
               -h    display this help message
+
+
+It is possible to combine RENormalizing checkers for easy reuse:
+
+    >>> address_and_time_checker = RENormalizing([
+    ...    (re.compile('[0-9]*[.][0-9]* seconds'), '<SOME NUMBER OF> seconds'),
+    ...    (re.compile('at 0x[0-9a-f]+'), 'at <SOME ADDRESS>'),
+    ...    ])
+    >>> lowercase_checker = RENormalizing([
+    ...    lambda s: s.lower(),
+    ...    ])
+    >>> combined_checker = address_and_time_checker + lowercase_checker
+    >>> len(combined_checker.transformers)
+    3
+
+Combining a checker with something else does not work:
+
+    >>> lowercase_checker + 5
+    Traceback (most recent call last):
+        ...
+    TypeError: unsupported operand type(s) for +: 'instance' and 'int'
+
 """
 
 import doctest
@@ -230,6 +252,11 @@ class RENormalizing(doctest.OutputChecker):
 
     def __init__(self, patterns):
         self.transformers = map(self._cook, patterns)
+
+    def __add__(self, other):
+        if not isinstance(other, RENormalizing):
+            return NotImplemented
+        return RENormalizing(self.transformers + other.transformers)
 
     def _cook(self, pattern):
         if callable(pattern):

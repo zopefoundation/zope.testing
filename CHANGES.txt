@@ -9,6 +9,9 @@ zope.testing Changelog
 
 - Cleaned up unused imports reported by pyflakes.
 
+- RENormalizing checkers can be combined via `` + `` now: ``checker1 +
+checker2`` creates a checker with the transformations of both checkers.
+
 3.8.3 (2009-09-21)
 ==================
 
