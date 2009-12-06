@@ -220,8 +220,6 @@ The difference would show us that:
         + <BLANKLINE>
           options:
               -h    display this help message
-
-$Id$
 """
 
 import doctest
