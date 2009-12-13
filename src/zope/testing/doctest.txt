@@ -28,5 +28,5 @@ It worked. Let's also try the test file suite:
 
   >>> import unittest
   >>> result = unittest.TestResult()
-  >>> doctest.DocFileSuite(fn, module_relative=False).run(result)
-  <unittest.TestResult run=1 errors=0 failures=0>
+  >>> doctest.DocFileSuite(fn, module_relative=False).run(result) #doctest: +ELLIPSIS
+  <...TestResult run=1 errors=0 failures=0>

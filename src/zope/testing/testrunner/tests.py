@@ -72,10 +72,10 @@ if sys.platform == 'win32':
 
         # omit traceback entries for unittest.py or doctest.py from
         # output:
-        (re.compile(r'^ +File "[^\n]*(doc|unit)test.py", [^\n]+\n[^\n]+\n',
+        (re.compile(r'^ +File "[^\n]*(doctest|unittest|case).py", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
-        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doc|unit)test.py{\w+}", [^\n]+\n[^\n]+\n',
+        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doctest|unittest|case).py{\w+}", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
         #(re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
@@ -114,10 +114,10 @@ else:
 
         # omit traceback entries for unittest.py or doctest.py from
         # output:
-        (re.compile(r'^ +File "[^\n]*(doc|unit)test.py", [^\n]+\n[^\n]+\n',
+        (re.compile(r'^ +File "[^\n]*(doctest|unittest|case).py", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
-        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doc|unit)test.py{\w+}", [^\n]+\n[^\n]+\n',
+        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doctest|unittest|case).py{\w+}", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
         (re.compile('import pdb; pdb'), 'Pdb()'), # Py 2.3
