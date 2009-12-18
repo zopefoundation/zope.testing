@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.8.4 (unreleased)
+3.8.4 (2009-12-18)
 ==================
 
 - Fixed missing imports and undefined variables reported by pyflakes,
