@@ -398,6 +398,19 @@ setup.add_option(
 Specifies the name of a directory to ignore when looking for tests.
 """)
 
+setup.add_option(
+    '--shuffle', action="store_true", dest='shuffle',
+    help="""\
+Shuffles the order in which tests are ran.
+""")
+
+setup.add_option(
+    '--shuffle-seed', action="store", dest='shuffle_seed', type="int",
+    help="""\
+Value used to initialize the tests shuffler. Specify a value to create
+repeatable random ordered tests.
+""")
+
 parser.add_option_group(setup)
 
 ######################################################################

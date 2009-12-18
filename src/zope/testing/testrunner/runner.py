@@ -46,6 +46,7 @@ import zope.testing.testrunner.process
 import zope.testing.testrunner.interfaces
 import zope.testing.testrunner.debug
 import zope.testing.testrunner.tb_format
+import zope.testing.testrunner.shuffle
 
 
 PYREFCOUNT_PATTERN = re.compile('\[[0-9]+ refs\]')
@@ -188,6 +189,7 @@ class Runner(object):
                 zope.testing.testrunner.garbagecollection.Debug(self))
 
         self.features.append(zope.testing.testrunner.find.Find(self))
+        self.features.append(zope.testing.testrunner.shuffle.Shuffle(self))
         self.features.append(zope.testing.testrunner.process.SubProcess(self))
         self.features.append(zope.testing.testrunner.filter.Filter(self))
         self.features.append(zope.testing.testrunner.listing.Listing(self))

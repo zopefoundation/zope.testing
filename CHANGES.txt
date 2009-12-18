@@ -9,6 +9,9 @@ zope.testing Changelog
 
 - Cleaned up unused imports reported by pyflakes.
 
+- Added two new options to generate randomly ordered list of tests and to
+  select a specific order of tests.
+
 - RENormalizing checkers can be combined via `` + `` now: ``checker1 +
 checker2`` creates a checker with the transformations of both checkers.
 
