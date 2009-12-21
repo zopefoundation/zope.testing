@@ -105,6 +105,10 @@ from StringIO import StringIO
 warnings.filterwarnings("ignore", "is_private", DeprecationWarning,
                         __name__, 0)
 
+# Tell people to use the builtin module instead.
+warnings.warn('zope.testing.doctest is deprecated in favour of '
+              'the Python standard library doctest module', DeprecationWarning)
+
 class UnusedFootnoteWarning(Warning):
     """Warn about a footnote that is defined, but never referenced."""
 

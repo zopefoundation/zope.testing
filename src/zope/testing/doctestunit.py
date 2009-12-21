@@ -19,6 +19,13 @@ tests to unit tests.
 $Id$
 """
 
+import warnings
+warnings.warn('zope.testing.doctest is deprecated in favour of '
+              'the Python standard library doctest module', DeprecationWarning)
+
+from doctest import DocFileSuite, DocTestSuite
+from doctest import debug_src, debug
+
 def pprint():
     from pprint import PrettyPrinter
     def pprint(ob, **opts):
