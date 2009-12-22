@@ -107,7 +107,8 @@ warnings.filterwarnings("ignore", "is_private", DeprecationWarning,
 
 # Tell people to use the builtin module instead.
 warnings.warn('zope.testing.doctest is deprecated in favour of '
-              'the Python standard library doctest module', DeprecationWarning)
+              'the Python standard library doctest module', DeprecationWarning,
+               stacklevel=2)
 
 class UnusedFootnoteWarning(Warning):
     """Warn about a footnote that is defined, but never referenced."""

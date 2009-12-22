@@ -21,7 +21,8 @@ $Id$
 
 import warnings
 warnings.warn('zope.testing.doctestunit is deprecated in favour of '
-              'the Python standard library doctest module', DeprecationWarning)
+              'the Python standard library doctest module', DeprecationWarning,
+              stacklevel=2)
 
 from doctest import DocFileSuite, DocTestSuite
 from doctest import debug_src, debug
