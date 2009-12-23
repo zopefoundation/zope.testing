@@ -1,0 +1,3 @@
+include *.txt *.py buildout.cfg
+recursive-include src *.py *.txt *.test sampletests
+# I found no way to include the three empty "sampletests" directories into the sdist :/

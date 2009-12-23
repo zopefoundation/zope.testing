@@ -4,7 +4,7 @@ zope.testing Changelog
 3.8.6 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Added MANIFEST.in and reuploaded to fix broken 3.8.5 release on PyPI.
 
 
 3.8.5 (2009-12-23)
