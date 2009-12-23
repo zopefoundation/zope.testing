@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.8.5 (unreleased)
+3.8.5 (2009-12-23)
 ==================
 
 - Added DocFileSuite, DocTestSuite, debug_src and debug back BBB imports
