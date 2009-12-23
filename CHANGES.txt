@@ -4,7 +4,12 @@ zope.testing Changelog
 3.8.5 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Added DocFileSuite, DocTestSuite, debug_src and debug back BBB imports
+  back into zope.testing.doctestunit; apparently many packages still import
+  them from there!
+
+- Made zope.testing.doctest and zope.testing.doctestunit emit deprecation
+  warnings: use the stdlib doctest instead.
 
 
 3.8.4 (2009-12-18)
