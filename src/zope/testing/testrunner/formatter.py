@@ -16,12 +16,12 @@
 $Id: __init__.py 86207 2008-05-03 13:25:02Z ctheune $
 """
 
+import doctest
 import sys
 import re
 import traceback
 
-from zope.testing import doctest
-
+from zope.testing.exceptions import DocTestFailureException
 
 doctest_template = """
 File "%s", line %s, in %s
@@ -328,7 +328,7 @@ class OutputFormatter(object):
     def format_traceback(self, exc_info):
         """Format the traceback."""
         v = exc_info[1]
-        if isinstance(v, doctest.DocTestFailureException):
+        if isinstance(v, DocTestFailureException):
             tb = v.args[0]
         elif isinstance(v, doctest.DocTestFailure):
             tb = doctest_template % (
@@ -560,7 +560,7 @@ class ColorfulOutputFormatter(OutputFormatter):
         print
         print self.colorize('error', msg)
         v = exc_info[1]
-        if isinstance(v, doctest.DocTestFailureException):
+        if isinstance(v, DocTestFailureException):
             self.print_doctest_failure(v.args[0])
         elif isinstance(v, doctest.DocTestFailure):
             # I don't think these are ever used... -- mgedmin

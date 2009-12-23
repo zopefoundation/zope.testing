@@ -103,7 +103,7 @@ A failed test run highlights the failures in red:
       Tear down samplelayers.Layer122 in {green}0.000{normal} seconds.
       Tear down samplelayers.Layer12 in {green}0.000{normal} seconds.
       Tear down samplelayers.Layer1 in {green}0.000{normal} seconds.
-    Set up zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
+      Set up zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
     <BLANKLINE>
     <BLANKLINE>
     {boldred}Failure in test eek (sample2.sampletests_e){normal}
@@ -116,7 +116,7 @@ A failed test run highlights the failures in red:
     {cyan}    f(){normal}
     Exception raised:
     {red}    Traceback (most recent call last):{normal}
-    {red}      File ".../doctest.py", line 1356, in __run{normal}
+    {red}      File ".../doctest/__init__.py", line 1356, in __run{normal}
     {red}        compileflags, 1) in test.globs{normal}
     {red}      File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?{normal}
     {red}        f(){normal}
@@ -154,7 +154,7 @@ A failed test run highlights the failures in red:
     {cyan}    f(){normal}
     Exception raised:
     {red}    Traceback (most recent call last):{normal}
-    {red}      File ".../doctest.py", line 1356, in __run{normal}
+    {red}      File ".../doctest/__init__.py", line 1356, in __run{normal}
     {red}        compileflags, 1) in test.globs{normal}
     {red}      File "<doctest e.txt[line 4, example 1]>", line 1, in ?{normal}
     {red}        f(){normal}
@@ -176,7 +176,7 @@ A failed test run highlights the failures in red:
     <BLANKLINE>
     {normal}  Ran {green}200{normal} tests with {boldred}3{normal} failures and {boldred}1{normal} errors in {green}0.045{normal} seconds.{normal}
     {normal}Tearing down left over layers:{normal}
-    Tear down zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
+      Tear down zope.testing.testrunner.layer.UnitTests in {green}N.NNN{normal} seconds.
     {normal}Total: {green}413{normal} tests, {boldred}3{normal} failures, {boldred}1{normal} errors in {green}0.023{normal} seconds.{normal}
     True
 

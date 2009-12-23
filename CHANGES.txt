@@ -4,7 +4,8 @@ zope.testing Changelog
 3.8.7 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Modified the testrunner to use the standard Python doctest module instead of
+  the deprecated zope.testing.doctest.
 
 
 3.8.6 (2009-12-23)

@@ -229,21 +229,23 @@ Post-mortem debugging docstring-based doctest:
     >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running zope.testing.testrunner.layer.UnitTests tests:...
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    <BLANKLINE>
+    <BLANKLINE>
     Error in test post_mortem3 (sample3.sampletests_d)
     Traceback (most recent call last):
-      File "zope/testing/doctest.py", line 2276, in debug
-        runner.run(self._dt_test)
-      File "zope/testing/doctest.py", line 1731, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in debug
+        runner.run(self._dt_test, clear_globs=False)
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         r = DocTestRunner.run(self, test, compileflags, out, False)
-      File "zope/testing/doctest.py", line 1389, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         return self.__run(test, compileflags, out)
-      File "zope/testing/doctest.py", line 1310, in __run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in __run
         exc_info)
-      File "zope/testing/doctest.py", line 1737, in report_unexpected_exception
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in report_unexpected_exception
         raise UnexpectedException(test, example, exc_info)
-    UnexpectedException:
-       from testrunner-ex/sample3/sampletests_d.py:61 (2 examples)>
+    UnexpectedException: testrunner-ex/sample3/sampletests_d.py:61 (2 examples)>
     <BLANKLINE>
     exceptions.ValueError:
     <BLANKLINE>
@@ -261,24 +263,27 @@ Post-mortem debugging function called from docstring-based doctest:
     >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running zope.testing.testrunner.layer.UnitTests tests:...
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    <BLANKLINE>
+    <BLANKLINE>
     Error in test post_mortem4 (sample3.sampletests_d)
     Traceback (most recent call last):
-      File "zope/testing/doctest.py", line 2276, in debug
-        runner.run(self._dt_test)
-      File "zope/testing/doctest.py", line 1731, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in debug
+        runner.run(self._dt_test, clear_globs=False)
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         r = DocTestRunner.run(self, test, compileflags, out, False)
-      File "zope/testing/doctest.py", line 1389, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         return self.__run(test, compileflags, out)
-      File "zope/testing/doctest.py", line 1310, in __run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in __run
         exc_info)
-      File "zope/testing/doctest.py", line 1737, in report_unexpected_exception
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in report_unexpected_exception
         raise UnexpectedException(test, example, exc_info)
-    UnexpectedException: testrunner-ex/sample3/sampletests_d.py:67 (1 example)>
+    UnexpectedException: testrunner-ex/sample3/sampletests_d.py:NNN (1 example)>
     <BLANKLINE>
     exceptions.ValueError:
     <BLANKLINE>
-    > testrunner-ex/sample3/sampletests_d.py(46)g()
+    > testrunner-ex/sample3/sampletests_d.py(NNN)g()
     -> raise ValueError
     (Pdb) p x
     1
@@ -293,20 +298,21 @@ Post-mortem debugging file-based doctest:
     >>> try: testrunner.run_internal(defaults)
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
-    Running zope.testing.testrunner.layer.UnitTests tests:...
+    Running zope.testing.testrunner.layer.UnitTests tests:
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
-    Error in test zope/testing/testrunner-ex/sample3/post_mortem5.txt
+    Error testrunner-ex/sample3/post_mortem5.txt
     Traceback (most recent call last):
-      File "zope/testing/doctest.py", line 2276, in debug
-        runner.run(self._dt_test)
-      File "zope/testing/doctest.py", line 1731, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in debug
+        runner.run(self._dt_test, clear_globs=False)
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         r = DocTestRunner.run(self, test, compileflags, out, False)
-      File "zope/testing/doctest.py", line 1389, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         return self.__run(test, compileflags, out)
-      File "zope/testing/doctest.py", line 1310, in __run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in __run
         exc_info)
-      File "zope/testing/doctest.py", line 1737, in report_unexpected_exception
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in report_unexpected_exception
         raise UnexpectedException(test, example, exc_info)
     UnexpectedException: testrunner-ex/sample3/post_mortem5.txt:0 (2 examples)>
     <BLANKLINE>
@@ -328,25 +334,26 @@ Post-mortem debugging function called from file-based doctest:
     ... finally: sys.stdin = real_stdin
     ... # doctest: +NORMALIZE_WHITESPACE
     Running zope.testing.testrunner.layer.UnitTests tests:...
+      Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
     <BLANKLINE>
     <BLANKLINE>
-    Error in test zope/testing/testrunner-ex/sample3/post_mortem6.txt
+    Error testrunner-ex/sample3/post_mortem6.txt
     Traceback (most recent call last):
-      File "zope/testing/doctest.py", line 2276, in debug
-        runner.run(self._dt_test)
-      File "zope/testing/doctest.py", line 1731, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in debug
+        runner.run(self._dt_test, clear_globs=False)
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         r = DocTestRunner.run(self, test, compileflags, out, False)
-      File "zope/testing/doctest.py", line 1389, in run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in run
         return self.__run(test, compileflags, out)
-      File "zope/testing/doctest.py", line 1310, in __run
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in __run
         exc_info)
-      File "zope/testing/doctest.py", line 1737, in report_unexpected_exception
+      File ".../zope/testing/doctest/__init__.py", Line NNN, in report_unexpected_exception
         raise UnexpectedException(test, example, exc_info)
     UnexpectedException: testrunner-ex/sample3/post_mortem6.txt:0 (2 examples)>
     <BLANKLINE>
     exceptions.ValueError:
     <BLANKLINE>
-    > testrunner-ex/sample3/sampletests_d.py(46)g()
+    > testrunner-ex/sample3/sampletests_d.py(NNN)g()
     -> raise ValueError
     (Pdb) p x
     1

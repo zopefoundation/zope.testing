@@ -34,7 +34,7 @@ from zope.testing.testrunner.find import name_from_layer, _layer_name_cache
 from zope.testing.testrunner.refcount import TrackRefs
 from zope.testing.testrunner.options import get_options
 import zope.testing.testrunner.coverage
-import zope.testing.testrunner.doctest
+import zope.testing.testrunner._doctest
 import zope.testing.testrunner.logsupport
 import zope.testing.testrunner.selftest
 import zope.testing.testrunner.profiling
@@ -177,7 +177,7 @@ class Runner(object):
         self.features.append(zope.testing.testrunner.selftest.SelfTest(self))
         self.features.append(zope.testing.testrunner.logsupport.Logging(self))
         self.features.append(zope.testing.testrunner.coverage.Coverage(self))
-        self.features.append(zope.testing.testrunner.doctest.DocTest(self))
+        self.features.append(zope.testing.testrunner._doctest.DocTest(self))
         self.features.append(zope.testing.testrunner.profiling.Profiling(self))
         if is_jython:
             # Jython GC support is not yet implemented

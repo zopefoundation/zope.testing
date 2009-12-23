@@ -17,10 +17,10 @@ $Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
 
 """
 
+import doctest
 import sys
 import pdb
 
-from zope.testing import doctest
 import zope.testing.testrunner.interfaces
 
 

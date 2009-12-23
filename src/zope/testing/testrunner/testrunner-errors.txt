@@ -42,7 +42,7 @@ be read only):
         f()
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?
             f()
@@ -78,7 +78,7 @@ be read only):
         f()
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest e.txt[line 4, example 1]>", line 1, in ?
             f()
@@ -129,7 +129,7 @@ there'll be a summary of the errors at the end of the test:
         f()
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?
             f()
@@ -166,7 +166,7 @@ there'll be a summary of the errors at the end of the test:
         f()
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest e.txt[line 4, example 1]>", line 1, in ?
             f()
@@ -220,7 +220,7 @@ Similarly for progress output, the progress ticker will be interrupted:
         f()
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_e.eek[line 2, example 0]>", line 1, in ?
             f()
@@ -264,7 +264,7 @@ Similarly for progress output, the progress ticker will be interrupted:
         f()
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest e.txt[line 4, example 1]>", line 1, in ?
             f()
@@ -392,7 +392,7 @@ examples in the same test to fail.  Each failure is reported:
         x = y
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
@@ -404,7 +404,7 @@ examples in the same test to fail.  Each failure is reported:
         x
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 4, example 1]>", line 1, in ?
             x
@@ -416,7 +416,7 @@ examples in the same test to fail.  Each failure is reported:
         z = x + 1
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 7, example 2]>", line 1, in ?
             z = x + 1
@@ -449,7 +449,7 @@ me the first failed example in a doctest" :)
         x = y
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
@@ -482,7 +482,7 @@ The --hide-secondary-failures option is an alias for -1:
         x = y
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
@@ -518,7 +518,7 @@ command-line options in sys.argv.
         x = y
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 2, example 0]>", line 1, in ?
             x = y
@@ -530,7 +530,7 @@ command-line options in sys.argv.
         x
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 4, example 1]>", line 1, in ?
             x
@@ -542,7 +542,7 @@ command-line options in sys.argv.
         z = x + 1
     Exception raised:
         Traceback (most recent call last):
-          File ".../doctest.py", line 1256, in __run
+          File ".../doctest/__init__.py", line 1256, in __run
             compileflags, 1) in test.globs
           File "<doctest sample2.sampletests_1.eek[line 7, example 2]>", line 1, in ?
             z = x + 1

@@ -85,7 +85,7 @@ __all__ = [
     # 8. Unittest Support
     'DocTestSuite',
     'DocFileSuite',
-    'set_unittest_reportflags',
+    'setdoctest._unittest_reportflags',
     # 9. Debugging Support
     'script_from_examples',
     'testsource',
@@ -95,10 +95,13 @@ __all__ = [
 
 import __future__
 
+import doctest
 import sys, traceback, inspect, linecache, os, re
 import unittest, difflib, pdb, tempfile
 import warnings
+from doctest import DocTestFailure, UnexpectedException
 from StringIO import StringIO
+from zope.testing.exceptions import DocTestFailureException
 
 # Don't whine about the deprecated is_private function in this
 # module's tests.
@@ -136,33 +139,19 @@ real_pdb_set_trace = pdb.set_trace
 
 # Option constants.
 
-OPTIONFLAGS_BY_NAME = {}
-def register_optionflag(name):
-    flag = 1 << len(OPTIONFLAGS_BY_NAME)
-    OPTIONFLAGS_BY_NAME[name] = flag
-    return flag
-
-DONT_ACCEPT_TRUE_FOR_1 = register_optionflag('DONT_ACCEPT_TRUE_FOR_1')
-DONT_ACCEPT_BLANKLINE = register_optionflag('DONT_ACCEPT_BLANKLINE')
-NORMALIZE_WHITESPACE = register_optionflag('NORMALIZE_WHITESPACE')
-ELLIPSIS = register_optionflag('ELLIPSIS')
-IGNORE_EXCEPTION_DETAIL = register_optionflag('IGNORE_EXCEPTION_DETAIL')
-
-COMPARISON_FLAGS = (DONT_ACCEPT_TRUE_FOR_1 |
-                    DONT_ACCEPT_BLANKLINE |
-                    NORMALIZE_WHITESPACE |
-                    ELLIPSIS |
-                    IGNORE_EXCEPTION_DETAIL)
-
-REPORT_UDIFF = register_optionflag('REPORT_UDIFF')
-REPORT_CDIFF = register_optionflag('REPORT_CDIFF')
-REPORT_NDIFF = register_optionflag('REPORT_NDIFF')
-REPORT_ONLY_FIRST_FAILURE = register_optionflag('REPORT_ONLY_FIRST_FAILURE')
-
-REPORTING_FLAGS = (REPORT_UDIFF |
-                   REPORT_CDIFF |
-                   REPORT_NDIFF |
-                   REPORT_ONLY_FIRST_FAILURE)
+from doctest import register_optionflag, \
+    OPTIONFLAGS_BY_NAME, \
+    DONT_ACCEPT_TRUE_FOR_1, \
+    DONT_ACCEPT_BLANKLINE, \
+    NORMALIZE_WHITESPACE, \
+    ELLIPSIS, \
+    IGNORE_EXCEPTION_DETAIL, \
+    COMPARISON_FLAGS, \
+    REPORT_UDIFF, \
+    REPORT_CDIFF, \
+    REPORT_NDIFF, \
+    REPORT_ONLY_FIRST_FAILURE, \
+    REPORTING_FLAGS
 
 INTERPRET_FOOTNOTES = register_optionflag('INTERPRET_FOOTNOTES')
 
@@ -1711,43 +1700,6 @@ class OutputChecker:
         else:
             return 'Expected nothing\nGot nothing\n'
 
-class DocTestFailure(Exception):
-    """A DocTest example has failed in debugging mode.
-
-    The exception instance has variables:
-
-    - test: the DocTest object being run
-
-    - excample: the Example object that failed
-
-    - got: the actual output
-    """
-    def __init__(self, test, example, got):
-        self.test = test
-        self.example = example
-        self.got = got
-
-    def __str__(self):
-        return str(self.test)
-
-class UnexpectedException(Exception):
-    """A DocTest example has encountered an unexpected exception
-
-    The exception instance has variables:
-
-    - test: the DocTest object being run
-
-    - excample: the Example object that failed
-
-    - exc_info: the exception info
-    """
-    def __init__(self, test, example, exc_info):
-        self.test = test
-        self.example = example
-        self.exc_info = exc_info
-
-    def __str__(self):
-        return str(self.test)
 
 class DebugRunner(DocTestRunner):
     r"""Run doc tests but raise an exception as soon as there is a failure.
@@ -2209,42 +2161,7 @@ class Tester:
 ## 8. Unittest Support
 ######################################################################
 
-_unittest_reportflags = 0
-
-def set_unittest_reportflags(flags):
-    """Sets the unittest option flags.
-
-    The old flag is returned so that a runner could restore the old
-    value if it wished to:
-
-      >>> import doctest
-      >>> old = doctest._unittest_reportflags
-      >>> set_unittest_reportflags(REPORT_NDIFF |
-      ...                          REPORT_ONLY_FIRST_FAILURE) == old
-      True
-
-      >>> doctest._unittest_reportflags == (REPORT_NDIFF |
-      ...                                   REPORT_ONLY_FIRST_FAILURE)
-      True
-
-    Only reporting flags can be set:
-
-      >>> set_unittest_reportflags(ELLIPSIS)
-      Traceback (most recent call last):
-      ...
-      ValueError: ('Only reporting flags allowed', 8)
-
-      >>> set_unittest_reportflags(old) == (REPORT_NDIFF |
-      ...                                   REPORT_ONLY_FIRST_FAILURE)
-      True
-    """
-    global _unittest_reportflags
-
-    if (flags & REPORTING_FLAGS) != flags:
-        raise ValueError("Only reporting flags allowed", flags)
-    old = _unittest_reportflags
-    _unittest_reportflags = flags
-    return old
+from doctest import set_unittest_reportflags
 
 _para_re = re.compile(r'\s*\n\s*\n\s*')
 def _unittest_count(docstring):
@@ -2263,10 +2180,6 @@ def _unittest_count(docstring):
 
     return count or 1
 
-
-class DocTestFailureException(AssertionError):
-    """Use custom exception for doctest unit test failures
-    """
 
 class DocTestCase(unittest.TestCase):
 
@@ -2313,9 +2226,9 @@ class DocTestCase(unittest.TestCase):
         if not (optionflags & REPORTING_FLAGS):
             # The option flags don't include any reporting flags,
             # so add the default reporting flags
-            optionflags |= _unittest_reportflags
+            optionflags |= doctest._unittest_reportflags
 
-        if _unittest_reportflags & REPORT_ONLY_FIRST_FAILURE:
+        if doctest._unittest_reportflags & REPORT_ONLY_FIRST_FAILURE:
             optionflags |= REPORT_ONLY_FIRST_FAILURE
 
         runner = DocTestRunner(optionflags=optionflags,
