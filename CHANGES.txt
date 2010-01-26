@@ -4,7 +4,8 @@ zope.testing Changelog
 3.8.7 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Downgraded the zope.testing.doctest deprecation warning into a
+  PendingDeprecationWarning.
 
 
 3.8.6 (2009-12-23)
