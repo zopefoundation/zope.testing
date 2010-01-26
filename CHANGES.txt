@@ -1,13 +1,39 @@
 zope.testing Changelog
 **********************
 
-3.8.4 (unreleased)
+3.8.7 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
+3.8.6 (2009-12-23)
+==================
+
+- Added MANIFEST.in and reuploaded to fix broken 3.8.5 release on PyPI.
+
+
+3.8.5 (2009-12-23)
+==================
+
+- Added DocFileSuite, DocTestSuite, debug_src and debug back BBB imports
+  back into zope.testing.doctestunit; apparently many packages still import
+  them from there!
+
+- Made zope.testing.doctest and zope.testing.doctestunit emit deprecation
+  warnings: use the stdlib doctest instead.
+
+
+3.8.4 (2009-12-18)
 ==================
 
 - Fixed missing imports and undefined variables reported by pyflakes,
   adding tests to exercise the blind spots.
 
 - Cleaned up unused imports reported by pyflakes.
+
+- Added two new options to generate randomly ordered list of tests and to
+  select a specific order of tests.
 
 - RENormalizing checkers can be combined via `` + `` now: ``checker1 +
 checker2`` creates a checker with the transformations of both checkers.

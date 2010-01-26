@@ -163,6 +163,7 @@ def test_suite():
         'testrunner-repeat.txt',
         'testrunner-gc.txt',
         'testrunner-knit.txt',
+        'testrunner-shuffle.txt',
         setUp=setUp, tearDown=tearDown,
         optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE,
         checker=checker),
