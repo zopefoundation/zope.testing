@@ -22,7 +22,11 @@ import os
 import sys
 
 from zope.testing.testrunner.profiling import available_profilers
-from zope.testing.testrunner.formatter import OutputFormatter, ColorfulOutputFormatter
+from zope.testing.testrunner.formatter import (
+    OutputFormatter,
+    ColorfulOutputFormatter,
+    SubunitOutputFormatter,
+    )
 from zope.testing.testrunner.formatter import terminal_has_colors
 
 
@@ -189,6 +193,12 @@ reporting.add_option(
     '--auto-color', action="callback", callback=lambda *args: None,
     help="""\
 Colorize the output, but only when stdout is a terminal.
+""")
+
+reporting.add_option(
+    '--subunit', action="store_true", dest='subunit',
+    help="""\
+Use subunit output. Will not be colorized.
 """)
 
 reporting.add_option(
@@ -531,7 +541,19 @@ def get_options(args=None, defaults=None):
     options, positional = parser.parse_args(args[1:], defaults)
     options.original_testrunner_args = args
 
-    if options.color:
+    if options.subunit:
+        try:
+            import subunit
+        except ImportError:
+            print """\
+        Subunit is not installed. Please install Subunit
+        to generate subunit output.
+        """
+            options.fail = True
+            return options
+        else:
+            options.output = SubunitOutputFormatter(options)
+    elif options.color:
         options.output = ColorfulOutputFormatter(options)
         options.output.slow_test_threshold = options.slow_test_threshold
     else:

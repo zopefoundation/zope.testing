@@ -17,9 +17,13 @@ $Id: __init__.py 86207 2008-05-03 13:25:02Z ctheune $
 """
 
 import doctest
+import os
 import sys
 import re
+import tempfile
 import traceback
+
+from datetime import datetime, timedelta
 
 from zope.testing.exceptions import DocTestFailureException
 
@@ -647,3 +651,405 @@ class ColorfulOutputFormatter(OutputFormatter):
             else:
                 print self.colorize('exception', line)
         print
+
+
+class FakeTest(object):
+    """A fake test object that only has an id."""
+
+    failureException = None
+
+    def __init__(self, test_id):
+        self._id = test_id
+
+    def id(self):
+        return self._id
+
+
+# Conditional imports, we don't want zope.testing to have a hard dependency on
+# subunit.
+try:
+    import subunit
+    from subunit.iso8601 import Utc
+except ImportError:
+    subunit = None
+
+
+# testtools is a hard dependency of subunit itself, guarding separately for
+# richer error messages.
+try:
+    from testtools import content
+except ImportError:
+    content = None
+
+
+class SubunitOutputFormatter(object):
+    """A subunit output formatter.
+
+    This output formatter generates subunit compatible output (see
+    https://launchpad.net/subunit). Subunit output is essentially a stream of
+    results of unit tests. In this formatter, non-test events (such as layer
+    set up) are encoded as specially tagged tests and summary-generating
+    methods (such as modules_with_import_problems) deliberately do nothing.
+
+    In particular, for a layer 'foo', the fake tests related to layer set up
+    and tear down are tagged with 'zope:layer' and are called 'foo:setUp' and
+    'foo:tearDown'. Any tests within layer 'foo' are tagged with
+    'zope:layer:foo'.
+
+    Note that all tags specific to this formatter begin with 'zope:'
+    """
+
+    # subunit output is designed for computers, so displaying a progress bar
+    # isn't helpful.
+    progress = False
+    verbose = property(lambda self: self.options.verbose)
+
+    TAG_INFO_SUBOPTIMAL = 'zope:info_suboptimal'
+    TAG_ERROR_WITH_BANNER = 'zope:error_with_banner'
+    TAG_LAYER = 'zope:layer'
+    TAG_IMPORT_ERROR = 'zope:import_error'
+    TAG_PROFILER_STATS = 'zope:profiler_stats'
+    TAG_GARBAGE = 'zope:garbage'
+    TAG_THREADS = 'zope:threads'
+    TAG_REFCOUNTS = 'zope:refcounts'
+
+    def __init__(self, options):
+        if subunit is None:
+            raise Exception("Requires subunit 0.0.5 or better")
+        if content is None:
+            raise Exception("Requires testtools 0.9.2 or better")
+        self.options = options
+        self._stream = sys.stdout
+        self._subunit = subunit.TestProtocolClient(self._stream)
+        # Used to track the last layer that was set up or torn down. Either
+        # None or (layer_name, last_touched_time).
+        self._last_layer = None
+        self.UTC = Utc()
+        # Content types used in the output.
+        self.TRACEBACK_CONTENT_TYPE = content.ContentType(
+            'text', 'x-traceback', dict(language='python', charset='utf8'))
+        self.PROFILE_CONTENT_TYPE = content.ContentType(
+            'application', 'x-binary-profile')
+        self.PLAIN_TEXT = content.ContentType(
+            'text', 'plain', {'charset': 'utf8'})
+
+    @property
+    def _time_tests(self):
+        return self.verbose > 2
+
+    def _emit_timestamp(self, now=None):
+        """Emit a timestamp to the subunit stream.
+
+        If 'now' is not specified, use the current time on the system clock.
+        """
+        if now is None:
+            now = datetime.now(self.UTC)
+        self._subunit.time(now)
+        return now
+
+    def _emit_tag(self, tag):
+        self._stream.write('tags: %s\n' % (tag,))
+
+    def _stop_tag(self, tag):
+        self._stream.write('tags: -%s\n' % (tag,))
+
+    def _emit_fake_test(self, message, tag, details=None):
+        """Emit a successful fake test to the subunit stream.
+
+        Use this to print tagged informative messages.
+        """
+        test = FakeTest(message)
+        self._subunit.startTest(test)
+        self._emit_tag(tag)
+        self._subunit.addSuccess(test, details)
+
+    def _emit_error(self, error_id, tag, exc_info):
+        """Emit an error to the subunit stream.
+
+        Use this to pass on information about errors that occur outside of
+        tests.
+        """
+        test = FakeTest(error_id)
+        self._subunit.startTest(test)
+        self._emit_tag(tag)
+        self._subunit.addError(test, exc_info)
+
+    def info(self, message):
+        """Print an informative message, but only if verbose."""
+        # info() output is not relevant to actual test results. It only says
+        # things like "Running tests" or "Tearing down left over layers",
+        # things that are communicated already by the subunit stream. Just
+        # suppress the info() output.
+        pass
+
+    def info_suboptimal(self, message):
+        """Print an informative message about losing some of the features.
+
+        For example, when you run some tests in a subprocess, you lose the
+        ability to use the debugger.
+        """
+        # Used _only_ to indicate running in a subprocess.
+        self._emit_fake_test(message.strip(), self.TAG_INFO_SUBOPTIMAL)
+
+    def error(self, message):
+        """Report an error."""
+        # XXX: Mostly used for user errors, sometimes used for errors in the
+        # test framework, sometimes used to record layer setUp failure (!!!).
+        # How should this be encoded?
+        raise NotImplementedError(self.error)
+
+    def error_with_banner(self, message):
+        """Report an error with a big ASCII banner."""
+        # Either "Could not communicate with subprocess"
+        # Or "Can't post-mortem debug when running a layer as a subprocess!"
+        self._emit_fake_test(message, self.TAG_ERROR_WITH_BANNER)
+
+    def _enter_layer(self, layer_name):
+        """Signal in the subunit stream that we are entering a layer."""
+        self._emit_tag('zope:layer:%s' % (layer_name,))
+
+    def _exit_layer(self, layer_name):
+        """Signal in the subunit stream that we are leaving a layer."""
+        self._stop_tag('zope:layer:%s' % (layer_name,))
+
+    def start_set_up(self, layer_name):
+        """Report that we're setting up a layer.
+
+        We do this by emitting a tag of the form 'layer:$LAYER_NAME'.
+        """
+        now = self._emit_timestamp()
+        self._subunit.startTest(FakeTest('%s:setUp' % (layer_name,)))
+        self._emit_tag(self.TAG_LAYER)
+        self._last_layer = (layer_name, now)
+
+    def stop_set_up(self, seconds):
+        layer_name, start_time = self._last_layer
+        self._last_layer = None
+        self._emit_timestamp(start_time + timedelta(seconds=seconds))
+        self._subunit.addSuccess(FakeTest('%s:setUp' % (layer_name,)))
+        self._enter_layer(layer_name)
+
+    def start_tear_down(self, layer_name):
+        """Report that we're tearing down a layer.
+
+        We do this by removing a tag of the form 'layer:$LAYER_NAME'.
+        """
+        self._exit_layer(layer_name)
+        now = self._emit_timestamp()
+        self._subunit.startTest(FakeTest('%s:tearDown' % (layer_name,)))
+        self._emit_tag(self.TAG_LAYER)
+        self._last_layer = (layer_name, now)
+
+    def stop_tear_down(self, seconds):
+        layer_name, start_time = self._last_layer
+        self._last_layer = None
+        self._emit_timestamp(start_time + timedelta(seconds=seconds))
+        self._subunit.addSuccess(FakeTest('%s:tearDown' % (layer_name,)))
+
+    def tear_down_not_supported(self):
+        """Report that we could not tear down a layer.
+
+        Should be called right after start_tear_down().
+        """
+        layer_name, start_time = self._last_layer
+        self._last_layer = None
+        self._emit_timestamp(datetime.now(self.UTC))
+        self._subunit.addSkip(
+            FakeTest('%s:tearDown' % (layer_name,)), "tearDown not supported")
+
+    def summary(self, n_tests, n_failures, n_errors, n_seconds):
+        """Print out a summary.
+
+        Since subunit is a stream protocol format, it has no need for a
+        summary. When the stream is finished other tools can generate a
+        summary if so desired.
+        """
+        pass
+
+    def start_test(self, test, tests_run, total_tests):
+        """Report that we're about to run a test.
+
+        The next output operation should be test_success(), test_error(), or
+        test_failure().
+        """
+        if self._time_tests:
+            self._emit_timestamp()
+        # Note that this always emits newlines, so it will function as well as
+        # other start_test implementations if we are running in a subprocess.
+        self._subunit.startTest(test)
+
+    def stop_test(self, test):
+        """Clean up the output state after a test."""
+        self._subunit.stopTest(test)
+        self._stream.flush()
+
+    def stop_tests(self):
+        """Clean up the output state after a collection of tests."""
+        self._stream.flush()
+
+    def test_success(self, test, seconds):
+        if self._time_tests:
+            self._emit_timestamp()
+        self._subunit.addSuccess(test)
+
+    def import_errors(self, import_errors):
+        """Report test-module import errors (if any)."""
+        if not import_errors:
+            return
+        for error in import_errors:
+            self._emit_error(
+                error.module, self.TAG_IMPORT_ERROR, error.exc_info)
+
+    def modules_with_import_problems(self, import_errors):
+        """Report names of modules with import problems (if any)."""
+        # This is simply a summary method, and subunit output doesn't benefit
+        # from summaries.
+        pass
+
+    def _exc_info_to_details(self, exc_info):
+        """Translate 'exc_info' into a details dictionary usable with subunit.
+        """
+        # In an ideal world, we'd use the pre-bundled 'TracebackContent' class
+        # from testtools. However, 'OutputFormatter' contains special logic to
+        # handle errors from doctests, so we have to use that and manually
+        # create an object equivalent to an instance of 'TracebackContent'.
+        formatter = OutputFormatter(None)
+        traceback = formatter.format_traceback(exc_info)
+        return {
+            'traceback': content.Content(
+                self.TRACEBACK_CONTENT_TYPE, lambda: [traceback.encode('utf8')])}
+
+    def test_error(self, test, seconds, exc_info):
+        """Report that an error occurred while running a test.
+
+        Should be called right after start_test().
+
+        The next output operation should be stop_test().
+        """
+        if self._time_tests:
+            self._emit_timestamp()
+        details = self._exc_info_to_details(exc_info)
+        self._subunit.addError(test, details=details)
+
+    def test_failure(self, test, seconds, exc_info):
+        """Report that a test failed.
+
+        Should be called right after start_test().
+
+        The next output operation should be stop_test().
+        """
+        if self._time_tests:
+            self._emit_timestamp()
+        details = self._exc_info_to_details(exc_info)
+        self._subunit.addFailure(test, details=details)
+
+    def profiler_stats(self, stats):
+        """Report profiler stats."""
+        ignored, filename = tempfile.mkstemp()
+        try:
+            stats.dump_stats(filename)
+            profile_content = content.Content(
+                self.PROFILE_CONTENT_TYPE, open(filename).read)
+            details = {'profiler-stats': profile_content}
+        finally:
+            os.unlink(filename)
+        # Name the test 'zope:profiler_stats' just like its tag.
+        self._emit_fake_test(
+            self.TAG_PROFILER_STATS, self.TAG_PROFILER_STATS, details)
+
+    def tests_with_errors(self, errors):
+        """Report tests with errors.
+
+        Simply not supported by the subunit formatter. Fancy summary output
+        doesn't make sense.
+        """
+        pass
+
+    def tests_with_failures(self, failures):
+        """Report tests with failures.
+
+        Simply not supported by the subunit formatter. Fancy summary output
+        doesn't make sense.
+        """
+        pass
+
+    def totals(self, n_tests, n_failures, n_errors, n_seconds):
+        """Summarize the results of all layers.
+
+        Simply not supported by the subunit formatter. Fancy summary output
+        doesn't make sense.
+        """
+        pass
+
+    def list_of_tests(self, tests, layer_name):
+        """Report a list of test names."""
+        self._enter_layer(layer_name)
+        for test in tests:
+            self._subunit.startTest(test)
+            self._subunit.addSuccess(test)
+        self._exit_layer(layer_name)
+
+    def _get_text_details(self, name, text):
+        """Get a details dictionary that just has some plain text."""
+        return {
+            name: content.Content(
+                self.PLAIN_TEXT, lambda: [text.encode('utf8')])}
+
+    def garbage(self, garbage):
+        """Report garbage generated by tests."""
+        # XXX: Really, 'garbage', 'profiler_stats' and the 'refcounts' twins
+        # ought to add extra details to a fake test that represents the
+        # summary information for the whole suite. However, there's no event
+        # on output formatters for "everything is really finished, honest". --
+        # jml, 2010-02-14
+        details = self._get_text_details('garbage', unicode(garbage))
+        self._emit_fake_test(
+            self.TAG_GARBAGE, self.TAG_GARBAGE, details)
+
+    def test_garbage(self, test, garbage):
+        """Report garbage generated by a test.
+
+        Encoded in the subunit stream as a test error. Clients can filter out
+        these tests based on the tag if they don't think garbage should fail
+        the test run.
+        """
+        # XXX: Perhaps 'test_garbage' and 'test_threads' ought to be within
+        # the output for the actual test, appended as details to whatever
+        # result the test gets. Not an option with the present API, as there's
+        # no event for "no more output for this test". -- jml, 2010-02-14
+        self._subunit.startTest(test)
+        self._emit_tag(self.TAG_GARBAGE)
+        self._subunit.addError(
+            test, self._get_text_details('garbage', unicode(garbage)))
+
+    def test_threads(self, test, new_threads):
+        """Report threads left behind by a test.
+
+        Encoded in the subunit stream as a test error. Clients can filter out
+        these tests based on the tag if they don't think left-over threads
+        should fail the test run.
+        """
+        self._subunit.startTest(test)
+        self._emit_tag(self.TAG_THREADS)
+        self._subunit.addError(
+            test, self._get_text_details('garbage', unicode(new_threads)))
+
+    def refcounts(self, rc, prev):
+        """Report a change in reference counts."""
+        details = self._get_text_details('sys-refcounts', str(rc))
+        details.update(
+            self._get_text_details('changes', str(rc - prev)))
+        # XXX: Emit the details dict as JSON?
+        self._emit_fake_test(
+            self.TAG_REFCOUNTS, self.TAG_REFCOUNTS, details)
+
+    def detailed_refcounts(self, track, rc, prev):
+        """Report a change in reference counts, with extra detail."""
+        details = self._get_text_details('sys-refcounts', str(rc))
+        details.update(
+            self._get_text_details('changes', str(rc - prev)))
+        details.update(
+            self._get_text_details('track', str(track.delta)))
+
+        self._emit_fake_test(
+            self.TAG_REFCOUNTS, self.TAG_REFCOUNTS, details)

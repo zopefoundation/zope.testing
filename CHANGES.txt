@@ -10,6 +10,11 @@ zope.testing Changelog
 - Fix testrunner-leaks.txt to use the run_internal helper, so that
   sys.exit() isn't triggered during the test run.
 
+- Added support for conditionally using a subunit-based output
+  formatter upon request if subunit and testtools are available. Patch
+  contributed by Jonathan Lange.
+
+
 3.8.6 (2009-12-23)
 ==================
 

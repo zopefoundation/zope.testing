@@ -103,6 +103,8 @@ else:
         (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
         (re.compile(r'\d+[.]\d\d\d s'), 'N.NNN s'),
         (re.compile(r'\d+[.]\d\d\d{'), 'N.NNN{'),
+        (re.compile(r'\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d+'),
+         'YYYY-MM-DD HH:MM:SS.mmmmmm'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
@@ -251,4 +253,29 @@ def test_suite():
             checker=checker,
             )
         )
+
+    try:
+        import subunit
+    except ImportError:
+        suites.append(
+            doctest.DocFileSuite(
+                'testrunner-subunit-err.txt',
+                setUp=setUp, tearDown=tearDown,
+                optionflags=doctest.ELLIPSIS + doctest.NORMALIZE_WHITESPACE,
+                checker=checker))
+    else:
+        suites.append(
+            doctest.DocFileSuite(
+                'testrunner-subunit.txt',
+                setUp=setUp, tearDown=tearDown,
+                optionflags=doctest.ELLIPSIS + doctest.NORMALIZE_WHITESPACE,
+                checker=checker))
+        if hasattr(sys, 'gettotalrefcount'):
+            suites.append(
+                doctest.DocFileSuite(
+                    'testrunner-subunit-leaks.txt',
+                    setUp=setUp, tearDown=tearDown,
+                    optionflags=doctest.ELLIPSIS + doctest.NORMALIZE_WHITESPACE,
+                    checker=checker))
+
     return unittest.TestSuite(suites)
