@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.9.0 (unreleased)
+3.9.0 (2010-03-12)
 ==================
 
 - Modified the testrunner to use the standard Python doctest module instead of
