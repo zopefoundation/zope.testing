@@ -70,12 +70,17 @@ if sys.platform == 'win32':
         (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
         (re.compile(r' line {([a-z]+)}\d+{', re.IGNORECASE), r' Line {\1}NNN{'),
 
-        # omit traceback entries for unittest.py or doctest.py from
-        # output:
-        (re.compile(r'^ +File "[^\n]*(doctest|unittest|case).py", [^\n]+\n[^\n]+\n',
+        # testtools formatter includes a size hint, which can vary
+        # depending on the path included in the traceback.
+        (re.compile(r'traceback\n[A-F\d]+\\r', re.MULTILINE),
+         r'traceback\nXXX\\r'),
+
+        # omit traceback entries for unittest.py or doctest.py (and
+        # their package variants) from output:
+        (re.compile(r'^ +File "[^\n]*(doctest|unittest|case)(/__init__)?.py", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
-        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doctest|unittest|case).py{\w+}", [^\n]+\n[^\n]+\n',
+        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doctest|unittest|case)(/__init__)?.py{\w+}", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
         #(re.compile('^> [^\n]+->None$', re.M), '> ...->None'),
@@ -114,12 +119,17 @@ else:
         (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
         (re.compile(r' line {([a-z]+)}\d+{', re.IGNORECASE), r' Line {\1}NNN{'),
 
-        # omit traceback entries for unittest.py or doctest.py from
-        # output:
-        (re.compile(r'^ +File "[^\n]*(doctest|unittest|case).py", [^\n]+\n[^\n]+\n',
+        # testtools formatter includes a size hint, which can vary
+        # depending on the path included in the traceback.
+        (re.compile(r'traceback\n[A-F\d]+\\r', re.MULTILINE),
+         r'traceback\nXXX\\r'),
+
+        # omit traceback entries for unittest.py or doctest.py (and
+        # their package variants) from output:
+        (re.compile(r'^ +File "[^\n]*(doctest|unittest|case)(/__init__)?.py", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
-        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doctest|unittest|case).py{\w+}", [^\n]+\n[^\n]+\n',
+        (re.compile(r'^{\w+} +File "{\w+}[^\n]*(doctest|unittest|case)(/__init__)?.py{\w+}", [^\n]+\n[^\n]+\n',
                     re.MULTILINE),
          r''),
         (re.compile('import pdb; pdb'), 'Pdb()'), # Py 2.3
