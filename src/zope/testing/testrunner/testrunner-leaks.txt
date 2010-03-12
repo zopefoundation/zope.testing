@@ -16,7 +16,7 @@ this option to configure and then build Python.)
     >>> from zope.testing import testrunner
     
     >>> sys.argv = 'test --layer Layer11$ --layer Layer12$ -N4 -r'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running samplelayers.Layer11 tests:
       Set up samplelayers.Layer1 in 0.000 seconds.
       Set up samplelayers.Layer11 in 0.000 seconds.
@@ -60,7 +60,7 @@ zero changes in systen refcount.
 Let's look at an example test that leaks:
 
     >>> sys.argv = 'test --tests-pattern leak -N4 -r'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running zope.testing.testrunner.layer.UnitTests tests:...
     Iteration 1
       Ran 1 tests with 0 failures and 0 errors in 0.000 seconds.
@@ -81,7 +81,7 @@ verbosity greater than one, we can get details broken out by object
 type (or class):
 
     >>> sys.argv = 'test --tests-pattern leak -N5 -r -v'.split()
-    >>> _ = testrunner.run(defaults)
+    >>> _ = testrunner.run_internal(defaults)
     Running tests at level 1
     Running zope.testing.testrunner.layer.UnitTests tests:...
     Iteration 1

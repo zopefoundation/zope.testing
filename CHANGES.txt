@@ -7,6 +7,8 @@ zope.testing Changelog
 - Modified the testrunner to use the standard Python doctest module instead of
   the deprecated zope.testing.doctest.
 
+- Fix testrunner-leaks.txt to use the run_internal helper, so that
+  sys.exit() isn't triggered during the test run.
 
 3.8.6 (2009-12-23)
 ==================
