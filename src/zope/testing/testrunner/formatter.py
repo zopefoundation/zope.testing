@@ -945,17 +945,22 @@ class SubunitOutputFormatter(object):
 
     def profiler_stats(self, stats):
         """Report profiler stats."""
-        ignored, filename = tempfile.mkstemp()
+        fd, filename = tempfile.mkstemp()
+        os.close(fd)
         try:
             stats.dump_stats(filename)
-            profile_content = content.Content(
-                self.PROFILE_CONTENT_TYPE, open(filename).read)
-            details = {'profiler-stats': profile_content}
+            stats_dump = open(filename)
+            try:
+                profile_content = content.Content(
+                    self.PROFILE_CONTENT_TYPE, stats_dump.read)
+                details = {'profiler-stats': profile_content}
+                # Name the test 'zope:profiler_stats' just like its tag.
+                self._emit_fake_test(
+                    self.TAG_PROFILER_STATS, self.TAG_PROFILER_STATS, details)
+            finally:
+                stats_dump.close()
         finally:
             os.unlink(filename)
-        # Name the test 'zope:profiler_stats' just like its tag.
-        self._emit_fake_test(
-            self.TAG_PROFILER_STATS, self.TAG_PROFILER_STATS, details)
 
     def tests_with_errors(self, errors):
         """Report tests with errors.

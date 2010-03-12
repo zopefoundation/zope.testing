@@ -46,6 +46,17 @@ if sys.platform == 'win32':
         (re.compile(r"<type 'exceptions.(\w+)Error'>:"),
                     r'exceptions.\1Error:'),
 
+        # Remove '\r', since this only causes confusion.
+        (re.compile(r'\\r', re.MULTILINE), ''),
+        (re.compile(r'\r', re.MULTILINE), ''),
+
+        # testtools content formatter is used to mime-encode
+        # tracebacks when the SubunitOutputFormatter is used, and the
+        # resulting text includes a size which can vary depending on
+        # the path included in the traceback.
+        (re.compile(r'traceback\n[A-F\d]+', re.MULTILINE),
+         r'traceback\nNNN'),
+
         (re.compile("'[A-Za-z]:\\\\"), "'"), # hopefully, we'll make Windows happy
                                              # replaces drives with nothing
 
@@ -61,6 +72,8 @@ if sys.platform == 'win32':
         (re.compile(r'\d+[.]\d\d\d seconds'), 'N.NNN seconds'),
         (re.compile(r'\d+[.]\d\d\d s'), 'N.NNN s'),
         (re.compile(r'\d+[.]\d\d\d{'), 'N.NNN{'),
+        (re.compile(r'\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d+'),
+         'YYYY-MM-DD HH:MM:SS.mmmmmm'),
         (re.compile('( |")[^\n]+testrunner-ex'), r'\1testrunner-ex'),
         (re.compile('( |")[^\n]+testrunner.py'), r'\1testrunner.py'),
         (re.compile(r'> [^\n]*(doc|unit)test[.]py\(\d+\)'),
@@ -69,11 +82,6 @@ if sys.platform == 'win32':
         (re.compile(r'[.]py:\d+'), r'.py:NNN'),
         (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
         (re.compile(r' line {([a-z]+)}\d+{', re.IGNORECASE), r' Line {\1}NNN{'),
-
-        # testtools formatter includes a size hint, which can vary
-        # depending on the path included in the traceback.
-        (re.compile(r'traceback\n[A-F\d]+\\r', re.MULTILINE),
-         r'traceback\nXXX\\r'),
 
         # omit traceback entries for unittest.py or doctest.py (and
         # their package variants) from output:
@@ -119,10 +127,12 @@ else:
         (re.compile(r' line \d+,', re.IGNORECASE), r' Line NNN,'),
         (re.compile(r' line {([a-z]+)}\d+{', re.IGNORECASE), r' Line {\1}NNN{'),
 
-        # testtools formatter includes a size hint, which can vary
-        # depending on the path included in the traceback.
-        (re.compile(r'traceback\n[A-F\d]+\\r', re.MULTILINE),
-         r'traceback\nXXX\\r'),
+        # testtools content formatter is used to mime-encode
+        # tracebacks when the SubunitOutputFormatter is used, and the
+        # resulting text includes a size which can vary depending on
+        # the path included in the traceback.
+        (re.compile(r'traceback\n[A-F\d]+', re.MULTILINE),
+         r'traceback\nNNN'),
 
         # omit traceback entries for unittest.py or doctest.py (and
         # their package variants) from output:
