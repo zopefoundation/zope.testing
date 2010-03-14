@@ -1,10 +1,10 @@
 zope.testing Changelog
 **********************
 
-3.9.1 (Unreleased)
+3.9.1 (2010-03-15)
 ==================
 
-- ...
+- No changes; reuploaded to fix broken 3.9.0 release on PyPI.
 
 
 3.9.0 (2010-03-12)
