@@ -10,7 +10,7 @@ zope.testing Changelog
 3.9.2 (2010-03-15)
 ==================
 
-- Fixed broken `from zope.testing.doctest import *`
+- Fixed broken ``from zope.testing.doctest import *``
 
 3.9.1 (2010-03-15)
 ==================
