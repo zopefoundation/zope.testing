@@ -9,6 +9,9 @@ zope.testing Changelog
 
 - Fix testrunner-layers-ntd.txt to suppress output to sys.stderr.
 
+- Suppress zope.testing.doctest deprecation warning when running
+  zope.testing's own test suite.
+
 
 3.9.2 (2010-03-15)
 ==================

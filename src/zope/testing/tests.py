@@ -1,6 +1,4 @@
 ##############################################################################
-#
-# Copyright (c) 2004 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -18,7 +16,15 @@ $Id$
 
 import re
 import unittest
-from zope.testing import doctest, renormalizing
+import warnings
+from zope.testing import renormalizing
+
+# Yes, it is deprecated, but we want to run tests on it here.
+warnings.filterwarnings("ignore", "zope.testing.doctest is deprecated",
+                        DeprecationWarning, __name__, 0)
+
+from zope.testing import doctest
+
 
 def test_suite():
     return unittest.TestSuite((
