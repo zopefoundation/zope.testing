@@ -244,6 +244,10 @@ If a test is run in a subprocess and it generates output on stderr (as
 stderrtest does), the output is ignored (but it doesn't cause a SubprocessError
 like it once did).
 
+    >>> from cStringIO import StringIO
+    >>> real_stderr = sys.stderr
+    >>> sys.stderr = StringIO()
+
     >>> sys.argv = [testrunner_script, '-s', 'sample2', '--tests-pattern',
     ...     '(sampletests_ntd$|stderrtest)']
     >>> testrunner.run_internal(defaults)
@@ -258,3 +262,9 @@ like it once did).
       Tear down sample2.stderrtest.Layer in 0.000 seconds.
     Total: 2 tests, 0 failures, 0 errors in 0.197 seconds.
     False
+
+    >>> print sys.stderr.getvalue()
+    A message on stderr.  Please ignore (expected in test output).
+
+    >>> sys.stderr = real_stderr
+
