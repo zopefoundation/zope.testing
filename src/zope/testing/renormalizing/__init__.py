@@ -11,6 +11,19 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+#
+# This file is a package rather than a module because we want
+#
+#     import doctest
+#
+# to import the stdlib version of doctest rather than the deprecated
+# zope.testing.doctest, and
+#
+#     from __future__ import absolute_import
+#
+# is not available on Python 2.4 which we still support.
+#
+##############################################################################
 r"""Regular expression pattern normalizing output checker
 
 The pattern-normalizing output checker extends the default output checker with
@@ -245,6 +258,7 @@ Combining a checker with something else does not work:
 """
 
 import doctest
+
 
 class RENormalizing(doctest.OutputChecker):
     """Pattern-normalizing outout checker

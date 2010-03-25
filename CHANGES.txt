@@ -4,6 +4,9 @@ zope.testing Changelog
 3.9.3 (unreleased)
 ==================
 
+- zope.testing.renormalizer no longer imports zope.testing.doctest, which
+  caused deprecation warnings.
+
 - Fix testrunner-layers-ntd.txt to suppress output to sys.stderr.
 
 
