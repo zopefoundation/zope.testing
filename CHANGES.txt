@@ -4,7 +4,7 @@ zope.testing Changelog
 3.9.3 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Fix testrunner-layers-ntd.txt to suppress output to sys.stderr.
 
 
 3.9.2 (2010-03-15)
