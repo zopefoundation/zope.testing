@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.9.3 (unreleased)
+3.9.3 (2010-03-26)
 ==================
 
 - zope.testing.renormalizer no longer imports zope.testing.doctest, which
