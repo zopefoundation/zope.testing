@@ -4,7 +4,11 @@ zope.testing Changelog
 3.9.4 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Added tests for LP #144569 and #69988.
+
+  https://bugs.launchpad.net/bugs/69988
+
+  https://bugs.launchpad.net/zope3/+bug/144569
 
 
 3.9.3 (2010-03-26)

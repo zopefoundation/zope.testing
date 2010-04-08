@@ -37,3 +37,13 @@ Regression tests
 This section is about regression tests of ``zope.testing`` itself.
 
   >>> from zope.testing.doctest import *
+
+LP #69988 and #144569 both assert that doctests fail when rendering
+non-ASCII output with a UnicodeDecodeError.  However, this does not appear
+to be so:
+
+  >>> print u'abc'
+  abc
+
+  >>> print u'\xe9'.encode('utf-8')
+  é
