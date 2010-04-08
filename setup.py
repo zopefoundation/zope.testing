@@ -67,8 +67,6 @@ long_description=(
     + '\n' + chapters
     )
 
-open('documentation.txt', 'w').write(long_description)
-
 setup(
     name='zope.testing',
     version='3.5.7dev',
