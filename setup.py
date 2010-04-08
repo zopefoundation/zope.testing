@@ -30,7 +30,9 @@ try:
         install_requires = ['setuptools',
                             'zope.exceptions',
                             'zope.interface'],
-        entry_points = {'console_scripts': ['zope-testrunner = zope.testing.testrunner:run',]},
+        entry_points = {
+            'console_scripts':
+                ['zope-testrunner = zope.testing.testrunner:run',]},
         include_package_data = True,
         zip_safe = False,
         )
@@ -80,8 +82,6 @@ long_description=(
     '**********************\n'
     + '\n' + chapters
     )
-
-open('documentation.txt', 'w').write(long_description)
 
 setup(
     name='zope.testing',
