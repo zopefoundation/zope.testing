@@ -711,6 +711,8 @@ class TestResult(unittest.TestResult):
                                                       " as a subprocess!")
             else:
                 zope.testing.testrunner.debug.post_mortem(exc_info)
+        elif self.options.stop_on_error:
+            self.stop()
 
     def addFailure(self, test, exc_info):
         self.options.output.test_failure(test, time.time() - self._start_time,
@@ -722,6 +724,8 @@ class TestResult(unittest.TestResult):
             # XXX: mgedmin: why isn't there a resume_layer check here like
             # in addError?
             zope.testing.testrunner.debug.post_mortem(exc_info)
+        elif self.options.stop_on_error:
+            self.stop()
 
     def stopTest(self, test):
         self.testTearDown()

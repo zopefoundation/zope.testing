@@ -4,6 +4,9 @@ zope.testing Changelog
 3.9.4 (unreleased)
 ==================
 
+- LP #399394:  Added a ``--stop-on-error`` / ``--stop`` / ``-x`` option to
+  the testrunner.
+
 - LP #498162:  Added a ``--pdb`` alias for the existing ``--post-mortem``
   / ``-D`` option to the testrunner.
 
