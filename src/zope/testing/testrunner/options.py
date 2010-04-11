@@ -255,7 +255,7 @@ Analysis options provide tools for analysing test output.
 
 
 analysis.add_option(
-    '--post-mortem', '-D', action="store_true", dest='post_mortem',
+    '--post-mortem', '--pdb', '-D', action="store_true", dest='post_mortem',
     help="Enable post-mortem debugging of test failures"
     )
 

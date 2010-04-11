@@ -4,6 +4,9 @@ zope.testing Changelog
 3.9.4 (unreleased)
 ==================
 
+- LP #498162:  Added a ``--pdb`` alias for the existing ``--post-mortem``
+  / ``-D`` option to the testrunner.
+
 - LP #547023:  Added a ``--version`` option to the testrunner.
 
 - Added tests for LP #144569 and #69988.
