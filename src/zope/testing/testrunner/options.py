@@ -21,6 +21,8 @@ import re
 import os
 import sys
 
+import pkg_resources
+
 from zope.testing.testrunner.profiling import available_profilers
 from zope.testing.testrunner.formatter import (
     OutputFormatter,
@@ -429,6 +431,10 @@ parser.add_option_group(setup)
 other = optparse.OptionGroup(parser, "Other", "Other options")
 
 other.add_option(
+    '--version', action="store_true", dest='showversion',
+    help="Print the version of the testrunner, and exit.")
+
+other.add_option(
     '-j', action="store", type="int", dest='processes',
     help="""\
 Use up to given number of parallel processes to execute tests.  May decrease
@@ -540,6 +546,12 @@ def get_options(args=None, defaults=None):
 
     options, positional = parser.parse_args(args[1:], defaults)
     options.original_testrunner_args = args
+
+    if options.showversion:
+        dist = pkg_resources.require('zope.testing')[0]
+        print 'zope.app.testrunner version %s' % dist.version
+        options.fail = True
+        return options
 
     if options.subunit:
         try:

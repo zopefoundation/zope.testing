@@ -4,6 +4,8 @@ zope.testing Changelog
 3.9.4 (unreleased)
 ==================
 
+- LP #547023:  Added a ``--version`` option to the testrunner.
+
 - Added tests for LP #144569 and #69988.
 
   https://bugs.launchpad.net/bugs/69988
