@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.9.4 (unreleased)
+3.9.4 (2010-04-13)
 ==================
 
 - LP #560259: Fix subunit output formatter to handle layer setup
