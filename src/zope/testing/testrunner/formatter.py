@@ -795,8 +795,7 @@ class SubunitOutputFormatter(object):
         """Report an error."""
         # XXX: Mostly used for user errors, sometimes used for errors in the
         # test framework, sometimes used to record layer setUp failure (!!!).
-        # How should this be encoded?
-        raise NotImplementedError(self.error)
+        self._stream.write('%s\n' % (message,))
 
     def error_with_banner(self, message):
         """Report an error with a big ASCII banner."""

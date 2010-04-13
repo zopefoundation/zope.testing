@@ -4,6 +4,9 @@ zope.testing Changelog
 3.9.4 (unreleased)
 ==================
 
+- LP #560259: Fix subunit output formatter to handle layer setup
+  errors.
+
 - LP #399394:  Added a ``--stop-on-error`` / ``--stop`` / ``-x`` option to
   the testrunner.
 
