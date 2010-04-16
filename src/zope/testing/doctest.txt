@@ -47,3 +47,12 @@ to be so:
 
   >>> print u'\xe9'.encode('utf-8')
   é
+
+Tests for LP #561568:
+
+  >>> v = u'foo\xe9bar'
+  >>> v # doctest: +ELLIPSIS
+  u'foo...bar'
+
+  >>> v.encode('utf-8') # doctest: +ELLIPSIS
+  'foo...bar'
