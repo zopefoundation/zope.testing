@@ -4,7 +4,9 @@ zope.testing Changelog
 3.9.5 (Unreleased)
 ==================
 
-- ...
+- Deprecated zope.testing.testrunner. It has been copied to a separate
+  zope.testrunner module, and will be removed from zope.testing in 4.0.0,
+  together with zope.testing.doctest.
 
 3.9.4 (2010-04-13)
 ==================

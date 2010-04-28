@@ -19,6 +19,9 @@ $Id$
 import sys
 import unittest
 
+import warnings
+warnings.warn('zope.testing.testrunner is deprecated in favour of '
+              'zope.testrunner.', DeprecationWarning, stacklevel=2)
 
 import zope.testing.testrunner.interfaces
 
