@@ -231,7 +231,6 @@ class Runner(object):
                 break
 
         if should_resume:
-            setup_layers = None
             if layers_to_run:
                 self.ran += resume_tests(
                     self.script_parts, self.options, self.features,
@@ -601,15 +600,17 @@ def tear_down_unneeded(options, needed, setup_layers, optional=False):
         output.start_tear_down(name_from_layer(l))
         t = time.time()
         try:
-            if hasattr(l, 'tearDown'):
-                l.tearDown()
-        except NotImplementedError:
-            output.tear_down_not_supported()
-            if not optional:
-                raise CanNotTearDown(l)
-        else:
-            output.stop_tear_down(time.time() - t)
-        del setup_layers[l]
+            try:
+                if hasattr(l, 'tearDown'):
+                    l.tearDown()
+            except NotImplementedError:
+                output.tear_down_not_supported()
+                if not optional:
+                    raise CanNotTearDown(l)
+            else:
+                output.stop_tear_down(time.time() - t)
+        finally:
+            del setup_layers[l]
 
 
 cant_pm_in_subprocess_message = """

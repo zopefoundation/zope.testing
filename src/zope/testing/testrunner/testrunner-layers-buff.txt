@@ -111,6 +111,9 @@ a different result that has similar characteristics.
       Running in a subprocess.
       Set up sampletests_buffering.Layer2 in N.NNN seconds.
       Ran 2 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down sampletests_buffering.Layer2 ... not supported
+    Tearing down left over layers:
+      Tear down sampletests_buffering.Layer1 ... not supported
     Total: 3 tests, 0 failures, 0 errors in N.NNN seconds.
     False
 

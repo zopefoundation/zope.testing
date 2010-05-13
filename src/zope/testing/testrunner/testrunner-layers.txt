@@ -136,6 +136,8 @@ It is possible to force the layers to run in subprocesses and parallelize them.
       Set up samplelayers.Layer1 in N.NNN seconds.
       Set up samplelayers.Layer11 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down samplelayers.Layer11 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
     Running samplelayers.Layer111 tests:
       Running in a subprocess.
       Set up samplelayers.Layerx in N.NNN seconds.
@@ -143,6 +145,10 @@ It is possible to force the layers to run in subprocesses and parallelize them.
       Set up samplelayers.Layer11 in N.NNN seconds.
       Set up samplelayers.Layer111 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down samplelayers.Layer111 in N.NNN seconds.
+      Tear down samplelayers.Layerx in N.NNN seconds.
+      Tear down samplelayers.Layer11 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
     Running samplelayers.Layer112 tests:
       Running in a subprocess.
       Set up samplelayers.Layerx in N.NNN seconds.
@@ -150,26 +156,41 @@ It is possible to force the layers to run in subprocesses and parallelize them.
       Set up samplelayers.Layer11 in N.NNN seconds.
       Set up samplelayers.Layer112 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down samplelayers.Layer112 in N.NNN seconds.
+      Tear down samplelayers.Layerx in N.NNN seconds.
+      Tear down samplelayers.Layer11 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
     Running samplelayers.Layer12 tests:
       Running in a subprocess.
       Set up samplelayers.Layer1 in N.NNN seconds.
       Set up samplelayers.Layer12 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down samplelayers.Layer12 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
     Running samplelayers.Layer121 tests:
       Running in a subprocess.
       Set up samplelayers.Layer1 in N.NNN seconds.
       Set up samplelayers.Layer12 in N.NNN seconds.
       Set up samplelayers.Layer121 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down samplelayers.Layer121 in N.NNN seconds.
+      Tear down samplelayers.Layer12 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
     Running samplelayers.Layer122 tests:
       Running in a subprocess.
       Set up samplelayers.Layer1 in N.NNN seconds.
       Set up samplelayers.Layer12 in N.NNN seconds.
       Set up samplelayers.Layer122 in N.NNN seconds.
       Ran 34 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down samplelayers.Layer122 in N.NNN seconds.
+      Tear down samplelayers.Layer12 in N.NNN seconds.
+      Tear down samplelayers.Layer1 in N.NNN seconds.
     Running zope.testing.testrunner.layer.UnitTests tests:
       Running in a subprocess.
       Set up zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
       Ran 192 tests with 0 failures and 0 errors in N.NNN seconds.
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    Tearing down left over layers:
+      Tear down samplelayers.Layer1 in N.NNN seconds.
     Total: 405 tests, 0 failures, 0 errors in N.NNN seconds.
     False
