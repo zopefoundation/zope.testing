@@ -4,13 +4,13 @@ zope.testing Changelog
 3.9.5 (Unreleased)
 ==================
 
+- LP #579019: When layers were run in parallel, their tearDown was not
+  called. Additionally, the first layer which was run in the main
+  thread did not have it's tearDown called either.
+
 - Deprecated zope.testing.testrunner and zope.testing.exceptions. They have
   been moved to a separate zope.testrunner module, and will be removed from
   zope.testing in 4.0.0, together with zope.testing.doctest.
-
-- When layers were run in parallel, their tearDown was not
-  called. Additionally, the first layer which was run in the main
-  thread did not have it's tearDown called either.
 
 3.9.4 (2010-04-13)
 ==================
