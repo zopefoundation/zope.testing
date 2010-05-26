@@ -73,6 +73,11 @@ zope.testing Changelog
   formatter upon request if subunit and testtools are available. Patch
   contributed by Jonathan Lange.
 
+3.8.7 (2010-01-26)
+==================
+
+- Downgraded the zope.testing.doctest deprecation warning into a
+  PendingDeprecationWarning.
 
 3.8.6 (2009-12-23)
 ==================
