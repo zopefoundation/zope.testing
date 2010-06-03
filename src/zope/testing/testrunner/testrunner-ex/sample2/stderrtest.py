@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Sample tests with a layer that produces output on stderr
-
-$Id$
 """
 
 import unittest

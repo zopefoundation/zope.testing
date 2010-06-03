@@ -14,8 +14,6 @@
 """Self-test support.
 
 Provides setup routines that enable the test runner to test itself.
-
-$Id: __init__.py 86218 2008-05-03 14:17:26Z ctheune $
 """
 
 import pdb

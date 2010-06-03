@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Sample test layers
-
-$Id$
 """
 
 layer = '0' # Internal to samples. Not part of layer API

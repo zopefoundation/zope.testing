@@ -67,8 +67,6 @@ and, sure enough, we still have no output:
 
   >>> handler.records
   []
-
-$Id$
 """
 
 import logging

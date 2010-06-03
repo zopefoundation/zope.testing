@@ -34,8 +34,6 @@ addCleanup::
 
   addCleanUp(pigRegistry._clear)
 
-
-$Id$
 """
 _cleanups = []
 

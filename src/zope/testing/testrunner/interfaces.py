@@ -16,8 +16,6 @@
 XXX Note: These interfaces are still being sketched out. Please do not rely on
 them, yet.
 
-$Id: __init__.py 86232 2008-05-03 15:09:33Z ctheune $
-
 """
 
 import zope.interface

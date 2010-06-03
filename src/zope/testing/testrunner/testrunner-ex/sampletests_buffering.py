@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Sample tests with sleep and layers that can't be torn down
-
-$Id$
 """
 
 import unittest, time

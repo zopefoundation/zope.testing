@@ -17,8 +17,6 @@ This code is pretty much untested and was only mechanically refactored.
 
 The module name is not 'logging' because of a name collision with Python's
 logging module.
-
-$Id: __init__.py 86218 2008-05-03 14:17:26Z ctheune $
 """
 
 import logging

@@ -15,8 +15,6 @@
 
 This module provides a DocTestSuite contructor for converting doctest
 tests to unit tests.
-
-$Id$
 """
 
 import warnings

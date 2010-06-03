@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Sample package that knits in extra directories.
-
-$Id$
 """
 
 import os

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Filter which tests to run.
-
-$Id: __init__.py 86218 2008-05-03 14:17:26Z ctheune $
 """
 
 import zope.testing.testrunner.feature

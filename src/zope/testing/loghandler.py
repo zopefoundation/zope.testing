@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """logging handler for tests that check logging output.
-
-$Id$
 """
 import logging
 

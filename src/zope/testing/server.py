@@ -21,8 +21,6 @@ http is an instance of HTTPCaller, url is the url that will be opened
 in the browser, the username and password are optional. When you're
 done with inspecting the application press Ctrl+C to continue with the
 functional test.
-
-$Id$
 """
 import urllib2
 import webbrowser

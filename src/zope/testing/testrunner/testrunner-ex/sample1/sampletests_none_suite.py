@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Sample tests with a layer that can't be torn down
-
-$Id$
 """
 
 def test_suite():

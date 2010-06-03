@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Shuffle tests discovered before executing them.
-
-$Id$
 """
 
 import time
