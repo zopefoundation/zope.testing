@@ -36,9 +36,13 @@ class StartUpFailure(unittest.TestCase):
     Normally the StartUpFailure just acts as an empty test suite to satisfy
     the test runner and statistics:
     
-    >>> s = StartUpFailure(options, None, None)
+    >>> s = StartUpFailure(options, 'fauxmodule', None)
+    >>> s
+    <StartUpFailure module=fauxmodule>
     >>> isinstance(s,unittest.TestCase)
     True
+    >>> s.shortDescription()
+    'StartUpFailure: import errors in fauxmodule.'
 
     However, if the post mortem option is enabled:
 
@@ -74,7 +78,7 @@ class StartUpFailure(unittest.TestCase):
     Traceback (most recent call last):
     EndRun
 
-    Annoyingly, sometimes StartupFailures occur when postmortem debugging
+    Annoyingly, sometimes StartUpFailures occur when postmortem debugging
     is enabled but no exc_info is passed. In this case, we raise a
     sensible exception rather than letting the debugger barf with an
     AttributeError:
@@ -85,6 +89,11 @@ class StartUpFailure(unittest.TestCase):
     ...
     TypeError: If post_mortem is specified, full exc_info must be passed!
     """
+
+    def _getTestMethodDoc(self):
+        return 'StartUpFailure: import errors in %s.' % self.module
+
+    _testMethodDoc = property(_getTestMethodDoc,)
 
     def __init__(self, options, module, exc_info):
         if options.post_mortem:
