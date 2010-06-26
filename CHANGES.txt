@@ -4,7 +4,7 @@ zope.testing Changelog
 3.9.6 (unreleased)
 ==================
 
-- TBD
+- Update fix for LP #221151 to a spelliing compatible with Python 2.4.
 
 3.9.5 (2010-05-19)
 ==================
