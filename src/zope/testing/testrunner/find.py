@@ -89,12 +89,6 @@ class StartUpFailure(unittest.TestCase):
     ...
     TypeError: If post_mortem is specified, full exc_info must be passed!
     """
-
-    def _getTestMethodDoc(self):
-        return 'StartUpFailure: import errors in %s.' % self.module
-
-    _testMethodDoc = property(_getTestMethodDoc,)
-
     def __init__(self, options, module, exc_info):
         if options.post_mortem:
             for item in exc_info:
@@ -104,6 +98,9 @@ class StartUpFailure(unittest.TestCase):
             zope.testing.testrunner.debug.post_mortem(exc_info)
         self.module = module
         self.exc_info = exc_info
+
+    def shortDescription(self):
+        return 'StartUpFailure: import errors in %s.' % self.module
 
     def __repr__(self):
         return '<StartUpFailure module=%s>' % self.module
