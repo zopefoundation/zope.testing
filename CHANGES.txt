@@ -247,8 +247,8 @@ zope.testing Changelog
 
 - Fixed NameError in StartUpFailure.
 
-- Open doctest files in universal mode, so that packages released in Windoes
-  can be tested in Linux, for example.
+- Open doctest files in universal mode, so that packages released on Windows
+  can be tested on Linux, for example.
 
 
 3.6.0 (2008/07/10)
