@@ -1,10 +1,12 @@
 zope.testing Changelog
 **********************
 
-3.9.6 (unreleased)
-==================
+3.10.0 (unreleased)
+===================
 
-- Update fix for LP #221151 to a spelliing compatible with Python 2.4.
+- Removed zope.testing.testrunner, which now is moved to zope.testrunner.
+
+- Update fix for LP #221151 to a spelling compatible with Python 2.4.
 
 3.9.5 (2010-05-19)
 ==================
