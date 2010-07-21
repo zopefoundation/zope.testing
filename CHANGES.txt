@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.10.0 (unreleased)
+3.10.0 (2010-07-21)
 ===================
 
 - Removed zope.testing.testrunner, which now is moved to zope.testrunner.
