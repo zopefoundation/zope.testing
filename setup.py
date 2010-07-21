@@ -20,51 +20,9 @@
 """
 
 import os
-
-try:
-    from setuptools import setup
-    extra = dict(
-        namespace_packages=['zope',],
-        install_requires = ['setuptools',
-                            'zope.exceptions',
-                            'zope.interface'],
-        entry_points = {
-            'console_scripts':
-                ['zope-testrunner = zope.testing.testrunner:run',]},
-        include_package_data = True,
-        zip_safe = False,
-        )
-except ImportError, e:
-    from distutils.core import setup
-    extra = {}
+from setuptools import setup
 
 chapters = '\n'.join([
-    open(os.path.join('src', 'zope', 'testing', 'testrunner', name)).read()
-    for name in (
-        'testrunner.txt',
-        'testrunner-simple.txt',
-        'testrunner-layers-api.txt',
-        'testrunner-layers.txt',
-        'testrunner-arguments.txt',
-        'testrunner-verbose.txt',
-        'testrunner-test-selection.txt',
-        'testrunner-progress.txt',
-
-        # The following seems to cause weird unicode in the output: :(
-        ##     'testrunner-errors.txt',
-
-        'testrunner-debugging.txt',
-        'testrunner-layers-ntd.txt',
-        'testrunner-coverage.txt',
-        'testrunner-profiling.txt',
-        'testrunner-wo-source.txt',
-        'testrunner-repeat.txt',
-        'testrunner-gc.txt',
-        'testrunner-leaks.txt',
-        'testrunner-knit.txt',
-    )])
-
-chapters += '\n'.join([
     open(os.path.join('src', 'zope', 'testing', name)).read()
     for name in (
         'formparser.txt',
@@ -83,21 +41,15 @@ long_description=(
 
 setup(
     name='zope.testing',
-    version = '3.9.6dev',
+    version = '3.10.0dev',
     url='http://pypi.python.org/pypi/zope.testing',
     license='ZPL 2.1',
-    description='Zope testing framework, including the testrunner script.',
+    description='Zope testing helpers',
     long_description=long_description,
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
-
-    packages=["zope", "zope.testing"],
-    package_dir = {'': 'src'},
-
     classifiers=[
         "Development Status :: 5 - Production/Stable",
-        "Environment :: Console",
-        "Framework :: Zope3",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Zope Public License",
         "Operating System :: OS Independent",
@@ -107,5 +59,14 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Testing",
         ],
-
-    **extra)
+    
+    packages=["zope", "zope.testing"],
+    package_dir = {'': 'src'},
+    namespace_packages=['zope',],
+    install_requires = ['setuptools',
+                        'zope.exceptions',
+                        'zope.interface'],
+    include_package_data = True,
+    zip_safe = False,
+    test_suite = 'zope.testing.tests.test_suite'
+)
