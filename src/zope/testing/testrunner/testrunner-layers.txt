@@ -127,7 +127,7 @@ Or we can explicitly say that we want both unit and non-unit tests.
 It is possible to force the layers to run in subprocesses and parallelize them.
 
     >>> sys.argv = [testrunner_script, '-j2']
-    >>> testrunner.run_internal(defaults)
+    >>> testrunner.run_internal(defaults) # doctest: +REPORT_NDIFF
     Running samplelayers.Layer1 tests:
       Set up samplelayers.Layer1 in N.NNN seconds.
       Ran 9 tests with 0 failures and 0 errors in N.NNN seconds.
