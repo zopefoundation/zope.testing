@@ -1,10 +1,10 @@
 zope.testing Changelog
 **********************
 
-3.10.1 (unreleased)
+3.10.1 (2010-11-29)
 ===================
 
-- Nothing changed yet.
+- Fix removal of broken symlinks on Unix.
 
 
 3.10.0 (2010-07-21)

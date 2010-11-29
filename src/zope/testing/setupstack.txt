@@ -87,6 +87,12 @@ to remove them.
     >>> import stat
     >>> os.chmod('Data.fs', stat.S_IREAD)
 
+On Unix systems, broken symlinks can cause problems because the chmod
+attempt by the teardown hook will fail; let's set up a broken symlink as
+well, and verify the teardown doesn't break because of that:
+
+    >>> os.symlink('NotThere', 'BrokenLink')
+
 When tearDown is called:
 
     >>> zope.testing.setupstack.tearDown(test)

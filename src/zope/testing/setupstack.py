@@ -43,7 +43,8 @@ def rmtree(path):
     for path, dirs, files in os.walk(path, False):
         for fname in files:
             fname = os.path.join(path, fname)
-            os.chmod(fname, stat.S_IWUSR)
+            if not os.path.islink(fname):
+                os.chmod(fname, stat.S_IWUSR)
             os.remove(fname)
         for dname in dirs:
             dname = os.path.join(path, dname)
