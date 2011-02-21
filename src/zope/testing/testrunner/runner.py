@@ -650,6 +650,10 @@ def setup_layer(options, layer, setup_layers):
 
 class TestResult(unittest.TestResult):
 
+    # Handle unexpected success as failure:
+    # https://bugs.launchpad.net/zope.testrunner/+bug/719369
+    addUnexpectedSuccess = None
+
     def __init__(self, options, tests, layer_name=None):
         unittest.TestResult.__init__(self)
         self.options = options

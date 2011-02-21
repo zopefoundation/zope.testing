@@ -4,6 +4,14 @@ zope.testing Changelog
 3.9.6 (unreleased)
 ==================
 
+- LP #719369: An `Unexpected success`_ (concept intruduced in Python 2.7) is
+  no longer handled as success but as failure. This is a workaround. The
+  whole unexpected success concept might be implemented later.
+
+.. _`Unexpected success`: http://www.voidspace.org.uk/python/articles/unittest2.shtml#more-skipping
+
+- Updated tests to run on Python 2.7, too.
+
 
 3.9.5 (2010-05-19)
 ==================
