@@ -39,7 +39,7 @@ class TestSomething(unittest.TestCase):
     def test_post_mortem_failure1(self):
         x = 1
         y = 2
-        self.assertEqual(x, y)
+        assert x == y
 
 def f():
     x = 1

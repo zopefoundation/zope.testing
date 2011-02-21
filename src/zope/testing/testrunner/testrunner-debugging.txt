@@ -84,7 +84,7 @@ Note that the test runner exits after post-mortem debugging.
 In the example above, we debugged an error.  Failures are actually
 converted to errors and can be debugged the same way:
 
-    >>> sys.stdin = Input('up\np x\np y\nc')
+    >>> sys.stdin = Input('p x\np y\nc')
     >>> sys.argv = ('test -ssample3 --tests-pattern ^sampletests_d$'
     ...             ' -t post_mortem_failure1 -D').split()
     >>> try: testrunner.run_internal(defaults)
@@ -98,18 +98,13 @@ converted to errors and can be debugged the same way:
         getattr(self, self.__testMethodName)()
       File "testrunner-ex/sample3/sampletests_d.py",
         line 42, in test_post_mortem_failure1
-        self.assertEqual(x, y)
-      File ".../unittest.py", line 302, in failUnlessEqual
-        raise self.failureException, \
-    AssertionError: 1 != 2
+        assert x == y
+    AssertionError
     <BLANKLINE>
-    exceptions.AssertionError:
-    1 != 2
-    > .../unittest.py(302)failUnlessEqual()
-    -> ...
-    (Pdb) up
+    ...AssertionError:
+    <BLANKLINE>
     > testrunner-ex/sample3/sampletests_d.py(42)test_post_mortem_failure1()
-    -> self.assertEqual(x, y)
+    -> assert x == y
     (Pdb) p x
     1
     (Pdb) p y
