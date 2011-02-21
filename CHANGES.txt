@@ -1,6 +1,12 @@
 zope.testing Changelog
 **********************
 
+3.9.7 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 3.9.6 (2011-02-21)
 ==================
 
