@@ -12,6 +12,7 @@
 """Tests for the testing framework.
 """
 
+import sys
 import re
 import unittest
 import warnings
@@ -25,7 +26,7 @@ from zope.testing import doctest
 
 
 def test_suite():
-    return unittest.TestSuite((
+    suite = unittest.TestSuite((
         doctest.DocTestSuite('zope.testing.loggingsupport'),
         doctest.DocTestSuite('zope.testing.renormalizing'),
         doctest.DocTestSuite('zope.testing.server'),
@@ -41,5 +42,8 @@ def test_suite():
                 (re.compile('No module named zope.testing.unlikelymodulename'),
                  'No module named unlikelymodulename')])),
         doctest.DocFileSuite('setupstack.txt'),
-        doctest.DocTestSuite(doctest, optionflags=doctest.INTERPRET_FOOTNOTES),
         ))
+
+    if sys.version < '3':
+        suite.addTests(doctest.DocFileSuite('unicode.txt'))
+    return suite

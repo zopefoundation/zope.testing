@@ -22,7 +22,7 @@ in the browser, the username and password are optional. When you're
 done with inspecting the application press Ctrl+C to continue with the
 functional test.
 """
-import urllib2
+import urlparse
 import webbrowser
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import sys
@@ -78,10 +78,10 @@ def addPortToURL(url, port):
         'http://localhost:555/index.html'
 
     """
-    (scheme, netloc, url, query, fragment) = urllib2.urlparse.urlsplit(url)
+    (scheme, netloc, url, query, fragment) = urlparse.urlsplit(url)
     netloc = netloc.split(':')[0]
     netloc = "%s:%s" % (netloc, port)
-    url = urllib2.urlparse.urlunsplit((scheme, netloc, url, query, fragment))
+    url = urlparse.urlunsplit((scheme, netloc, url, query, fragment))
     return url
 
 

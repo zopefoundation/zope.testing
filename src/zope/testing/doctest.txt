@@ -16,12 +16,13 @@ some of the test files broken:
 
   >>> import tempfile
   >>> fn = tempfile.mktemp()
-  >>> open(fn, 'w').write('Test:\r\n\r\n  >>> x = 1 + 1\r\n\r\nDone.\r\n')
+  >>> foo = open(fn, 'w').write('Test:\r\n\r\n  >>> x = 1 + 1\r\n\r\nDone.\r\n')
 
 Let's now run it as a doctest:
 
   >>> from zope.testing import doctest
-  >>> doctest.testfile(fn, False)
+  >>> a, b = doctest.testfile(fn, False) # doctest 2.6 and later uses a named tuple here.
+  >>> a, b
   (0, 1)
 
 It worked. Let's also try the test file suite:
@@ -31,28 +32,3 @@ It worked. Let's also try the test file suite:
   >>> doctest.DocFileSuite(fn, module_relative=False).run(result) #doctest: +ELLIPSIS
   <...TestResult run=1 errors=0 failures=0>
 
-Regression tests
-----------------
-
-This section is about regression tests of ``zope.testing`` itself.
-
-  >>> from zope.testing.doctest import *
-
-LP #69988 and #144569 both assert that doctests fail when rendering
-non-ASCII output with a UnicodeDecodeError.  However, this does not appear
-to be so:
-
-  >>> print u'abc'
-  abc
-
-  >>> print u'\xe9'.encode('utf-8')
-  é
-
-Tests for LP #561568:
-
-  >>> v = u'foo\xe9bar'
-  >>> v # doctest: +ELLIPSIS
-  u'foo...bar'
-
-  >>> v.encode('utf-8') # doctest: +ELLIPSIS
-  'foo...bar'

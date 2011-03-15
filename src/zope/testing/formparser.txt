@@ -104,8 +104,8 @@ Fields which are repeated are reported as lists of objects that
 represent each instance of the field::
 
   >>> field = forms[1]["multi"]
-  >>> type(field)
-  <type 'list'>
+  >>> isinstance(field, list)
+  True
   >>> [o.value for o in field]
   ['', '']
   >>> [o.size for o in field]

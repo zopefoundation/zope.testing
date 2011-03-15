@@ -8,8 +8,8 @@ desirable. Let's demonstrate the behavior::
   >>> class Foo(object):
   ...    pass
 
-  >>> Foo.__module__
-  '__builtin__'
+  >>> 'builtin' in Foo.__module__ 
+  True
 
 By using ``zope.testing.module.setUp`` this can be
 controlled. Normally you set up your tests with it, but in this case
@@ -48,8 +48,8 @@ We should now be back to the original situation::
 
   >>> class Foo(object):
   ...    pass
-  >>> Foo.__module__
-  '__builtin__'
+  >>> 'builtin' in Foo.__module__ 
+  True
 
 Importing
 ---------

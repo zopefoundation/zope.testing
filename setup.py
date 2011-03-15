@@ -21,6 +21,19 @@
 
 import os
 from setuptools import setup
+import sys
+if sys.version > '3':
+    extras = dict(
+    use_2to3 = True,
+    convert_2to3_doctests = ['src/zope/testing/doctest.txt',
+                             'src/zope/testing/formparser.txt',
+                             'src/zope/testing/module.txt',
+                             'src/zope/testing/setupstack.txt',
+                             ],
+    dependency_links = ['.'], # Only until zope.interface 3.6 and zope.exception 3.6 has been released.
+    )
+else:
+    extras = {}
 
 chapters = '\n'.join([
     open(os.path.join('src', 'zope', 'testing', name)).read()
@@ -41,7 +54,7 @@ long_description=(
 
 setup(
     name='zope.testing',
-    version='3.10.3dev',
+    version = '3.11.0dev',
     url='http://pypi.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing helpers',
@@ -56,11 +69,18 @@ setup(
         "Programming Language :: Python :: 2.4",
         "Programming Language :: Python :: 2.5",
         "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.1",
+        "Programming Language :: Python :: 3.2",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Testing",
         ],
     
-    packages=["zope", "zope.testing"],
+    packages=["zope", 
+              "zope.testing", 
+              "zope.testing.doctest", 
+              "zope.testing.renormalizing"],
     package_dir = {'': 'src'},
     namespace_packages=['zope',],
     install_requires = ['setuptools',
@@ -68,5 +88,6 @@ setup(
                         'zope.interface'],
     include_package_data = True,
     zip_safe = False,
-    test_suite = 'zope.testing.tests.test_suite'
+    test_suite = 'zope.testing.tests.test_suite',
+    **extras
 )

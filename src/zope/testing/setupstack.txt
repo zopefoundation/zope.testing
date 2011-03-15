@@ -76,7 +76,7 @@ Now the current working directory has changed:
 
 We can create files to out heart's content:
 
-    >>> open('Data.fs', 'w').write('xxx')
+    >>> foo = open('Data.fs', 'w').write('xxx')
     >>> os.path.exists('Data.fs')
     True
 

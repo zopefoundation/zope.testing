@@ -226,13 +226,14 @@ The difference would show us that:
     ... ''' + want
     >>> example = doctest.Example(source, want)
     >>> print checker.output_difference(example, got,
-    ...                                 doctest.REPORT_NDIFF),
+    ...                                 doctest.REPORT_NDIFF)
     Differences (ndiff with -expected +actual):
           usage: thundermonkey [options] [url]
         - <blankline>
         + <BLANKLINE>
           options:
               -h    display this help message
+    <BLANKLINE>
 
 
 It is possible to combine RENormalizing checkers for easy reuse:
@@ -250,10 +251,10 @@ It is possible to combine RENormalizing checkers for easy reuse:
 
 Combining a checker with something else does not work:
 
-    >>> lowercase_checker + 5
+    >>> lowercase_checker + 5 #doctest: +ELLIPSIS
     Traceback (most recent call last):
         ...
-    TypeError: unsupported operand type(s) for +: 'instance' and 'int'
+    TypeError: unsupported operand type(s) for +: ...
 
 """
 
@@ -273,7 +274,7 @@ class RENormalizing(doctest.OutputChecker):
         return RENormalizing(self.transformers + other.transformers)
 
     def _cook(self, pattern):
-        if callable(pattern):
+        if hasattr(pattern, '__call__'):
             return pattern
         regexp, replacement = pattern
         return lambda text: regexp.sub(replacement, text)
