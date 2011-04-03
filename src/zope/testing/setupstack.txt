@@ -8,7 +8,7 @@ the zope.testing.setupstack module provides a small framework for
 automating test tear down.  It provides a generic setUp function that
 sets up a stack. Normal test setUp functions call this function to set
 up the stack and then use the register function to register tear-down
-functions. 
+functions.
 
 To see how this works we'll create a faux test:
 
