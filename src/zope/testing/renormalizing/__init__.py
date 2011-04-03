@@ -266,7 +266,7 @@ class RENormalizing(doctest.OutputChecker):
     """
 
     def __init__(self, patterns):
-        self.transformers = map(self._cook, patterns)
+        self.transformers = list(map(self._cook, patterns))
 
     def __add__(self, other):
         if not isinstance(other, RENormalizing):
