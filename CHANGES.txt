@@ -4,7 +4,8 @@ zope.testing Changelog
 3.9.7 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Work around sporadic timing-related issues in the subprocess buffering
+  tests.  Thanks to Jonathan Ballet for the patch!
 
 
 3.9.6 (2011-02-21)

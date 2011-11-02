@@ -65,15 +65,19 @@ two pauses of about half a second, one around the first test and one around the
 second.  Before the change that this test verifies, there was a single pause of
 more than a second after the second suite ran.
 
-    >>> pause = datetime.timedelta(seconds=0.3)
-    >>> last_line, last_time = record.pop(0)
-    >>> for line, time in record:
-    ...     if time-last_time >= pause:
-    ...         # We paused!
-    ...         print 'PAUSE FOUND BETWEEN THESE LINES:'
-    ...         print ''.join([last_line, line, '-'*70])
-    ...     last_line, last_time = line, time
-    ... # doctest: +ELLIPSIS
+    >>> def assert_progressive_output():
+    ...     pause = datetime.timedelta(seconds=0.3)
+    ...     last_line, last_time = record.pop(0)
+    ...     print '---'
+    ...     for line, time in record:
+    ...         if time-last_time >= pause:
+    ...             # We paused!
+    ...             print 'PAUSE FOUND BETWEEN THESE LINES:'
+    ...             print ''.join([last_line, line, '-'*70])
+    ...         last_line, last_time = line, time
+
+    >>> assert_progressive_output() # doctest: +ELLIPSIS
+    ---...
     PAUSE FOUND BETWEEN THESE LINES:...
       Running:
      test_something (sampletests_buffering.TestSomething2)
@@ -81,7 +85,7 @@ more than a second after the second suite ran.
     PAUSE FOUND BETWEEN THESE LINES:
      test_something (sampletests_buffering.TestSomething2)
      test_something2 (sampletests_buffering.TestSomething2)
-    ----------------------------------------------------------------------
+    ---...
 
 Because this is a test based on timing, it may be somewhat fragile.  However,
 on a relatively slow machine, this timing works out fine; I'm hopeful that this
@@ -127,14 +131,19 @@ giving us progress reports that can be used for keepalive analysis by a human or
 automated agent. In particular for the second point, notice below that, as
 before, the progress output is not buffered.
 
-    >>> last_line, last_time = record.pop(0)
-    >>> for line, time in record:
-    ...     if time-last_time >= pause:
-    ...         # We paused!
-    ...         print 'PAUSE FOUND BETWEEN THIS OUTPUT:'
-    ...         print '\n'.join([last_line, line, '-'*70])
-    ...     last_line, last_time = line, time
-    ... # doctest: +ELLIPSIS
+    >>> def assert_progressive_output():
+    ...     pause = datetime.timedelta(seconds=0.3)
+    ...     last_line, last_time = record.pop(0)
+    ...     print '---'
+    ...     for line, time in record:
+    ...         if time-last_time >= pause:
+    ...             # We paused!
+    ...             print 'PAUSE FOUND BETWEEN THIS OUTPUT:'
+    ...             print '\n'.join([last_line, line, '-'*70])
+    ...         last_line, last_time = line, time
+
+    >>> assert_progressive_output() # doctest: +ELLIPSIS
+    ---...
     PAUSE FOUND BETWEEN THIS OUTPUT:...
     .
     .
@@ -142,7 +151,7 @@ before, the progress output is not buffered.
     PAUSE FOUND BETWEEN THIS OUTPUT:
     .
      LAYER FINISHED
-    ----------------------------------------------------------------------
+    ---...
 
 
 Fake an IOError reading the output of the subprocess to exercise the
