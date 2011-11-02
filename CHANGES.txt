@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-3.9.7 (unreleased)
+3.9.7 (2011-11-02)
 ==================
 
 - Work around sporadic timing-related issues in the subprocess buffering
