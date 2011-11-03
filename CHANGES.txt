@@ -1,6 +1,13 @@
 zope.testing Changelog
 **********************
 
+3.10.3 (unreleased)
+===================
+
+- Fixed test which fails if there is a file named `Data.fs` in the current
+  working directory.
+
+
 3.10.2 (2010-11-30)
 ===================
 
