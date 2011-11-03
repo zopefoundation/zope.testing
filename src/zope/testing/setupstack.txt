@@ -73,11 +73,12 @@ Now the current working directory has changed:
 
     >>> here == os.getcwd()
     False
+    >>> setupstack_cwd = os.getcwd()
 
 We can create files to out heart's content:
 
     >>> foo = open('Data.fs', 'w').write('xxx')
-    >>> os.path.exists('Data.fs')
+    >>> os.path.exists(os.path.join(setupstack_cwd, 'Data.fs'))
     True
 
 We'll make the file read-only. This can cause problems on Windows, but
@@ -106,5 +107,5 @@ We'll be back where we started:
 and the files we created will be gone (along with the temporary
 directory that was created:
 
-    >>> os.path.exists('Data.fs')
+    >>> os.path.exists(os.path.join(setupstack_cwd, 'Data.fs'))
     False
