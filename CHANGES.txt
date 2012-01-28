@@ -6,6 +6,11 @@ zope.testing Changelog
 
 - Added context-manager support to ``zope.testing.setupstack``
 
+- Made ``zope.testing.setupstack`` usable with all tests, not just
+  doctests and added ``zope.testing.setupstack.globs``, which makes it
+  easier to write test setup code that workes with doctests and other
+  kinds of tests.
+
 - Added the ``wait_until`` module, which makes it easier to deal with
   non-deterministic timing issues.
 
