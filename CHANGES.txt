@@ -1,10 +1,21 @@
 zope.testing Changelog
 **********************
 
-4.0.1 (unreleased)
+4.1.0 (unreleased)
 ==================
 
-- None yet.
+- Added context-manager support to ``zope.testing.setupstack``
+
+- Added the ``wait_until`` module, which makes it easier to deal with
+  non-deterministic timing issues.
+
+- Renamed ``zope.testing.renormalizing.RENormalizing`` to
+  ``zope.testing.renormalizing.OutputChecker``. The old name is an
+  alias.
+
+- Updated tests to run with Python 3.
+
+- More clearly labeled which features were supported by Python 3.
 
 4.0.0 (2011-11-09)
 ==================

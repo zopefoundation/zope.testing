@@ -20,14 +20,22 @@ import os, stat, tempfile
 
 key = '__' + __name__
 
+def globs(test):
+    try:
+        return test.globs
+    except AttributeError:
+        return test.__dict__
+
 def register(test, function, *args, **kw):
-    stack = test.globs.get(key)
+    tglobs = globs(test)
+    stack = tglobs.get(key)
     if stack is None:
-        stack = test.globs[key] = []
+        stack = tglobs[key] = []
     stack.append((function, args, kw))
 
 def tearDown(test):
-    stack = test.globs.get(key)
+    tglobs = globs(test)
+    stack = tglobs.get(key)
     while stack:
         f, p, k = stack.pop()
         f(*p, **k)
@@ -50,4 +58,9 @@ def rmtree(path):
             dname = os.path.join(path, dname)
             os.rmdir(dname)
     os.rmdir(path)
-    
+
+def context_manager(test, manager):
+    result = manager.__enter__()
+    register(test, manager.__exit__, None, None, None)
+    return result
+

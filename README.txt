@@ -4,64 +4,54 @@ zope.testing
 
 .. contents::
 
-This package provides a number of testing frameworks.  It includes a
-flexible test runner, and supports both doctest and unittest.
+This package provides a number of testing frameworks.
 
-cleanup.py
+cleanup
   Provides a mixin class for cleaning up after tests that
   make global changes.
 
-doctest.py
-  Enhanced version of python's standard doctest.py.
-  Better test count (one per block instead of one per docstring).
-  See doctest.txt.
-
-  (We need to merge this with the standard doctest module.)
-
-doctestunit.py
-  Provides a pprint function that always sorts dictionary entries
-  (pprint.pprint from the standard library doesn't sort very short ones,
-  sometimes causing test failures when the internal order changes).
-
-formparser.py
+formparser
   An HTML parser that extracts form information.
+
+  **Python 2 only**
 
   This is intended to support functional tests that need to extract
   information from HTML forms returned by the publisher.
 
   See formparser.txt.
 
-loggingsupport.py
+loggingsupport
   Support for testing logging code
 
   If you want to test that your code generates proper log output, you
   can create and install a handler that collects output.
 
-loghandler.py
+loghandler
   Logging handler for tests that check logging output.
 
-module.py
+module
   Lets a doctest pretend to be a Python module.
 
   See module.txt.
 
-renormalizing.py
+renormalizing
   Regular expression pattern normalizing output checker.
   Useful for doctests.
 
-server.py
+server
   Provides a simple HTTP server compatible with the zope.app.testing
   functional testing API.  Lets you interactively play with the system
   under test.  Helpful in debugging functional doctest failures.
 
-setupstack.py
+  **Python 2 only**
+
+setupstack
   A simple framework for automating doctest set-up and tear-down.
   See setupstack.txt.
 
-testrunner
-  The test runner package.  This is typically wrapped by a test.py script that
-  sets up options to run a particular set of tests.
-
+wait_until
+  A small utility for dealing with timing non-determinism
+  See wait_until.txt.
 
 Getting started
 ***************

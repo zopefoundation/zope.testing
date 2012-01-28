@@ -38,18 +38,20 @@ else:
 chapters = '\n'.join([
     open(os.path.join('src', 'zope', 'testing', name)).read()
     for name in (
-        'formparser.txt',
-        'setupstack.txt',
+    'formparser.txt',
+    'loggingsupport.txt',
+    'renormalizing.txt',
+    'setupstack.txt',
+    'wait_until.txt',
     )])
 
 long_description=(
     open('README.txt').read()
     + '\n' +
-    open('CHANGES.txt').read()
-    + '\n' +
     'Detailed Documentation\n'
     '**********************\n'
     + '\n' + chapters
+    + '\n' + open('CHANGES.txt').read()
     )
 
 setup(
@@ -76,10 +78,10 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Testing",
         ],
-    
-    packages=["zope", 
-              "zope.testing", 
-              "zope.testing.doctest", 
+
+    packages=["zope",
+              "zope.testing",
+              "zope.testing.doctest",
               "zope.testing.renormalizing"],
     package_dir = {'': 'src'},
     namespace_packages=['zope',],
