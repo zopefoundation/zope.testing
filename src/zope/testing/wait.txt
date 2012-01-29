@@ -8,24 +8,24 @@ testing threaded (threads, processes, greenlet's, etc.) interactions.
 You can add sleeps to your tests, but it's often hard to know how
 long to sleep.
 
-``zope.testing.wait_until`` provides a convenient way to wait until
+``zope.testing.wait`` provides a convenient way to wait until
 some condition holds.  It will test a condition and, when true,
 return.  It will sleep a short time between tests.
 
 Here's a silly example, that illustrates it's use:
 
-    >>> from zope.testing.wait_until import wait_until
-    >>> wait_until(lambda : True)
+    >>> from zope.testing.wait import wait
+    >>> wait(lambda : True)
 
 Since the condition we passed is always True, it returned
 immediately.  If the condition doesn't hold, then we'll get a timeout:
 
-    >>> wait_until((lambda : False), timeout=.01)
+    >>> wait((lambda : False), timeout=.01)
     Traceback (most recent call last):
     ...
     TimeOutWaitingFor: <lambda>
 
-``wait_until`` has some keyword options:
+``wait`` has some keyword options:
 
 timeout
    How long, in seconds, to wait for the condition to hold
@@ -43,20 +43,20 @@ message
    This defaults to ``None``.  If this is false, then the callable's
    doc string or ``__name__`` is used.
 
-``wait_until`` can be used as a decorator:
+``wait`` can be used as a decorator:
 
-    >>> @wait_until
+    >>> @wait
     ... def ok():
     ...     return True
 
-    >>> @wait_until(timeout=.01)
+    >>> @wait(timeout=.01)
     ... def no_way():
     ...     pass
     Traceback (most recent call last):
     ...
     TimeOutWaitingFor: no_way
 
-    >>> @wait_until(timeout=.01)
+    >>> @wait(timeout=.01)
     ... def no_way():
     ...     "never true"
     Traceback (most recent call last):
@@ -67,7 +67,7 @@ message
 
     >>> import time
     >>> now = time.time()
-    >>> @wait_until(timeout=.01, message='dang')
+    >>> @wait(timeout=.01, message='dang')
     ... def no_way():
     ...     "never true"
     Traceback (most recent call last):
@@ -81,16 +81,15 @@ message
 Customization
 -------------
 
-``wait_until`` is an instance of ``WaitUntil``.  With ``WaitUntil``,
-you can create you're own custom ``wait_until`` utilities.  For
+``wait`` is an instance of ``Wait``.  With ``Wait``,
+you can create you're own custom ``wait`` utilities.  For
 example, if you're testing something that uses getevent, you'd want to
 use gevent's sleep function:
 
-    >>> import zope.testing.wait_until
-    >>> wait_until = zope.testing.wait_until.WaitUntil(
-    ...    getsleep=lambda : gevent.sleep)
+    >>> import zope.testing.wait
+    >>> wait = zope.testing.wait.Wait(getsleep=lambda : gevent.sleep)
 
-WaitUntil takes a number of customization parameters:
+Wait takes a number of customization parameters:
 
 exception
   Timeout exception class
@@ -126,11 +125,11 @@ wait
     ...     print_('mynow')
     ...     return time.time()
 
-    >>> wait_until = zope.testing.wait_until.WaitUntil(
+    >>> wait = zope.testing.wait.Wait(
     ...    getnow=(lambda : mynow), getsleep=(lambda : mysleep),
     ...    exception=ValueError, timeout=.02, wait=.0001)
 
-    >>> @wait_until
+    >>> @wait
     ... def _(state=[]):
     ...     if len(state) > 1:
     ...        return True
@@ -140,7 +139,7 @@ wait
     mynow
     mysleep 0.0001
 
-    >>> @wait_until(wait=.002)
+    >>> @wait(wait=.002)
     ... def _(state=[]):
     ...     if len(state) > 1:
     ...        return True
@@ -150,7 +149,7 @@ wait
     mynow
     mysleep 0.002
 
-    >>> @wait_until(timeout=0)
+    >>> @wait(timeout=0)
     ... def _(state=[]):
     ...     if len(state) > 1:
     ...        return True
@@ -159,8 +158,8 @@ wait
     ...
     ValueError: _
 
-    >>> wait_until = zope.testing.wait_until.WaitUntil(timeout=0)
-    >>> @wait_until(timeout=0)
+    >>> wait = zope.testing.wait.Wait(timeout=0)
+    >>> @wait(timeout=0)
     ... def _(state=[]):
     ...     if len(state) > 1:
     ...        return True

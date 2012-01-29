@@ -49,9 +49,9 @@ setupstack
   A simple framework for automating doctest set-up and tear-down.
   See setupstack.txt.
 
-wait_until
+wait
   A small utility for dealing with timing non-determinism
-  See wait_until.txt.
+  See wait.txt.
 
 Getting started
 ***************

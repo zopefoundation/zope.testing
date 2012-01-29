@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-4.1.0 (2012-01-28)
+4.1.0 (2012-01-29)
 ==================
 
 - Added context-manager support to ``zope.testing.setupstack``
@@ -11,7 +11,7 @@ zope.testing Changelog
   easier to write test setup code that workes with doctests and other
   kinds of tests.
 
-- Added the ``wait_until`` module, which makes it easier to deal with
+- Added the ``wait`` module, which makes it easier to deal with
   non-deterministic timing issues.
 
 - Renamed ``zope.testing.renormalizing.RENormalizing`` to

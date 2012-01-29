@@ -42,7 +42,7 @@ chapters = '\n'.join([
     'loggingsupport.txt',
     'renormalizing.txt',
     'setupstack.txt',
-    'wait_until.txt',
+    'wait.txt',
     )])
 
 long_description=(
