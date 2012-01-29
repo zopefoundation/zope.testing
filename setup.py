@@ -56,7 +56,7 @@ long_description=(
 
 setup(
     name='zope.testing',
-    version = '4.0.1dev',
+    version = '4.1.0',
     url='http://pypi.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing helpers',
