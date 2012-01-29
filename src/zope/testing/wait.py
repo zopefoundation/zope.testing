@@ -14,7 +14,7 @@
 
 import time
 
-class WaitUntil:
+class Wait:
 
     class TimeOutWaitingFor(Exception):
         "A test condition timed out"
@@ -65,4 +65,4 @@ class WaitUntil:
                     getattr(func, '__name__')
                     )
 
-wait_until = WaitUntil()
+wait = Wait()

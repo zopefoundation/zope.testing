@@ -47,9 +47,9 @@ def test_suite():
         doctest.DocFileSuite('renormalizing.txt', setUp=setUp),
         doctest.DocFileSuite('setupstack.txt', setUp=setUp),
         doctest.DocFileSuite(
-            'wait_until.txt', setUp=setUp,
+            'wait.txt', setUp=setUp,
             checker=renormalizing.RENormalizing([
-                (re.compile('zope.testing.wait_until.TimeOutWaitingFor: '),
+                (re.compile('zope.testing.wait.TimeOutWaitingFor: '),
                  'TimeOutWaitingFor: '),
                 ])
             ),
