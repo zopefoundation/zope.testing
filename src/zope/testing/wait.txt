@@ -127,7 +127,7 @@ wait
 
     >>> wait = zope.testing.wait.Wait(
     ...    getnow=(lambda : mynow), getsleep=(lambda : mysleep),
-    ...    exception=ValueError, timeout=.02, wait=.0001)
+    ...    exception=ValueError, timeout=.1, wait=.02)
 
     >>> @wait
     ... def _(state=[]):
@@ -135,9 +135,9 @@ wait
     ...        return True
     ...     state.append(0)
     mynow
-    mysleep 0.0001
+    mysleep 0.02
     mynow
-    mysleep 0.0001
+    mysleep 0.02
 
     >>> @wait(wait=.002)
     ... def _(state=[]):
