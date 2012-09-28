@@ -1,6 +1,12 @@
 zope.testing Changelog
 **********************
 
+4.1.2 (unreleased)
+==================
+
+- LP: #1055720: Fix failing test on Python 3.3 due to changed exception
+  messaging.
+
 4.1.1 (2012-02-01)
 ==================
 

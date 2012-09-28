@@ -36,13 +36,13 @@ def test_suite():
     suite = unittest.TestSuite((
         doctest.DocFileSuite(
             'module.txt',
-            # when this test is run in isolation, the error message shows the
-            # module name as fully qualified; when it is run as part of the
-            # full test suite, the error message shows the module name as
-            # relative.
+            # Python 3.3 changed exception messaging:
+            #   https://bugs.launchpad.net/zope.testing/+bug/1055720
             checker=renormalizing.RENormalizing([
-                (re.compile('No module named zope.testing.unlikelymodulename'),
-                 'No module named unlikelymodulename')])),
+                (re.compile("No module named '?zope.testing.unlikelymodulename'?"),
+                 'No module named unlikelymodulename'),
+                (re.compile("No module named '?fake'?"),
+                 'No module named fake')])),
         doctest.DocFileSuite('loggingsupport.txt', setUp=setUp),
         doctest.DocFileSuite('renormalizing.txt', setUp=setUp),
         doctest.DocFileSuite('setupstack.txt', setUp=setUp),
