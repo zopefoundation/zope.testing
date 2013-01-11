@@ -1,3 +1,10 @@
-include *.txt *.py buildout.cfg
-recursive-include src *.py *.txt *.test sampletests
-# I found no way to include the three empty "sampletests" directories into the sdist :/
+include *.rst
+include *.txt
+
+recursive-include docs *
+recursive-include src *
+
+global-exclude *.dll
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.so

@@ -46,12 +46,12 @@ chapters = '\n'.join([
     )])
 
 long_description=(
-    open('README.txt').read()
+    open('README.rst').read()
     + '\n' +
     'Detailed Documentation\n'
     '**********************\n'
     + '\n' + chapters
-    + '\n' + open('CHANGES.txt').read()
+    + '\n' + open('CHANGES.rst').read()
     )
 
 setup(
