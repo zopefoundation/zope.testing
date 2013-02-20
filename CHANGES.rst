@@ -1,7 +1,7 @@
 zope.testing Changelog
 **********************
 
-4.1.2 (unreleased)
+4.1.2 (2013-02-19)
 ==================
 
 - Adjusted Trove classifiers to reflect the currently supported Python
