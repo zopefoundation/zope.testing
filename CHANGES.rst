@@ -4,6 +4,9 @@ zope.testing Changelog
 4.1.2 (unreleased)
 ==================
 
+- Adjusted Trove classifiers to reflect the currently supported Python
+  versions. Officially drop Python 2.4 and 2.5. Added Python 3.3.
+
 - LP: #1055720: Fix failing test on Python 3.3 due to changed exception
   messaging.
 

@@ -30,7 +30,6 @@ if sys.version > '3':
                              'src/zope/testing/module.txt',
                              'src/zope/testing/setupstack.txt',
                              ],
-    dependency_links = ['.'], # Only until zope.interface 3.6 and zope.exception 3.6 has been released.
     )
 else:
     extras = {}
@@ -70,13 +69,13 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.4",
-        "Programming Language :: Python :: 2.5",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.1",
         "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        'Programming Language :: Python :: Implementation :: CPython',
         "Framework :: Zope3",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Testing",
