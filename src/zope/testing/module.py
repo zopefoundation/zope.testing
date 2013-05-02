@@ -24,6 +24,8 @@ class FakeModule:
             return self.__dict[name]
         except KeyError:
             raise AttributeError(name)
+    def __dir__(self):
+        return self.__dict.keys()
 
 def setUp(test, name='__main__'):
     dict = test.globs
