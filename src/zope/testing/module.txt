@@ -8,7 +8,7 @@ desirable. Let's demonstrate the behavior::
   >>> class Foo(object):
   ...    pass
 
-  >>> 'builtin' in Foo.__module__ 
+  >>> 'builtin' in Foo.__module__
   True
 
 By using ``zope.testing.module.setUp`` this can be
@@ -39,6 +39,14 @@ else, in this case the default, ``__main__``::
   >>> Foo.__module__
   '__main__'
 
+Calling ``dir`` on the module will yield the expected attributes,
+including the ``FakeTest`` class we added above.
+
+  >>> import __main__
+  >>> attrs = dir(__main__)
+  >>> "FakeTest" in attrs
+  True
+
 Let's tear this down again::
 
   >>> from zope.testing.module import tearDown
@@ -48,7 +56,7 @@ We should now be back to the original situation::
 
   >>> class Foo(object):
   ...    pass
-  >>> 'builtin' in Foo.__module__ 
+  >>> 'builtin' in Foo.__module__
   True
 
 Importing

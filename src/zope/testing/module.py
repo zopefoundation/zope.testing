@@ -16,7 +16,7 @@
 
 import sys
 
-class FakeModule:
+class FakeModule(object):
     def __init__(self, dict):
         self.__dict = dict
     def __getattr__(self, name):
@@ -24,6 +24,8 @@ class FakeModule:
             return self.__dict[name]
         except KeyError:
             raise AttributeError(name)
+    def __dir__(self):
+        return self.__dict.keys()
 
 def setUp(test, name='__main__'):
     dict = test.globs
