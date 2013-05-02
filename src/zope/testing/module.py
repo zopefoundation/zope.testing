@@ -16,7 +16,7 @@
 
 import sys
 
-class FakeModule:
+class FakeModule(object):
     def __init__(self, dict):
         self.__dict = dict
     def __getattr__(self, name):
