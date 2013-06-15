@@ -54,7 +54,7 @@ setup.
     (Pdb) p x
     1
     (Pdb) c
-    True
+    False
 
 Note that post-mortem debugging doesn't work when the layer is run in
 a subprocess:

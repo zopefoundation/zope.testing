@@ -219,7 +219,7 @@ class Runner(object):
                                       setup_layers, self.failures, self.errors)
             except zope.testing.testrunner.interfaces.EndRun:
                 self.failed = True
-                return
+                break
             except CanNotTearDown:
                 if not self.options.resume_layer:
                     should_resume = True

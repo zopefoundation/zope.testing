@@ -218,7 +218,9 @@ Post-mortem debugging function called from ordinary test:
     (Pdb) p x
     1
     (Pdb) c
-    True
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    False
 
 
 Post-mortem debugging docstring-based doctest:
@@ -253,7 +255,9 @@ Post-mortem debugging docstring-based doctest:
     (Pdb) p x
     1
     (Pdb) c
-    True
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    False
 
 Post-mortem debugging function called from docstring-based doctest:
 
@@ -288,7 +292,9 @@ Post-mortem debugging function called from docstring-based doctest:
     (Pdb) p x
     1
     (Pdb) c
-    True
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    False
 
 Post-mortem debugging file-based doctest:
 
@@ -322,7 +328,9 @@ Post-mortem debugging file-based doctest:
     (Pdb) p x
     1
     (Pdb) c
-    True
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    False
 
 
 Post-mortem debugging function called from file-based doctest:
@@ -358,7 +366,9 @@ Post-mortem debugging function called from file-based doctest:
     (Pdb) p x
     1
     (Pdb) c
-    True
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    False
 
 Post-mortem debugging of a docstring doctest failure:
 
@@ -392,7 +402,9 @@ Post-mortem debugging of a docstring doctest failure:
     (Pdb) p x
     1
     (Pdb) c
-    True
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    False
 
 
 Post-mortem debugging of a docfile doctest failure:
@@ -427,7 +439,9 @@ Post-mortem debugging of a docfile doctest failure:
     (Pdb) p x
     1
     (Pdb) c
-    True
+    Tearing down left over layers:
+      Tear down zope.testing.testrunner.layer.UnitTests in N.NNN seconds.
+    False
 
 Post-mortem debugging with triple verbosity
 
