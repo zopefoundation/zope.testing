@@ -77,7 +77,8 @@ Now the current working directory has changed:
 
 We can create files to out heart's content:
 
-    >>> foo = open('Data.fs', 'w').write('xxx')
+    >>> with open('Data.fs', 'w') as f:
+    ...     foo = f.write('xxx')
     >>> os.path.exists(os.path.join(setupstack_cwd, 'Data.fs'))
     True
 
