@@ -18,10 +18,11 @@
 ##############################################################################
 """Setup for zope.testing package
 """
-
 import os
-from setuptools import setup
 import sys
+
+from setuptools import setup
+
 if sys.version > '3':
     extras = dict(
     use_2to3 = True,
@@ -34,28 +35,28 @@ if sys.version > '3':
 else:
     extras = {}
 
-chapters = '\n'.join([
-    open(os.path.join('src', 'zope', 'testing', name)).read()
-    for name in (
-    'formparser.txt',
-    'loggingsupport.txt',
-    'renormalizing.txt',
-    'setupstack.txt',
-    'wait.txt',
-    )])
+def read(*rnames):
+    with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
+        return f.read()
 
-long_description=(
-    open('README.rst').read()
-    + '\n' +
-    'Detailed Documentation\n'
-    '**********************\n'
-    + '\n' + chapters
-    + '\n' + open('CHANGES.rst').read()
+chapters = [read((os.path.join('src', 'zope', 'testing', name)))
+                for name in [
+                    'formparser.txt',
+                    'loggingsupport.txt',
+                    'renormalizing.txt',
+                    'setupstack.txt',
+                    'wait.txt',
+                ]]
+
+long_description='\n\n'.join(
+    [read('README.rst')] +
+    chapters +
+    [read('CHANGES.rst')]
     )
 
 setup(
     name='zope.testing',
-    version='4.1.4dev',
+    version='4.1.4.dev0',
     url='http://pypi.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing helpers',

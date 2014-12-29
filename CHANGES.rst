@@ -1,14 +1,14 @@
-zope.testing Changelog
-**********************
+Changes
+=======
 
 4.1.4 (unreleased)
-==================
+------------------
 
 - TBD
 
 
 4.1.3 (2014-03-19)
-==================
+------------------
 
 - Added support for Python 3.4.
 
@@ -16,7 +16,7 @@ zope.testing Changelog
 
 
 4.1.2 (2013-02-19)
-==================
+------------------
 
 - Adjusted Trove classifiers to reflect the currently supported Python
   versions. Officially drop Python 2.4 and 2.5. Added Python 3.3.
@@ -25,12 +25,12 @@ zope.testing Changelog
   messaging.
 
 4.1.1 (2012-02-01)
-==================
+------------------
 
 - Fixed: Windows test failure.
 
 4.1.0 (2012-01-29)
-==================
+------------------
 
 - Added context-manager support to ``zope.testing.setupstack``
 
@@ -53,7 +53,7 @@ zope.testing Changelog
 - Reorganized documentation.
 
 4.0.0 (2011-11-09)
-==================
+------------------
 
 - Removes the deprecated zope.testing.doctest.
 
@@ -64,26 +64,26 @@ zope.testing Changelog
 
 
 3.10.2 (2010-11-30)
-===================
+-------------------
 
 - Fix test of broken symlink handling to not break on Windows.
 
 
 3.10.1 (2010-11-29)
-===================
+-------------------
 
 - Fix removal of broken symlinks on Unix.
 
 
 3.10.0 (2010-07-21)
-===================
+-------------------
 
 - Removed zope.testing.testrunner, which now is moved to zope.testrunner.
 
 - Update fix for LP #221151 to a spelling compatible with Python 2.4.
 
 3.9.5 (2010-05-19)
-==================
+------------------
 
 - LP #579019: When layers were run in parallel, their tearDown was not
   called. Additionally, the first layer which was run in the main
@@ -94,7 +94,7 @@ zope.testing Changelog
   zope.testing in 4.0.0, together with zope.testing.doctest.
 
 3.9.4 (2010-04-13)
-==================
+------------------
 
 - LP #560259: Fix subunit output formatter to handle layer setup
   errors.
@@ -115,7 +115,7 @@ zope.testing Changelog
 
 
 3.9.3 (2010-03-26)
-==================
+------------------
 
 - zope.testing.renormalizer no longer imports zope.testing.doctest, which
   caused deprecation warnings.
@@ -127,17 +127,17 @@ zope.testing Changelog
 
 
 3.9.2 (2010-03-15)
-==================
+------------------
 
 - Fixed broken ``from zope.testing.doctest import *``
 
 3.9.1 (2010-03-15)
-==================
+------------------
 
 - No changes; reuploaded to fix broken 3.9.0 release on PyPI.
 
 3.9.0 (2010-03-12)
-==================
+------------------
 
 - Modified the testrunner to use the standard Python doctest module instead of
   the deprecated zope.testing.doctest.
@@ -150,19 +150,19 @@ zope.testing Changelog
   contributed by Jonathan Lange.
 
 3.8.7 (2010-01-26)
-==================
+------------------
 
 - Downgraded the zope.testing.doctest deprecation warning into a
   PendingDeprecationWarning.
 
 3.8.6 (2009-12-23)
-==================
+------------------
 
 - Added MANIFEST.in and reuploaded to fix broken 3.8.5 release on PyPI.
 
 
 3.8.5 (2009-12-23)
-==================
+------------------
 
 - Added DocFileSuite, DocTestSuite, debug_src and debug back BBB imports
   back into zope.testing.doctestunit; apparently many packages still import
@@ -173,7 +173,7 @@ zope.testing Changelog
 
 
 3.8.4 (2009-12-18)
-==================
+------------------
 
 - Fixed missing imports and undefined variables reported by pyflakes,
   adding tests to exercise the blind spots.
@@ -190,7 +190,7 @@ zope.testing Changelog
 - Test fixes for Python 2.7.
 
 3.8.3 (2009-09-21)
-==================
+------------------
 
 - Avoid a split() call or we get test failures when running from a directory
   with spaces in it.
@@ -199,14 +199,14 @@ zope.testing Changelog
   (or greater).
 
 3.8.2 (2009-09-15)
-==================
+------------------
 
 - Removing hotshot profiler when using Python 2.6. That makes zope.testing
   compatible with Python 2.6
 
 
 3.8.1 (2009-08-12)
-==================
+------------------
 
 - Avoid hardcoding sys.argv[0] as script;
   allow, for instance, Zope 2's `bin/instance test` (LP#407916).
@@ -226,14 +226,14 @@ zope.testing Changelog
 
 
 3.8.0 (2009-07-24)
-==================
+------------------
 
 - Testrunner automatically picks up descendants of unittest.TestCase in test
   modules, so you don't have to provide a test_suite() anymore.
 
 
 3.7.7 (2009-07-15)
-==================
+------------------
 
 - Clean up support for displaying tracebacks with supplements by turning it
   into an always-enabled feature and making the dependency on zope.exceptions
@@ -246,14 +246,14 @@ zope.testing Changelog
 
 
 3.7.6 (2009-07-02)
-==================
+------------------
 
 - Add zope-testrunner console_scripts entry point. This exposes a
   zope-testrunner binary with default installs allowing the testrunner to be
   run from the command line.
 
 3.7.5 (2009-06-08)
-==================
+------------------
 
 - Fix bug when running subprocesses on Windows.
 
@@ -268,7 +268,7 @@ zope.testing Changelog
 
 
 3.7.4 (2009-05-01)
-==================
+------------------
 
 - Filenames of doctest examples now contain the line number and not
   only the example number. So a stack trace in pdb tells the exact
@@ -279,7 +279,7 @@ zope.testing Changelog
 
 
 3.7.3 (2009-04-22)
-==================
+------------------
 
 - Better deal with rogue threads by always exiting with status so even
   spinning daemon threads won't block the runner from exiting. This deprecated
@@ -287,7 +287,7 @@ zope.testing Changelog
 
 
 3.7.2 (2009-04-13)
-==================
+------------------
 
 - fix test failure on Python 2.4 because of slight difference in the way
   coverage is reported (__init__ files with only a single comment line are now
@@ -301,14 +301,14 @@ zope.testing Changelog
 
 
 3.7.1 (2008-10-17)
-==================
+------------------
 
 - The setupstack temporary-directory support now properly handles
   read-only files by making them writable before removing them.
 
 
 3.7.0 (2008-09-22)
-==================
+------------------
 
 - Added an alterate setuptools / distutils commands for running all tests
   using our testrunner.  See 'zope.testing.testrunner.eggsupport:ftest'.
@@ -328,7 +328,7 @@ zope.testing Changelog
 
 
 3.6.0 (2008/07/10)
-==================
+------------------
 
 - Added -j option to parallel tests run in subprocesses.
 
@@ -362,18 +362,12 @@ zope.testing Changelog
 
 
 3.5.1 (2007/08/14)
-==================
-
-Bugs Fixed:
------------
+------------------
 
 - Post-mortem debugging wasn't invoked for layer-setup failures.
 
 3.5.0 (2007/07/19)
-==================
-
-New Features
-------------
+------------------
 
 - The test runner now works on Python 2.5.
 
@@ -384,18 +378,12 @@ New Features
 - Added --hide-secondary-failures and --show-secondary-failures options
   (https://bugs.launchpad.net/zope3/+bug/115454).
 
-Bugs Fixed:
------------
-
 - Fix some problems with Unicode in doctests.
 
 - Fix "Error reading from subprocess" errors on Unix-like systems.
 
 3.4 (2007/03/29)
-================
-
-New Features
-------------
+----------------
 
 - Added exit-with-status support (supports use with buildbot and
   zc.recipe.testing)
@@ -403,14 +391,11 @@ New Features
 - Added a small framework for automating set up and tear down of
   doctest tests. See setupstack.txt.
 
-Bugs Fixed:
------------
-
 - Fix testrunner-wo-source.txt and testrunner-errors.txt to run with a
   read-only source tree.
 
 3.0 (2006/09/20)
-================
+----------------
 
 - Updated the doctest copy with text-file encoding support.
 
@@ -426,7 +411,7 @@ Bugs Fixed:
   requested.
 
 2.x.y (???)
-===========
+-----------
 
 - Fix the test coverage. If a module, for example `interfaces`, was in an
   ignored directory/package, then if a module of the same name existed in a
@@ -435,7 +420,7 @@ Bugs Fixed:
   module.
 
 2.0 (2006/01/05)
-================
+----------------
 
 - Corresponds to the version of the zope.testing package shipped as part of
   the Zope 3.2.0 release.

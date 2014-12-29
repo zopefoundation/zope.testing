@@ -1,8 +1,8 @@
-************
-zope.testing
-************
+``zope.testing``
+================
 
-.. contents::
+.. image:: https://travis-ci.org/zopefoundation/zope.testing.png?branch=master
+        :target: https://travis-ci.org/zopefoundation/zope.testing
 
 This package provides a number of testing frameworks.
 
@@ -54,7 +54,7 @@ wait
   See wait.txt.
 
 Getting started
-***************
+---------------
 
 zope.testing uses buildout.  To start, run ``python bootstrap.py``.  It will
 create a number of directories and the ``bin/buildout`` script.  Next, run
