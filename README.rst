@@ -1,8 +1,16 @@
 ``zope.testing``
 ================
 
+.. image:: https://pypip.in/version/zope.testing/badge.svg?style=flat
+    :target: https://pypi.python.org/pypi/zope.testing/
+    :alt: Latest Version
+
 .. image:: https://travis-ci.org/zopefoundation/zope.testing.png?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.testing
+
+.. image:: https://readthedocs.org/projects/zopetesting/badge/?version=latest
+        :target: http://zopetesting.readthedocs.org/en/latest/
+        :alt: Documentation Status
 
 This package provides a number of testing frameworks.
 
