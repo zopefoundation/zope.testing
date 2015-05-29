@@ -4,7 +4,7 @@ Changes
 4.1.4 (unreleased)
 ------------------
 
-- TBD
+- Added support for PyPy.
 
 
 4.1.3 (2014-03-19)
