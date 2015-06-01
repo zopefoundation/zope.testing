@@ -4,10 +4,4 @@ include bootstrap.py
 include buildout.cfg
 include tox.ini
 
-recursive-include docs *
 recursive-include src *
-
-global-exclude *.dll
-global-exclude *.pyc
-global-exclude *.pyo
-global-exclude *.so
