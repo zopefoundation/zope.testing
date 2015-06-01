@@ -1,7 +1,7 @@
 Changes
 =======
 
-4.1.4 (unreleased)
+4.2.0 (2015-06-01)
 ------------------
 
 - **Actually** remove long-deprecated ``zope.testing.doctest`` (announced as
