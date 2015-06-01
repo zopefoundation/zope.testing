@@ -56,7 +56,7 @@ long_description='\n\n'.join(
 
 setup(
     name='zope.testing',
-    version='4.1.4.dev0',
+    version='4.2.0.dev0',
     url='http://pypi.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing helpers',
@@ -86,8 +86,7 @@ setup(
 
     packages=["zope",
               "zope.testing",
-              "zope.testing.doctest",
-              "zope.testing.renormalizing"],
+             ],
     package_dir = {'': 'src'},
     namespace_packages=['zope',],
     install_requires = ['setuptools',

@@ -4,6 +4,9 @@ Changes
 4.1.4 (unreleased)
 ------------------
 
+- **Actually** remove long-deprecated ``zope.testing.doctest`` (announced as
+  removed in 4.0.0) and ``zope.testing.doctestunit``.
+
 - Add support for PyPy and PyPy3.
 
 4.1.3 (2014-03-19)

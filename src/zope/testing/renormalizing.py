@@ -11,19 +11,6 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-#
-# This file is a package rather than a module because we want
-#
-#     import doctest
-#
-# to import the stdlib version of doctest rather than the deprecated
-# zope.testing.doctest, and
-#
-#     from __future__ import absolute_import
-#
-# is not available on Python 2.4 which we still support.
-#
-##############################################################################
 import doctest
 
 class OutputChecker(doctest.OutputChecker):

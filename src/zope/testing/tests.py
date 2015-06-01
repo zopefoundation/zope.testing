@@ -11,20 +11,11 @@
 ##############################################################################
 """Tests for the testing framework.
 """
-
 import doctest
 import sys
 import re
 import unittest
-import warnings
 from zope.testing import renormalizing
-
-if sys.version < '3':
-    # Yes, it is deprecated, but we want to run tests on it here.
-    warnings.filterwarnings("ignore", "zope.testing.doctest is deprecated",
-                            DeprecationWarning, __name__, 0)
-
-    from zope.testing import doctest
 
 def print_(*args):
     sys.stdout.write(' '.join(map(str, args))+'\n')
@@ -56,8 +47,6 @@ def test_suite():
         ))
 
     if sys.version < '3':
-        suite.addTests(doctest.DocFileSuite('doctest.txt'))
-        suite.addTests(doctest.DocFileSuite('unicode.txt'))
         suite.addTests(doctest.DocTestSuite('zope.testing.server'))
         suite.addTests(doctest.DocFileSuite('formparser.txt'))
     return suite
