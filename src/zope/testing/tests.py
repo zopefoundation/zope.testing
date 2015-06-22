@@ -40,7 +40,11 @@ def test_suite():
         doctest.DocFileSuite(
             'wait.txt', setUp=setUp,
             checker=renormalizing.RENormalizing([
+                # For Python 3.4.
                 (re.compile('zope.testing.wait.TimeOutWaitingFor: '),
+                 'TimeOutWaitingFor: '),
+                # For Python 3.5
+                (re.compile('zope.testing.wait.Wait.TimeOutWaitingFor: '),
                  'TimeOutWaitingFor: '),
                 ])
             ),
