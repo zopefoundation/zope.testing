@@ -61,6 +61,13 @@ wait
   A small utility for dealing with timing non-determinism
   See wait.txt.
 
+doctestcase
+  Support for defining doctests as methods of ``unittest.TestCase``
+  classes so that they can be more easily found by test runners, like
+  nose, that ignore test suites.
+
+.. contents::
+
 Getting started
 ---------------
 

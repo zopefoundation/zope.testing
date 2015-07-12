@@ -46,6 +46,7 @@ chapters = [read((os.path.join('src', 'zope', 'testing', name)))
                     'renormalizing.txt',
                     'setupstack.txt',
                     'wait.txt',
+                    'doctestcase.txt',
                 ]]
 
 long_description='\n\n'.join(
