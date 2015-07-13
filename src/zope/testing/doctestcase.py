@@ -55,7 +55,7 @@ The exampe illustrates some additional points:
   function.  The decorated function is run before the test is executed.
   This provides a way to provide some test-specfic setup, if desired.
 
-  Note that the docstring, of any, of the decorated function is ignored.
+  Note that the docstring, if any, of the decorated function is ignored.
 
 Also note that, unlike regular unit tests, module globals from the
 module defining the tests are't included in the test globals.
@@ -94,7 +94,8 @@ class DTMaker:
                     sys._getframe(2).f_globals['__file__']
                     ))
                 path = os.path.join(base, test)
-                self.test = open(path).read()
+                with open(path) as f:
+                    self.test = f.read()
                 self.name = os.path.basename(path)
                 self.path = path
             else:
