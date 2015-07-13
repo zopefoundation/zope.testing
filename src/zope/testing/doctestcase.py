@@ -58,7 +58,7 @@ The exampe illustrates some additional points:
   Note that the docstring, if any, of the decorated function is ignored.
 
 Also note that, unlike regular unit tests, module globals from the
-module defining the tests are't included in the test globals.
+module defining the tests aren't included in the test globals.
 
 """
 import doctest as standard_doctest
