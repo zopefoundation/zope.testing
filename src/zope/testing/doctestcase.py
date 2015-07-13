@@ -1,7 +1,7 @@
 r"""Doctests in TestCase classes
 
 The original doctest unittest integration was based on unittest test
-suites, which have falled out of favor. This module provides a way to
+suites, which have fallen out of favor. This module provides a way to
 define doctests inside of unittest TestCase classes. It also provides
 better integration with unittest test fixtures, because doctests use
 setup provided by the containing test case class.
