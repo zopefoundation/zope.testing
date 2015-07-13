@@ -15,7 +15,7 @@ import doctest
 import sys
 import re
 import unittest
-from zope.testing import renormalizing, doctestcase
+from zope.testing import renormalizing
 
 def print_(*args):
     sys.stdout.write(' '.join(map(str, args))+'\n')
