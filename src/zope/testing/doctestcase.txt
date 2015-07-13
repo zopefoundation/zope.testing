@@ -182,7 +182,7 @@ The DocTest constructor accepts standard ``optionflags`` and
     ...         '...'
     ...         '''
     ...
-    ...     @DocTest('test4e.txt', optionflags = doctest.ELLIPSIS)
+    ...     @DocTest('test4e.txt', optionflags=doctest.ELLIPSIS)
     ...     def test4(self):
     ...         self.x = 5
     >>> suite = loader.loadTestsFromTestCase(MyTest)
