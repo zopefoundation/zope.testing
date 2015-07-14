@@ -1,10 +1,12 @@
 r"""Doctests in TestCase classes
 
-The original doctest unittest integration was based on unittest test
-suites, which have fallen out of favor. This module provides a way to
-define doctests inside of unittest TestCase classes. It also provides
-better integration with unittest test fixtures, because doctests use
-setup provided by the containing test case class.
+The original ``doctest`` unittest integration was based on
+``unittest`` test suites, which have fallen out of favor. This module
+provides a way to define doctests inside of unittest ``TestCase``
+classes. It also provides better integration with unittest test
+fixtures, because doctests use setup provided by the containing test
+case class.  It also provides access to unittest assertion
+methods.
 
 You can define doctests in 4 ways:
 
@@ -16,123 +18,205 @@ You can define doctests in 4 ways:
 
 - reference to named files decorating test-specific setup functions
 
+.. some setup
+
+   >>> __name__ = 'tests'
+
 Here are some examples::
 
+    from zope.testing import doctestcase
+    import doctest
     import unittest
-    from zope.testing.doctestcase import DocTest
 
+    g = 'global'
     class MyTest(unittest.TestCase):
 
-        test1 = DocTest('test1.txt')
+        def setUp(self):
+            self.a = 1
+            self.globs = dict(c=9)
 
-        test2 = DocTest('''
-        >>> 1 + 1
-        2
+        test1 = doctestcase.file('test1.txt', optionflags=doctest.ELLIPSIS)
+
+        test2 = doctestcase.docteststring('''
+          >>> self.a, g, c
+          (1, 'global', 9)
         ''')
 
-        @DocTest
+        @doctestcase.doctestmethod(optionflags=doctest.ELLIPSIS)
         def test3(self):
             '''
-            >>> test.x
-            3
+            >>> self.a, self.x, g, c
+            (1, 3, 'global', 9)
             '''
             self.x = 3
 
-        @DocTest('test4.txt')
+        @doctestcase.doctestfile('test4.txt')
         def test4(self):
-            self.y = 5
+            self.x = 5
 
-The exampe illustrates some additional points:
+In this example, 3 constructors were used:
 
-- the test case ``self`` argument is exposed to the doctest as the
-  ``test`` global variable.  This gives the test access to any
-  attributes defined in the test case.
+doctestfile (alias: file)
+  doctestfile makes a file-based test case.
 
-- The body of a function who's docstring defines a doctest is run before
-  the test, providing test-specific setup, if desired.
+  This can be used as a decorator, in which case, the decorated
+  function is called before the test is run, to provide test-specific
+  setup.
 
-- A the return value of the doctest function can be used to decorate a
-  function.  The decorated function is run before the test is executed.
-  This provides a way to provide some test-specfic setup, if desired.
+docteststring (alias string)
+  docteststring constructs a doctest from a string.
 
-  Note that the docstring, if any, of the decorated function is ignored.
+doctestmethod (alias method)
+  doctestmethod constructs a doctest from a method.
 
-Also note that, unlike regular unit tests, module globals from the
-module defining the tests aren't included in the test globals.
+  The method's docstring provides the test. The method's body provides
+  optional test-specific setup.
+
+Note that short aliases are provided, which maye be useful in certain
+import styles.
+
+Tests have access to the following data:
+
+- Tests created with the ``docteststring`` and ``doctestmethod``
+  constructors have access to the module globals of the defining
+  module.
+
+- In tests created with the ``docteststring`` and ``doctestmethod``
+  constructors, the test case instance is available as the ``self``
+  variable.
+
+- In tests created with the ``doctestfile`` constructor, the test case
+  instance is available as the ``test`` variable.
+
+- If a test case defines a globs attribute, it must be a dictionary
+  and it's contents are added to the test globals.
+
+The constructors accept standard doctest ``optionflags`` and
+``checker`` arguments.
 
 """
-import doctest as standard_doctest
+import doctest
 import inspect
 import os
 import re
 import sys
 import types
 
-non_identifier_sub = re.compile('[^a-zA-Z_0-9]').sub
+__all__ = ['doctestmethod', 'docteststring', 'doctestfile']
 
-def DocTest(test=None, **kw):
-    """Define a doctest within a unittest.TestCase
+_parser = doctest.DocTestParser()
+
+def doctestmethod(test=None, optionflags=0, checker=None):
+    """Define a doctest from a method within a unittest.TestCase
+
+    The method's doc string provides the test source. It's body is
+    called before the test and may perform test-specific setup.
 
     You can pass doctest option flags and a custon checker.
+
+    Variables defined in the enclosing module are available in the test.
+
+    If a test case defines a globs attribute, it must be a dictionary
+    and it's contents are added to the test globals.
+
+    The test object is available as the variable ``self`` in the test.
     """
     if test is None:
-        return lambda test: DocTest(test, **kw)
-    return DTMaker(test, **kw).test_func
+        return lambda test: _doctestmethod(test, optionflags, checker)
 
-class DTMaker:
-    parser = standard_doctest.DocTestParser()
+    return _doctestmethod(test, optionflags, checker)
 
-    def __init__(self, test, optionflags=0, checker=None):
-        self.optionflags = (
-            optionflags | standard_doctest.IGNORE_EXCEPTION_DETAIL)
-        self.checker = checker
-        self.setups = []
+method = doctestmethod
 
-        if isinstance(test, str):
-            if '\n' not in test:
-                base = os.path.dirname(os.path.abspath(
-                    sys._getframe(2).f_globals['__file__']
-                    ))
-                path = os.path.join(base, test)
-                with open(path) as f:
-                    self.test = f.read()
-                self.name = os.path.basename(path)
-                self.path = path
-            else:
-                self.test = test
-                self.name = self.path = '<string>'
-            self.lineno = 0
-        else:
-            # func
-            self.setups.append(test)
-            doc = test.__doc__
-            if doc:
-                self.test = doc
-                self.name = test.__name__
-                self.path = inspect.getsourcefile(test)
-                self.lineno = inspect.getsourcelines(test)[1]
-            else:
-                raise ValueError(test, "has no docstring")
-            self.name = test.__name__
+def _doctestmethod(test, optionflags, checker):
+    doc = test.__doc__
+    if not doc:
+        raise ValueError(test, "has no docstring")
+    setup = test
+    name = test.__name__
+    path = inspect.getsourcefile(test)
+    lineno = inspect.getsourcelines(test)[1]
 
-        def test_func(test):
-            if isinstance(test, types.FunctionType):
-                self.setups.append(test)
-                return self.test_func
+    fglobs = sys._getframe(3).f_globals
 
-            for setup in self.setups:
-                setup(test)
+    def test_method(self):
+        setup(self)
+        _run_test(self, doc, fglobs.copy(), name, path,
+                  optionflags, checker, lineno=lineno)
 
-            standard_doctest.DocTestCase(
-                self.parser.get_doctest(
-                    self.test,
-                    dict(test=test),
-                    self.name,
-                    self.path,
-                    self.lineno,
-                    ),
-                optionflags = self.optionflags,
-                checker = self.checker,
-                ).runTest()
+    return test_method
 
-        self.test_func = test_func
+def docteststring(test, optionflags=0, checker=None):
+    """Define a doctest from a string within a unittest.TestCase
+
+    You can pass doctest option flags and a custon checker.
+
+    Variables defined in the enclosing module are available in the test.
+
+    If a test case defines a globs attribute, it must be a dictionary
+    and it's contents are added to the test globals.
+
+    The test object is available as the variable ``self`` in the test.
+    """
+    fglobs = sys._getframe(2).f_globals
+
+    def test_string(self):
+        _run_test(self, test, fglobs.copy(), '<string>', '<string>',
+                  optionflags, checker)
+
+    return test_string
+
+string = docteststring
+
+def doctestfile(path, optionflags=0, checker=None):
+    """Define a doctest from a test file within a unittest.TestCase
+
+    The file path may be relative or absolute. If it's relative (the
+    common case), it will interpreted relative to the directory
+    containing the referencing module.
+
+    You can pass doctest option flags and a custon checker.
+
+    If a test case defines a globs attribute, it must be a dictionary
+    and it's contents are added to the test globals.
+
+    The test object is available as the variable ``self`` in the test.
+
+    The resulting object can be used as a function decorator. The
+    decorated method is called before the test and may perform
+    test-specific setup. (The decorated method's doc string is ignored.)
+    """
+    base = os.path.dirname(os.path.abspath(
+        sys._getframe(2).f_globals['__file__']
+        ))
+    path = os.path.join(base, path)
+    with open(path) as f:
+        test = f.read()
+    name = os.path.basename(path)
+
+    def test_file(self):
+        if isinstance(self, types.FunctionType):
+            setup = self
+            def test_file_w_setup(self):
+                setup(self)
+                _run_test(self, test, {}, name, path, optionflags, checker,
+                          'test')
+
+            return test_file_w_setup
+
+        _run_test(self, test, {}, name, path, optionflags, checker, 'test')
+
+    return test_file
+
+file = doctestfile
+
+def _run_test(self, test, globs, name, path,
+              optionflags, checker, testname='self', lineno=0):
+    globs.update(getattr(self, 'globs', ()))
+    globs[testname] = self
+    optionflags |= doctest.IGNORE_EXCEPTION_DETAIL
+    doctest.DocTestCase(
+        _parser.get_doctest(test, globs, name, path, lineno),
+        optionflags = optionflags,
+        checker = checker,
+        ).runTest()

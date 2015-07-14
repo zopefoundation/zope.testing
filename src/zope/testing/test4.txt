@@ -1,2 +1,2 @@
-    >>> test.a, test.x
-    (1, 5)
+    >>> test.a, test.x, c
+    (1, 5, 9)
