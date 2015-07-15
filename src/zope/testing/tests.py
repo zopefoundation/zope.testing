@@ -23,6 +23,7 @@ def print_(*args):
 def setUp(test):
     test.globs['print_'] = print_
 
+
 def test_suite():
     suite = unittest.TestSuite((
         doctest.DocFileSuite(
@@ -30,7 +31,8 @@ def test_suite():
             # Python 3.3 changed exception messaging:
             #   https://bugs.launchpad.net/zope.testing/+bug/1055720
             checker=renormalizing.RENormalizing([
-                (re.compile("No module named '?zope.testing.unlikelymodulename'?"),
+                (re.compile(
+                    "No module named '?zope.testing.unlikelymodulename'?"),
                  'No module named unlikelymodulename'),
                 (re.compile("No module named '?fake'?"),
                  'No module named fake')])),
@@ -50,6 +52,8 @@ def test_suite():
             ),
         ))
 
+    if sys.version_info[:2] >= (2, 7):
+        suite.addTests(doctest.DocFileSuite('doctestcase.txt'))
     if sys.version < '3':
         suite.addTests(doctest.DocTestSuite('zope.testing.server'))
         suite.addTests(doctest.DocFileSuite('formparser.txt'))

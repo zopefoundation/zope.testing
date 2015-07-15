@@ -1,6 +1,10 @@
 Changes
 =======
 
+- Added support for creating doctests as methods of
+  ``unittest.TestCase`` classes so that they can found automatically
+  by test runners, like *nose* that ignore test suites.
+
 4.2.1 (unreleased)
 ------------------
 
