@@ -94,6 +94,8 @@ Tests have access to the following data:
 The constructors accept standard doctest ``optionflags`` and
 ``checker`` arguments.
 
+Note that the doctest IGNORE_EXCEPTION_DETAIL option flag is
+added to optionflags.
 """
 import doctest
 import inspect

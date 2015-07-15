@@ -111,6 +111,9 @@ Tests have access to the following data:
 The constructors accept standard doctest ``optionflags`` and
 ``checker`` arguments.
 
+Note that the doctest IGNORE_EXCEPTION_DETAIL option flag is
+added to optionflags.
+
 .. Let's look at some failure cases:
 
     >>> class MyTest(unittest.TestCase):
