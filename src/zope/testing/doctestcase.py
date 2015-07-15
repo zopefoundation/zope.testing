@@ -72,7 +72,7 @@ doctestmethod (alias method)
   The method's docstring provides the test. The method's body provides
   optional test-specific setup.
 
-Note that short aliases are provided, which maye be useful in certain
+Note that short aliases are provided, which may be useful in certain
 import styles.
 
 Tests have access to the following data:
@@ -89,7 +89,7 @@ Tests have access to the following data:
   instance is available as the ``test`` variable.
 
 - If a test case defines a globs attribute, it must be a dictionary
-  and it's contents are added to the test globals.
+  and its contents are added to the test globals.
 
 The constructors accept standard doctest ``optionflags`` and
 ``checker`` arguments.
@@ -107,9 +107,9 @@ __all__ = ['doctestmethod', 'docteststring', 'doctestfile']
 _parser = doctest.DocTestParser()
 
 def doctestmethod(test=None, optionflags=0, checker=None):
-    """Define a doctest from a method within a unittest.TestCase
+    """Define a doctest from a method within a unittest.TestCase.
 
-    The method's doc string provides the test source. It's body is
+    The method's doc string provides the test source. Its body is
     called before the test and may perform test-specific setup.
 
     You can pass doctest option flags and a custon checker.
@@ -117,7 +117,7 @@ def doctestmethod(test=None, optionflags=0, checker=None):
     Variables defined in the enclosing module are available in the test.
 
     If a test case defines a globs attribute, it must be a dictionary
-    and it's contents are added to the test globals.
+    and its contents are added to the test globals.
 
     The test object is available as the variable ``self`` in the test.
     """
@@ -147,14 +147,14 @@ def _doctestmethod(test, optionflags, checker):
     return test_method
 
 def docteststring(test, optionflags=0, checker=None):
-    """Define a doctest from a string within a unittest.TestCase
+    """Define a doctest from a string within a unittest.TestCase.
 
     You can pass doctest option flags and a custon checker.
 
     Variables defined in the enclosing module are available in the test.
 
     If a test case defines a globs attribute, it must be a dictionary
-    and it's contents are added to the test globals.
+    and its contents are added to the test globals.
 
     The test object is available as the variable ``self`` in the test.
     """
@@ -169,16 +169,16 @@ def docteststring(test, optionflags=0, checker=None):
 string = docteststring
 
 def doctestfile(path, optionflags=0, checker=None):
-    """Define a doctest from a test file within a unittest.TestCase
+    """Define a doctest from a test file within a unittest.TestCase.
 
-    The file path may be relative or absolute. If it's relative (the
-    common case), it will interpreted relative to the directory
+    The file path may be relative or absolute. If its relative (the
+    common case), it will be interpreted relative to the directory
     containing the referencing module.
 
     You can pass doctest option flags and a custon checker.
 
     If a test case defines a globs attribute, it must be a dictionary
-    and it's contents are added to the test globals.
+    and its contents are added to the test globals.
 
     The test object is available as the variable ``self`` in the test.
 
@@ -217,6 +217,6 @@ def _run_test(self, test, globs, name, path,
     optionflags |= doctest.IGNORE_EXCEPTION_DETAIL
     doctest.DocTestCase(
         _parser.get_doctest(test, globs, name, path, lineno),
-        optionflags = optionflags,
-        checker = checker,
+        optionflags=optionflags,
+        checker=checker,
         ).runTest()
