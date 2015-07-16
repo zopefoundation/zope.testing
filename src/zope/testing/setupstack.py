@@ -68,10 +68,10 @@ def context_manager(test, manager):
     return result
 
 def mock(test, *args, **kw):
+    global mock_module
     try:
         mock_module
     except NameError:
-        global mock_module
         import mock as mock_module
 
     return context_manager(test, mock_module.patch(*args, **kw))
