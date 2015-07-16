@@ -1,6 +1,9 @@
 Changes
 =======
 
+4.4.0 (2015-07-16)
+------------------
+
 - Added ``zope.testing.setupstack.mock`` as a convenience function for
   setting up mocks in tests.  (The Python ``mock`` package must be in
   the path for this to work. The excellent ``mock`` package isn't a
