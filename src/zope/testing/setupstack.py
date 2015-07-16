@@ -16,7 +16,10 @@
 See setupstack.txt
 """
 
-import os, stat, tempfile
+import os
+import stat
+import tempfile
+import unittest
 
 key = '__' + __name__
 
@@ -64,3 +67,14 @@ def context_manager(test, manager):
     register(test, manager.__exit__, None, None, None)
     return result
 
+def mock(test, *args, **kw):
+    import mock as mock_module
+    return context_manager(test, mock_module.patch(*args, **kw))
+
+class TestCase(unittest.TestCase):
+
+    tearDown = tearDown
+    register = register
+    setUpDirectory = setUpDirectory
+    context_manager = context_manager
+    mock = mock

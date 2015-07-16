@@ -120,11 +120,15 @@ returned. The context-manager's __exit__ method will be called as part
 of test tear down:
 
     >>> class Manager(object):
+    ...     def __init__(self, *args, **kw):
+    ...         if kw:
+    ...             args += (kw, )
+    ...         self.args = args
     ...     def __enter__(self):
-    ...         print_('enter')
+    ...         print_('enter', *self.args)
     ...         return 42
     ...     def __exit__(self, *args):
-    ...         print_('exit', args)
+    ...         print_('exit', args, *self.args)
 
     >>> manager = Manager()
     >>> test = Test()
@@ -135,6 +139,26 @@ of test tear down:
 
     >>> zope.testing.setupstack.tearDown(test)
     exit (None, None, None)
+
+.. faux mock
+
+    >>> old_mock = sys.modules.get('mock')
+    >>> class FauxMock:
+    ...     @classmethod
+    ...     def patch(self, *args, **kw):
+    ...         return Manager(*args, **kw)
+
+    >>> sys.modules['mock'] = FauxMock
+
+By far the most commonly called context manager is ``mock.patch``, so
+there's a convenience function to make that simpler:
+
+    >>> zope.testing.setupstack.mock(test, 'time.time', return_value=42)
+    enter time.time {'return_value': 42}
+    42
+
+    >>> zope.testing.setupstack.tearDown(test)
+    exit (None, None, None) time.time {'return_value': 42}
 
 globs
 -----
@@ -170,3 +194,70 @@ will be used:
 
 The ``globs`` function is used internally, but can also be used by
 setup code to support either doctests or other test objects.
+
+TestCase
+--------
+
+A TestCase class is provided that:
+
+- Makes it easier to call setupstack apis, and
+
+- provides an inheritable tearDown method.
+
+In addition to a tearDown method, the class provides methods:
+
+setupDirectory()
+    Creates a temporary directory, runs the test, and cleans it up.
+
+register(func)
+    Register a tear-down function.
+
+context_manager(manager)
+    Enters a context manager and exits it on tearDown.
+
+mock(*args, **kw)
+    Enters  ``mock.patch`` with the given arguments.
+
+    This is syntactic sugur for::
+
+        context_manager(mock.patch(*args, **kw))
+
+Here's an example:
+
+    >>> open('t', 'w').close()
+
+    >>> class MyTests(zope.testing.setupstack.TestCase):
+    ...
+    ...     def setUp(self):
+    ...         self.setUpDirectory()
+    ...         self.context_manager(manager)
+    ...         self.mock("time.time", return_value=42)
+    ...
+    ...         @self.register
+    ...         def _():
+    ...             print('done w test')
+    ...
+    ...     def test(self):
+    ...         print(os.listdir('.'))
+
+.. let's try it
+
+    >>> import unittest
+    >>> loader = unittest.TestLoader()
+    >>> suite = loader.loadTestsFromTestCase(MyTests)
+    >>> result = suite.run(unittest.TestResult())
+    enter
+    enter time.time {'return_value': 42}
+    []
+    done w test
+    exit (None, None, None) time.time {'return_value': 42}
+    exit (None, None, None)
+
+.. cleanup
+
+    >>> if old_mock:
+    ...     sys.modules['mock'] = old_mock
+    ... else:
+    ...     del sys.modules['mock']
+    >>> os.remove('t')
+
