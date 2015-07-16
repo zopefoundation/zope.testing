@@ -1,6 +1,16 @@
 Changes
 =======
 
+- Added ``zope.testing.setupstack.mock`` as a convenience function for
+  setting up mocks in tests.  (The Python ``mock`` package must be in
+  the path for this to work. The excellent ``mock`` package isn't a
+  dependency of ``zope.testing``.)
+
+- Added the base class ``zope.testing.setupstack.TextCase`` to make it
+  much easier to use ``zope.testing.setupstack`` in ``unittest`` test
+  cases.
+
+
 4.3.0 (2015-07-15)
 ------------------
 
