@@ -6,7 +6,7 @@ Changes
   the path for this to work. The excellent ``mock`` package isn't a
   dependency of ``zope.testing``.)
 
-- Added the base class ``zope.testing.setupstack.TextCase`` to make it
+- Added the base class ``zope.testing.setupstack.TestCase`` to make it
   much easier to use ``zope.testing.setupstack`` in ``unittest`` test
   cases.
 
