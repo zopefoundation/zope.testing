@@ -218,7 +218,7 @@ context_manager(manager)
 mock(*args, **kw)
     Enters  ``mock.patch`` with the given arguments.
 
-    This is syntactic sugure for::
+    This is syntactic sugur for::
 
         context_manager(mock.patch(*args, **kw))
 
