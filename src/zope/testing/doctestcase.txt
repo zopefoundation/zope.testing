@@ -71,6 +71,29 @@ Here are some examples::
     >>> for _, e in result.errors:
     ...     print(e); print
 
+    Check meta data:
+
+    >>> MyTest.test1.__name__
+    'test1'
+    >>> import os, zope.testing
+    >>> (MyTest.test1.filepath ==
+    ...  os.path.join(os.path.dirname(zope.testing.__file__), 'test1.txt'))
+    True
+    >>> MyTest.test1.filename
+    'test1.txt'
+
+    >>> MyTest.test3.__name__
+    'test3'
+    >>> MyTest.test4.__name__
+    'test4'
+
+    >>> (MyTest.test4.filepath ==
+    ...  os.path.join(os.path.dirname(zope.testing.__file__), 'test4.txt'))
+    True
+    >>> MyTest.test4.filename
+    'test4.txt'
+
+
 In this example, 3 constructors were used:
 
 doctestfile (alias: file)
@@ -114,6 +137,26 @@ The constructors accept standard doctest ``optionflags`` and
 Note that the doctest IGNORE_EXCEPTION_DETAIL option flag is
 added to optionflags.
 
+Class members have ``__name__`` attributes set as follows:
+
+- When using ``doctestmethod`` or ``doctestfile`` with a setup
+  function, ``__name__`` attribute is set to the name of the function.
+
+- When doctestfile is used, ``__name__`` is set to the last part of
+  the file path with the extension removed and hyphens converted to
+  underscores. For example, with a test path of
+  ``'/foo/bar/test-it.rst'``, the ``__name__`` attribute is set to
+  ``'test_it'``.
+
+- When doctestfile is used, ``filename`` and ``filepath`` attributes
+  are available that contain the test file name and full path.
+
+- when using ``docteststring``, a ``name`` option can be passed in
+  to set ``__name__``.
+
+When using ``doctestfile``, class members have a ``path`` attribute,
+which is set to the path name.
+
 .. Let's look at some failure cases:
 
     >>> class MyTest(unittest.TestCase):
@@ -123,7 +166,7 @@ added to optionflags.
     ...     1
     ...     >>> 1 + 1
     ...     1
-    ...     ''')
+    ...     ''', name='test2')
     ...
     ...     @doctestcase.method
     ...     def test3(self):
@@ -189,6 +232,11 @@ added to optionflags.
         2
     <BLANKLINE>
     <BLANKLINE>
+
+    Check string meta data:
+
+    >>> MyTest.test2.__name__
+    'test2'
 
 .. Verify setting optionflags and checker
 
