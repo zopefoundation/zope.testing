@@ -36,7 +36,7 @@ Here are some examples::
     ...         self.a = 1
     ...         self.globs = dict(c=9)
     ...
-    ...     test1 = doctestcase.file('test1.txt', optionflags=doctest.ELLIPSIS)
+    ...     test1 = doctestcase.file('test-1.txt', optionflags=doctest.ELLIPSIS)
     ...
     ...     test2 = doctestcase.docteststring('''
     ...       >>> self.a, g, c
@@ -74,13 +74,13 @@ Here are some examples::
     Check meta data:
 
     >>> MyTest.test1.__name__
-    'test1'
+    'test_1'
     >>> import os, zope.testing
     >>> (MyTest.test1.filepath ==
-    ...  os.path.join(os.path.dirname(zope.testing.__file__), 'test1.txt'))
+    ...  os.path.join(os.path.dirname(zope.testing.__file__), 'test-1.txt'))
     True
     >>> MyTest.test1.filename
-    'test1.txt'
+    'test-1.txt'
 
     >>> MyTest.test3.__name__
     'test3'
@@ -142,20 +142,17 @@ Class members have ``__name__`` attributes set as follows:
 - When using ``doctestmethod`` or ``doctestfile`` with a setup
   function, ``__name__`` attribute is set to the name of the function.
 
-- When doctestfile is used, ``__name__`` is set to the last part of
-  the file path with the extension removed and hyphens converted to
-  underscores. For example, with a test path of
+- When doctestfile is used without a setup function, ``__name__`` is
+  set to the last part of the file path with the extension removed and
+  hyphens converted to underscores. For example, with a test path of
   ``'/foo/bar/test-it.rst'``, the ``__name__`` attribute is set to
   ``'test_it'``.
-
-- When doctestfile is used, ``filename`` and ``filepath`` attributes
-  are available that contain the test file name and full path.
 
 - when using ``docteststring``, a ``name`` option can be passed in
   to set ``__name__``.
 
-When using ``doctestfile``, class members have a ``path`` attribute,
-which is set to the path name.
+When using ``doctestfile``, ``filename`` and ``filepath`` attributes
+are available that contain the test file name and full path.
 
 .. Let's look at some failure cases:
 
@@ -263,6 +260,7 @@ which is set to the path name.
     ...     @doctestcase.file('test4e.txt', optionflags=doctest.ELLIPSIS)
     ...     def test4(self):
     ...         self.x = 5
+
     >>> suite = loader.loadTestsFromTestCase(MyTest)
     >>> result = suite.run(unittest.TextTestResult(sys.stdout, True, 2))
     test2 (tests.MyTest) ... ok
