@@ -146,9 +146,11 @@ def _doctestmethod(test, optionflags, checker):
         _run_test(self, doc, fglobs.copy(), name, path,
                   optionflags, checker, lineno=lineno)
 
+    test_method.__name__ = name
+
     return test_method
 
-def docteststring(test, optionflags=0, checker=None):
+def docteststring(test, optionflags=0, checker=None, name=None):
     """Define a doctest from a string within a unittest.TestCase.
 
     You can pass doctest option flags and a custon checker.
@@ -165,6 +167,8 @@ def docteststring(test, optionflags=0, checker=None):
     def test_string(self):
         _run_test(self, test, fglobs.copy(), '<string>', '<string>',
                   optionflags, checker)
+    if name:
+        test_string.__name__ = name
 
     return test_string
 
@@ -203,10 +207,17 @@ def doctestfile(path, optionflags=0, checker=None):
                 setup(self)
                 _run_test(self, test, {}, name, path, optionflags, checker,
                           'test')
-
+            test_file_w_setup.__name__ = setup.__name__
+            test_file_w_setup.filepath = path
+            test_file_w_setup.filename = os.path.basename(path)
             return test_file_w_setup
 
         _run_test(self, test, {}, name, path, optionflags, checker, 'test')
+
+    test_file.__name__ = os.path.splitext(
+        os.path.basename(path))[0].replace('-', '_')
+    test_file.filepath = path
+    test_file.filename = os.path.basename(path)
 
     return test_file
 

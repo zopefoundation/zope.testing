@@ -1,6 +1,17 @@
 Changes
 =======
 
+- Added meta data for test case methods created with
+  ``zope.testing.doctestcase``.
+
+  - Reasonable values for __name__
+
+  - For ``doctestfile`` methods, provide ``filename`` and ``filepath``
+    attributes.
+
+  The meta data us useful, for example, for selecting tests with the
+  nose attribute mechanism.
+
 4.4.0 (2015-07-16)
 ------------------
 
