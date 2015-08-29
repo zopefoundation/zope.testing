@@ -4,7 +4,8 @@ Changes
 - Added meta data for test case methods created with
   ``zope.testing.doctestcase``.
 
-  - Reasonable values for __name__
+  - Reasonable values for ``__name__``, making sure than ``__name__``
+    starts with ``test``.
 
   - For ``doctestfile`` methods, provide ``filename`` and ``filepath``
     attributes.

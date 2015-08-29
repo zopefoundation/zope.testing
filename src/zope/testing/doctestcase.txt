@@ -141,15 +141,18 @@ Class members have ``__name__`` attributes set as follows:
 
 - When using ``doctestmethod`` or ``doctestfile`` with a setup
   function, ``__name__`` attribute is set to the name of the function.
+  A ``test_`` prefix is added, if the name doesn't start with ``test``.
 
 - When doctestfile is used without a setup function, ``__name__`` is
   set to the last part of the file path with the extension removed and
-  hyphens converted to underscores. For example, with a test path of
-  ``'/foo/bar/test-it.rst'``, the ``__name__`` attribute is set to
-  ``'test_it'``.
+  non-word characters converted to underscores. For example, with a
+  test path of ``'/foo/bar/test-it.rst'``, the ``__name__`` attribute
+  is set to ``'test_it'``.  A ``test_`` prefix is added, if the name
+  doesn't start with ``test``.
 
-- when using ``docteststring``, a ``name`` option can be passed in
-  to set ``__name__``.
+- when using ``docteststring``, a ``name`` option can be passed in to
+  set ``__name__``.  A ``test_`` prefix is added, if the name doesn't
+  start with ``test``.
 
 When using ``doctestfile``, ``filename`` and ``filepath`` attributes
 are available that contain the test file name and full path.
@@ -266,3 +269,29 @@ are available that contain the test file name and full path.
     test2 (tests.MyTest) ... ok
     test3 (tests.MyTest) ... ok
     test4 (tests.MyTest) ... ok
+
+.. test __name__ variations
+
+    >>> class MyTest(unittest.TestCase):
+    ...
+    ...     foo = doctestcase.string('''>>> 1''', name='foo')
+    ...
+    ...     @doctestcase.method
+    ...     def bar(self):
+    ...         '''
+    ...         >>> self.x
+    ...         3
+    ...         '''
+    ...     @doctestcase.file('test4f.txt')
+    ...     def baz(self):
+    ...         pass
+    ...     wait = doctestcase.file('wait.txt')
+
+    >>> MyTest.foo.__name__
+    'test_foo'
+    >>> MyTest.bar.__name__
+    'test_bar'
+    >>> MyTest.baz.__name__
+    'test_baz'
+    >>> MyTest.wait.__name__
+    'test_wait'
