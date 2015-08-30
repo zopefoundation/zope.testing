@@ -137,6 +137,12 @@ The constructors accept standard doctest ``optionflags`` and
 Note that the doctest IGNORE_EXCEPTION_DETAIL option flag is
 added to optionflags.
 
+When using ``doctestfile``, ``filename`` and ``filepath`` attributes
+are available that contain the test file name and full path.
+
+``__name__`` attributes of class members
+----------------------------------------
+
 Class members have ``__name__`` attributes set as follows:
 
 - When using ``doctestmethod`` or ``doctestfile`` with a setup
@@ -154,8 +160,9 @@ Class members have ``__name__`` attributes set as follows:
   set ``__name__``.  A ``test_`` prefix is added, if the name doesn't
   start with ``test``.
 
-When using ``doctestfile``, ``filename`` and ``filepath`` attributes
-are available that contain the test file name and full path.
+The ``__name__`` attribute is important when using nose, because nose
+discovers tests as class members using their ``__name__`` attributes,
+whereas the unittest and py.test test runners use class dictionary keys.
 
 .. Let's look at some failure cases:
 
