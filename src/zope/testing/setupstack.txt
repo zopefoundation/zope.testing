@@ -206,16 +206,16 @@ A TestCase class is provided that:
 
 In addition to a tearDown method, the class provides methods:
 
-setupDirectory()
+``setupDirectory()``
     Creates a temporary directory, runs the test, and cleans it up.
 
-register(func)
+``register(func)``
     Register a tear-down function.
 
-context_manager(manager)
+``context_manager(manager)``
     Enters a context manager and exits it on tearDown.
 
-mock(*args, **kw)
+``mock(*args, **kw)``
     Enters  ``mock.patch`` with the given arguments.
 
     This is syntactic sugur for::
