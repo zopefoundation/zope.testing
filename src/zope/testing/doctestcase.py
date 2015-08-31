@@ -192,7 +192,7 @@ def doctestfile(path, optionflags=0, checker=None):
     If a test case defines a globs attribute, it must be a dictionary
     and its contents are added to the test globals.
 
-    The test object is available as the variable ``self`` in the test.
+    The test object is available as the variable ``test`` in the test.
 
     The resulting object can be used as a function decorator. The
     decorated method is called before the test and may perform
@@ -220,14 +220,54 @@ def doctestfile(path, optionflags=0, checker=None):
 
         _run_test(self, test, {}, name, path, optionflags, checker, 'test')
 
-    test_file.__name__ = _testify(
-        _not_word.sub('_', os.path.splitext(os.path.basename(path))[0]))
+    test_file.__name__ = name_from_path(path)
     test_file.filepath = path
     test_file.filename = os.path.basename(path)
 
     return test_file
 
 file = doctestfile
+
+def doctestfiles(*paths, **kw):
+    """Define doctests from test files within a unittest.TestCase.
+
+    Multiple files can be specified. A member is added to the
+    surrounding class for each file.
+
+    The file paths may be relative or absolute. If relative (the
+    common case), they will be interpreted relative to the directory
+    containing the referencing module.
+
+    You can pass doctest option flags and a custon checker.
+
+    If a test case defines a globs attribute, it must be a dictionary
+    and its contents are added to the test globals.
+
+    The test object is available as the variable ``test`` in the test.
+
+    The resulting object can be used as a function decorator. The
+    decorated method is called before the test and may perform
+    test-specific setup. (The decorated method's doc string is ignored.)
+    """
+    locals = sys._getframe(1).f_locals
+    for path in paths:
+        locals[name_from_path(path)] = doctestfile(path, **kw)
+
+    def doctestfiles_w_setup(func):
+        for path in paths:
+            name = name_from_path(path)
+            test = doctestfile(path, **kw)(func)
+            locals[name] = test
+            test.__name__ = name
+
+    return doctestfiles_w_setup
+
+files = doctestfiles
+
+def name_from_path(path):
+    return _testify(
+        _not_word.sub('_', os.path.splitext(os.path.basename(path))[0])
+        )
 
 def _run_test(self, test, globs, name, path,
               optionflags, checker, testname='self', lineno=0):
