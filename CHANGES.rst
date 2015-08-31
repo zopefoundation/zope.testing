@@ -19,11 +19,15 @@ Changes
 
   - Automatically assign test class members.  So rather than::
 
-      test_foo = doctestcase.doctestfile('foo.txt')
+      class MYTests(unittest.TestCase):
+          ...
+          test_foo = doctestcase.doctestfile('foo.txt')
 
     You can use::
 
-      doctestcase.doctestfiles('foo.txt')
+      @doctestcase.doctestfiles('foo.txt')
+      class MYTests(unittest.TestCase):
+          ...
 
 4.4.0 (2015-07-16)
 ------------------

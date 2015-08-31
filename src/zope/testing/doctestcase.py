@@ -229,10 +229,10 @@ def doctestfile(path, optionflags=0, checker=None):
 file = doctestfile
 
 def doctestfiles(*paths, **kw):
-    """Define doctests from test files within a unittest.TestCase.
+    """Define doctests from test files in a decorated class.
 
     Multiple files can be specified. A member is added to the
-    surrounding class for each file.
+    decorated class for each file.
 
     The file paths may be relative or absolute. If relative (the
     common case), they will be interpreted relative to the directory
@@ -245,22 +245,18 @@ def doctestfiles(*paths, **kw):
 
     The test object is available as the variable ``test`` in the test.
 
-    The resulting object can be used as a function decorator. The
-    decorated method is called before the test and may perform
-    test-specific setup. (The decorated method's doc string is ignored.)
+    The resulting object must be used as a class decorator.
     """
-    locals = sys._getframe(1).f_locals
-    for path in paths:
-        locals[name_from_path(path)] = doctestfile(path, **kw)
-
-    def doctestfiles_w_setup(func):
+    def doctestfiles_(class_):
         for path in paths:
             name = name_from_path(path)
-            test = doctestfile(path, **kw)(func)
-            locals[name] = test
+            test = doctestfile(path, **kw)
             test.__name__ = name
+            setattr(class_, name, test)
 
-    return doctestfiles_w_setup
+        return class_
+
+    return doctestfiles_
 
 files = doctestfiles
 
