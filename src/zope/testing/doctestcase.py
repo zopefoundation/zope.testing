@@ -108,6 +108,11 @@ __all__ = ['doctestmethod', 'docteststring', 'doctestfile']
 
 _parser = doctest.DocTestParser()
 
+def _testify(name):
+    if not name.startswith('test'):
+        name = 'test_' + name
+    return name
+
 def doctestmethod(test=None, optionflags=0, checker=None):
     """Define a doctest from a method within a unittest.TestCase.
 
@@ -146,7 +151,7 @@ def _doctestmethod(test, optionflags, checker):
         _run_test(self, doc, fglobs.copy(), name, path,
                   optionflags, checker, lineno=lineno)
 
-    test_method.__name__ = name
+    test_method.__name__ = _testify(name)
 
     return test_method
 
@@ -168,12 +173,13 @@ def docteststring(test, optionflags=0, checker=None, name=None):
         _run_test(self, test, fglobs.copy(), '<string>', '<string>',
                   optionflags, checker)
     if name:
-        test_string.__name__ = name
+        test_string.__name__ = _testify(name)
 
     return test_string
 
 string = docteststring
 
+_not_word = re.compile('\W')
 def doctestfile(path, optionflags=0, checker=None):
     """Define a doctest from a test file within a unittest.TestCase.
 
@@ -207,15 +213,15 @@ def doctestfile(path, optionflags=0, checker=None):
                 setup(self)
                 _run_test(self, test, {}, name, path, optionflags, checker,
                           'test')
-            test_file_w_setup.__name__ = setup.__name__
+            test_file_w_setup.__name__ = _testify(setup.__name__)
             test_file_w_setup.filepath = path
             test_file_w_setup.filename = os.path.basename(path)
             return test_file_w_setup
 
         _run_test(self, test, {}, name, path, optionflags, checker, 'test')
 
-    test_file.__name__ = os.path.splitext(
-        os.path.basename(path))[0].replace('-', '_')
+    test_file.__name__ = _testify(
+        _not_word.sub('_', os.path.splitext(os.path.basename(path))[0]))
     test_file.filepath = path
     test_file.filename = os.path.basename(path)
 
