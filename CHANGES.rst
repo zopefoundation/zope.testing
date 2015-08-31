@@ -13,6 +13,18 @@ Changes
   The meta data us useful, for example, for selecting tests with the
   nose attribute mechanism.
 
+- Added ``doctestcase.doctestfiles``
+
+  - Define multiple doctest files at once.
+
+  - Automatically assign test class members.  So rather than::
+
+      test_foo = doctestcase.doctestfile('foo.txt')
+
+    You can use::
+
+      doctestcase.doctestfiles('foo.txt')
+
 4.4.0 (2015-07-16)
 ------------------
 
