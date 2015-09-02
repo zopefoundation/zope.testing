@@ -4,12 +4,11 @@ Doctests in TestCase classes
 The original ``doctest`` unittest integration was based on
 ``unittest`` test suites, which have fallen out of favor. This module
 provides a way to define doctests inside of unittest ``TestCase``
-classes. It also provides better integration with unittest test
-fixtures, because doctests use setup provided by the containing test
-case class.  It also provides access to unittest assertion
-methods.
+classes. It provides better integration with unittest test fixtures,
+because doctests use setup provided by the containing test case
+class. It provides access to unittest assertion methods.
 
-You can define doctests in 4 ways:
+You can define doctests in multiple ways:
 
 - references to named files
 
@@ -18,6 +17,8 @@ You can define doctests in 4 ways:
 - decorated functions with docstrings
 
 - reference to named files decorating test-specific setup functions
+
+- reference to named files decorating a test class
 
 .. some setup
 
@@ -30,6 +31,7 @@ Here are some examples::
     >>> import unittest
 
     >>> g = 'global'
+
     >>> class MyTest(unittest.TestCase):
     ...
     ...     def setUp(self):
@@ -55,18 +57,32 @@ Here are some examples::
     ...     def test4(self):
     ...         self.x = 5
 
+    >>> import sys
+
+    >>> @doctestcase.doctestfiles('loggingsupport.txt', 'renormalizing.txt')
+    ... class MoreTests(unittest.TestCase):
+    ...
+    ...    def setUp(self):
+    ...        def print_(*args):
+    ...            sys.stdout.write(' '.join(map(str, args))+'\n')
+    ...        self.globs = dict(print_=print_)
+
+
 .. We can run these tests with the ``unittest`` test runner.
 
     >>> loader = unittest.TestLoader()
-    >>> suite = loader.loadTestsFromTestCase(MyTest)
-    >>> import sys
     >>> sys.stdout.writeln = lambda s: sys.stdout.write(s+'\n')
+    >>> suite = loader.loadTestsFromTestCase(MyTest)
     >>> result = suite.run(unittest.TextTestResult(sys.stdout, True, 3))
     test1 (tests.MyTest) ... ok
     test2 (tests.MyTest) ... ok
     test3 (tests.MyTest) ... ok
     test4 (tests.MyTest) ... ok
 
+    >>> suite = loader.loadTestsFromTestCase(MoreTests)
+    >>> result = suite.run(unittest.TextTestResult(sys.stdout, True, 3))
+    test_loggingsupport (tests.MoreTests) ... ok
+    test_renormalizing (tests.MoreTests) ... ok
 
     >>> for _, e in result.errors:
     ...     print(e); print
@@ -93,8 +109,16 @@ Here are some examples::
     >>> MyTest.test4.filename
     'test4.txt'
 
+    >>> MoreTests.test_loggingsupport.__name__
+    'test_loggingsupport'
+    >>> MoreTests.test_loggingsupport.filename
+    'loggingsupport.txt'
+    >>> (MoreTests.test_loggingsupport.filepath ==
+    ...  os.path.join(os.path.dirname(zope.testing.__file__),
+    ...               'loggingsupport.txt'))
+    True
 
-In this example, 3 constructors were used:
+In these examples, 4 constructors were used:
 
 doctestfile (alias: file)
   doctestfile makes a file-based test case.
@@ -102,6 +126,13 @@ doctestfile (alias: file)
   This can be used as a decorator, in which case, the decorated
   function is called before the test is run, to provide test-specific
   setup.
+
+doctestfiles (alias: files)
+  doctestfiles makes file-based test cases and assigns them to the
+  decorated class.
+
+  Multiple files can be specified and the resulting doctests are added
+  as members of the decorated class.
 
 docteststring (alias string)
   docteststring constructs a doctest from a string.
@@ -125,8 +156,9 @@ Tests have access to the following data:
   constructors, the test case instance is available as the ``self``
   variable.
 
-- In tests created with the ``doctestfile`` constructor, the test case
-  instance is available as the ``test`` variable.
+- In tests created with the ``doctestfile`` and ``doctestfiles``
+  constructor, the test case instance is available as the ``test``
+  variable.
 
 - If a test case defines a globs attribute, it must be a dictionary
   and it's contents are added to the test globals.
@@ -137,8 +169,9 @@ The constructors accept standard doctest ``optionflags`` and
 Note that the doctest IGNORE_EXCEPTION_DETAIL option flag is
 added to optionflags.
 
-When using ``doctestfile``, ``filename`` and ``filepath`` attributes
-are available that contain the test file name and full path.
+When using ``doctestfile`` and ``doctestfile``, ``filename`` and
+``filepath`` attributes are available that contain the test file name
+and full path.
 
 ``__name__`` attributes of class members
 ----------------------------------------
@@ -149,12 +182,13 @@ Class members have ``__name__`` attributes set as follows:
   function, ``__name__`` attribute is set to the name of the function.
   A ``test_`` prefix is added, if the name doesn't start with ``test``.
 
-- When doctestfile is used without a setup function, ``__name__`` is
-  set to the last part of the file path with the extension removed and
-  non-word characters converted to underscores. For example, with a
-  test path of ``'/foo/bar/test-it.rst'``, the ``__name__`` attribute
-  is set to ``'test_it'``.  A ``test_`` prefix is added, if the name
-  doesn't start with ``test``.
+- When ``doctestfile`` is used without a setup function or when
+  ``doctestfiles`` is used, ``__name__`` is set to the last part of the
+  file path with the extension removed and non-word characters
+  converted to underscores. For example, with a test path of
+  ``'/foo/bar/test-it.rst'``, the ``__name__`` attribute is set to
+  ``'test_it'``.  A ``test_`` prefix is added, if the name doesn't
+  start with ``test``.
 
 - when using ``docteststring``, a ``name`` option can be passed in to
   set ``__name__``.  A ``test_`` prefix is added, if the name doesn't

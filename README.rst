@@ -1,5 +1,6 @@
+=================
 ``zope.testing``
-================
+=================
 
 .. image:: https://pypip.in/version/zope.testing/badge.svg?style=flat
     :target: https://pypi.python.org/pypi/zope.testing/
@@ -68,8 +69,8 @@ doctestcase
 
 .. contents::
 
-Getting started
----------------
+Getting started developing zope.testing
+=======================================
 
 zope.testing uses buildout.  To start, run ``python bootstrap.py``.  It will
 create a number of directories and the ``bin/buildout`` script.  Next, run
