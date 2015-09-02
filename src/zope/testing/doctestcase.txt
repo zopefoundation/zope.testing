@@ -65,7 +65,7 @@ Here are some examples::
     ...    def setUp(self):
     ...        def print_(*args):
     ...            sys.stdout.write(' '.join(map(str, args))+'\n')
-    ...        self.globs = dict(print_ = print_)
+    ...        self.globs = dict(print_=print_)
 
 
 .. We can run these tests with the ``unittest`` test runner.
@@ -78,9 +78,6 @@ Here are some examples::
     test2 (tests.MyTest) ... ok
     test3 (tests.MyTest) ... ok
     test4 (tests.MyTest) ... ok
-
-    >>> for _, e in result.errors:
-    ...     print(e); print
 
     >>> suite = loader.loadTestsFromTestCase(MoreTests)
     >>> result = suite.run(unittest.TextTestResult(sys.stdout, True, 3))
@@ -134,7 +131,7 @@ doctestfiles (alias: files)
   doctestfiles makes file-based test cases and assigns them to the
   decorated class.
 
-  Multile files can be specified and the resulting doctests are added
+  Multiple files can be specified and the resulting doctests are added
   as members of the decorated class.
 
 docteststring (alias string)
