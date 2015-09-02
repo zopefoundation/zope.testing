@@ -57,7 +57,7 @@ long_description='\n\n'.join(
 
 setup(
     name='zope.testing',
-    version='4.4.0',
+    version='4.5.0',
     url='http://pypi.python.org/pypi/zope.testing',
     license='ZPL 2.1',
     description='Zope testing helpers',

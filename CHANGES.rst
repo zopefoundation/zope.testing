@@ -1,6 +1,9 @@
 Changes
 =======
 
+4.5.0 (2015-09-02)
+------------------
+
 - Added meta data for test case methods created with
   ``zope.testing.doctestcase``.
 
