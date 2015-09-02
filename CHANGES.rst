@@ -25,7 +25,7 @@ Changes
 
     You can use::
 
-      @doctestcase.doctestfiles('foo.txt')
+      @doctestcase.doctestfiles('foo.txt', 'bar.txt', ...)
       class MYTests(unittest.TestCase):
           ...
 
