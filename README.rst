@@ -2,7 +2,7 @@
 ``zope.testing``
 =================
 
-.. image:: https://pypip.in/version/zope.testing/badge.svg?style=flat
+.. image:: https://img.shields.io/pypi/v/zope.testing.svg
     :target: https://pypi.python.org/pypi/zope.testing/
     :alt: Latest Version
 
