@@ -29,7 +29,9 @@ class OutputChecker(doctest.OutputChecker):
     """Pattern-normalizing outout checker
     """
 
-    def __init__(self, patterns):
+    def __init__(self, patterns=None):
+        if patterns is None:
+            patterns = []
         self.transformers = list(map(self._cook, patterns))
 
     def __add__(self, other):

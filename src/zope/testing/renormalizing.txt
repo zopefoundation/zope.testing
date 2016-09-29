@@ -237,7 +237,7 @@ Combining a checker with something else does not work:
 Using the 2to3 exception normalization:
 
     >>> from zope.testing.renormalizing import EXCEPTION_2TO3
-    >>> checker = OutputChecker(patterns=[])
+    >>> checker = OutputChecker()
     >>> want = """\
     ... Traceback (most recent call last):
     ... foo.bar.FooBarError: requires at least one argument."""
