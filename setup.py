@@ -19,8 +19,22 @@
 """Setup for zope.testing package
 """
 import os
-
+import platform
 from setuptools import setup
+
+
+if platform.python_implementation() == 'PyPy' \
+        and platform.python_version() > '3':
+    extras = dict(
+        use_2to3=True,
+        convert_2to3_doctests=[
+            'src/zope/testing/doctest.txt',
+            'src/zope/testing/formparser.txt',
+            'src/zope/testing/module.txt',
+            'src/zope/testing/setupstack.txt'],
+    )
+else:
+    extras = {}
 
 
 def read(*rnames):
@@ -86,4 +100,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     test_suite='zope.testing.tests.test_suite',
+    **extras
 )
