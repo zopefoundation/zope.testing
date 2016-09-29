@@ -234,3 +234,21 @@ Combining a checker with something else does not work:
         ...
     TypeError: unsupported operand type(s) for +: ...
 
+Using the 2to3 exception normalization:
+
+    >>> from zope.testing.renormalizing import EXCEPTION_2TO3
+    >>> checker = OutputChecker(patterns=[])
+    >>> want = """\
+    ... Traceback (most recent call last):
+    ... foo.bar.FooBarError: requires at least one argument."""
+    >>> got = """\
+    ... Traceback (most recent call last):
+    ... FooBarError: requires at least one argument."""
+    >>> result = checker.check_output(want, got, EXCEPTION_2TO3)
+    >>> import sys
+    >>> if sys.version < '3':
+    ...     expected = True
+    ... else:
+    ...     expected = False
+    >>> result == expected
+    True

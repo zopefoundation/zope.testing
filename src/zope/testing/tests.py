@@ -16,6 +16,7 @@ import sys
 import re
 import unittest
 from zope.testing import renormalizing
+from zope.testing.test_renormalizing import Exception2To3
 
 def print_(*args):
     sys.stdout.write(' '.join(map(str, args))+'\n')
@@ -57,4 +58,6 @@ def test_suite():
     if sys.version < '3':
         suite.addTests(doctest.DocTestSuite('zope.testing.server'))
         suite.addTests(doctest.DocFileSuite('formparser.txt'))
+    suite.addTest(
+        unittest.makeSuite(Exception2To3))
     return suite

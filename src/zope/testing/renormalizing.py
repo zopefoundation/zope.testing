@@ -11,7 +11,12 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+import sys
 import doctest
+
+
+EXCEPTION_2TO3 = doctest.register_optionflag('EXCEPTION_2TO3')
+
 
 class OutputChecker(doctest.OutputChecker):
     """Pattern-normalizing outout checker
@@ -38,6 +43,10 @@ class OutputChecker(doctest.OutputChecker):
         for transformer in self.transformers:
             want = transformer(want)
             got = transformer(got)
+
+        if sys.version < '3':
+            if optionflags & EXCEPTION_2TO3:
+                want = strip_dottedname_from_traceback(want)
 
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
 
@@ -70,3 +79,22 @@ class OutputChecker(doctest.OutputChecker):
 
 RENormalizing = OutputChecker
 
+
+def strip_dottedname_from_traceback(string):
+    # We might want to confirm more strictly were dealing with a traceback.
+    # We'll assume so for now.
+    if not string:
+        return string
+
+    lines = string.splitlines()
+    last = lines[-1]
+    words = last.split(' ')
+    first = words[0]
+    if not first.endswith(':'):
+        return string
+
+    name = first.split('.')[-1]
+    words[0] = name
+    last = ' '.join(words)
+    lines[-1] = last
+    return '\n'.join(lines)
