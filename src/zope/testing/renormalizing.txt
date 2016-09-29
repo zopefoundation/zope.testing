@@ -252,3 +252,38 @@ Using the 2to3 exception normalization:
     ...     expected = False
     >>> result == expected
     True
+
+When reporting a failing test and running in Python 2, the normalizer tries
+to be helpful by explaining how to test for exceptions in the traceback output.
+
+    >>> want = """\
+    ... Traceback (most recent call last):
+    ... foo.bar.FooBarErrorXX: requires at least one argument."""
+    >>> got = """\
+    ... Traceback (most recent call last):
+    ... FooBarError: requires at least one argument."""
+    >>> checker.check_output(want, got, EXCEPTION_2TO3)
+    False
+    >>> from doctest import Example
+    >>> example = Example('dummy', want)
+    >>> result = checker.output_difference(example, got, EXCEPTION_2TO3)
+    >>> output = """\
+    ... Expected:
+    ...     Traceback (most recent call last):
+    ...     foo.bar.FooBarErrorXX: requires at least one argument.
+    ... Got:
+    ...     Traceback (most recent call last):
+    ...     FooBarError: requires at least one argument."""
+    >>> hint = """
+    ...     ===============================================================
+    ...     HINT:
+    ...       You seem to test traceback output.
+    ...       The optionflag EXCEPTION_2TO3 is set.
+    ...       Do you use the full dotted name for the exception class name?
+    ...     ==============================================================="""
+    >>> if sys.version < '3':
+    ...     expected = output + hint
+    ... else:
+    ...     expected = output
+    >>> result == expected
+    True

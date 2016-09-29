@@ -16,6 +16,13 @@ import doctest
 
 
 EXCEPTION_2TO3 = doctest.register_optionflag('EXCEPTION_2TO3')
+EXCEPTION_2TO3_HINT = """
+===============================================================
+HINT:
+  You seem to test traceback output.
+  The optionflag EXCEPTION_2TO3 is set.
+  Do you use the full dotted name for the exception class name?
+==============================================================="""
 
 
 class OutputChecker(doctest.OutputChecker):
@@ -71,6 +78,12 @@ class OutputChecker(doctest.OutputChecker):
 
         # temporarily hack example with normalized want:
         example.want = want
+
+        if sys.version < '3':
+            if optionflags & EXCEPTION_2TO3:
+                if maybe_a_traceback(got) is not None:
+                    got += EXCEPTION_2TO3_HINT
+
         result = doctest.OutputChecker.output_difference(
             self, example, got, optionflags)
         example.want = original
@@ -80,19 +93,28 @@ class OutputChecker(doctest.OutputChecker):
 RENormalizing = OutputChecker
 
 
-def strip_dottedname_from_traceback(string):
-    # We might want to confirm more strictly were dealing with a traceback.
-    # We'll assume so for now.
+def maybe_a_traceback(string):
     if not string:
-        return string
+        return None
 
     lines = string.splitlines()
     last = lines[-1]
     words = last.split(' ')
     first = words[0]
     if not first.endswith(':'):
+        return None
+
+    return lines, last, words, first
+
+
+def strip_dottedname_from_traceback(string):
+    # We might want to confirm more strictly were dealing with a traceback.
+    # We'll assume so for now.
+    maybe = maybe_a_traceback(string)
+    if maybe is None:
         return string
 
+    lines, last, words, first = maybe
     name = first.split('.')[-1]
     words[0] = name
     last = ' '.join(words)
