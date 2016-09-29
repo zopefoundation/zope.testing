@@ -19,41 +19,33 @@
 """Setup for zope.testing package
 """
 import os
-import sys
 
 from setuptools import setup
 
-if sys.version > '3':
-    extras = dict(
-    use_2to3 = True,
-    convert_2to3_doctests = ['src/zope/testing/doctest.txt',
-                             'src/zope/testing/formparser.txt',
-                             'src/zope/testing/module.txt',
-                             'src/zope/testing/setupstack.txt',
-                             ],
-    )
-else:
-    extras = {}
 
 def read(*rnames):
     with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
         return f.read()
 
-chapters = [read((os.path.join('src', 'zope', 'testing', name)))
-                for name in [
-                    'formparser.txt',
-                    'loggingsupport.txt',
-                    'renormalizing.txt',
-                    'setupstack.txt',
-                    'wait.txt',
-                    'doctestcase.txt',
-                ]]
 
-long_description='\n\n'.join(
+chapters = [
+    read((os.path.join('src', 'zope', 'testing', name)))
+    for name in [
+        'formparser.txt',
+        'loggingsupport.txt',
+        'renormalizing.txt',
+        'setupstack.txt',
+        'wait.txt',
+        'doctestcase.txt',
+    ]]
+
+
+long_description = '\n\n'.join(
     [read('README.rst')] +
     chapters +
     [read('CHANGES.rst')]
     )
+
 
 setup(
     name='zope.testing',
@@ -82,17 +74,16 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Testing",
         ],
-
-    packages=["zope",
-              "zope.testing",
-             ],
-    package_dir = {'': 'src'},
-    namespace_packages=['zope',],
-    install_requires = ['setuptools',
-                        'zope.exceptions',
-                        'zope.interface'],
-    include_package_data = True,
-    zip_safe = False,
-    test_suite = 'zope.testing.tests.test_suite',
-    **extras
+    packages=[
+        "zope",
+        "zope.testing"],
+    package_dir={'': 'src'},
+    namespace_packages=['zope'],
+    install_requires=[
+        'setuptools',
+        'zope.exceptions',
+        'zope.interface'],
+    include_package_data=True,
+    zip_safe=False,
+    test_suite='zope.testing.tests.test_suite',
 )

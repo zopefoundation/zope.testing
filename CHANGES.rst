@@ -8,6 +8,7 @@ Changes
 
 - Add support for Python 3.5.
 
+- Cleaned up useless 2to3 conversion.
 
 4.5.0 (2015-09-02)
 ------------------
@@ -481,5 +482,5 @@ Changes
 2.0 (2006-01-05)
 ----------------
 
-- Release a separate project corresponding to the version of ``zope.testing`` 
+- Release a separate project corresponding to the version of ``zope.testing``
   shipped as part of the Zope 3.2.0 release.
