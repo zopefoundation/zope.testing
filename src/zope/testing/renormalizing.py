@@ -16,7 +16,7 @@ import doctest
 
 
 EXCEPTION_2TO3 = doctest.register_optionflag('EXCEPTION_2TO3')
-EXCEPTION_2TO3_HINT = """
+EXCEPTION_2TO3_HINT = """\
 ===============================================================
 HINT:
   You seem to test traceback output.
