@@ -12,7 +12,6 @@
 #
 ##############################################################################
 import sys
-import re
 import doctest
 
 
@@ -99,18 +98,15 @@ class OutputChecker(doctest.OutputChecker):
 RENormalizing = OutputChecker
 
 
-_TRACEBACK_RE = re.compile(
-    r"Traceback \((most recent call last|innermost last)\):")
-
-
 def maybe_a_traceback(string):
+    # We wanted to confirm more strictly we're dealing with a traceback here.
+    # However, doctest will preprocess exception output. It gets rid of the
+    # the stack trace and the "Traceback (most recent call last)"-part. It
+    # passes only the exception message to the checker.
     if not string:
         return None
 
     lines = string.splitlines()
-    if not _TRACEBACK_RE.match(lines[0]):
-        return None
-
     last = lines[-1]
     words = last.split(' ')
     first = words[0]
