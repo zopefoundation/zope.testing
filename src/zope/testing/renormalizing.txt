@@ -283,9 +283,11 @@ to be helpful by explaining how to test for exceptions in the traceback output.
     >>> hint = """\
     ...     ===============================================================
     ...     HINT:
-    ...       You seem to test traceback output.
     ...       The optionflag IGNORE_EXCEPTION_MODULE_IN_PYTHON2 is set.
-    ...       Do you use the full dotted name for the exception class name?
+    ...       You seem to test traceback output.
+    ...       If you are indeed, make sure to use the full dotted name of
+    ...       the exception class like Python 3 displays,
+    ...       even though you are running the tests in Python 2.
     ...     ==============================================================="""
     >>> if sys.version_info[0] < 3:
     ...     expected = output + hint

@@ -21,9 +21,11 @@ IGNORE_EXCEPTION_MODULE_IN_PYTHON2 = doctest.register_optionflag(
 IGNORE_EXCEPTION_MODULE_IN_PYTHON2_HINT = """\
 ===============================================================
 HINT:
-  You seem to test traceback output.
   The optionflag IGNORE_EXCEPTION_MODULE_IN_PYTHON2 is set.
-  Do you use the full dotted name for the exception class name?
+  You seem to test traceback output.
+  If you are indeed, make sure to use the full dotted name of
+  the exception class like Python 3 displays,
+  even though you are running the tests in Python 2.
 ==============================================================="""
 
 
