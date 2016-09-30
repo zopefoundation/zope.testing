@@ -25,6 +25,8 @@ HINT:
   If you are indeed, make sure to use the full dotted name of
   the exception class like Python 3 displays,
   even though you are running the tests in Python 2.
+  The exception message needs to be last line (and thus not
+  split over multiple lines).
 ==============================================================="""
 
 
