@@ -12,6 +12,7 @@
 #
 ##############################################################################
 import sys
+import re
 import doctest
 
 
@@ -96,11 +97,18 @@ class OutputChecker(doctest.OutputChecker):
 RENormalizing = OutputChecker
 
 
+_TRACEBACK_RE = re.compile(
+    r"Traceback \((most recent call last|innermost last)\):")
+
+
 def maybe_a_traceback(string):
     if not string:
         return None
 
     lines = string.splitlines()
+    if not _TRACEBACK_RE.match(lines[0]):
+        return None
+
     last = lines[-1]
     words = last.split(' ')
     first = words[0]
@@ -111,8 +119,6 @@ def maybe_a_traceback(string):
 
 
 def strip_dottedname_from_traceback(string):
-    # We might want to confirm more strictly were dealing with a traceback.
-    # We'll assume so for now.
     maybe = maybe_a_traceback(string)
     if maybe is None:
         return string
