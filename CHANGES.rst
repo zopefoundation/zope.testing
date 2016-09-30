@@ -10,12 +10,13 @@ Changes
 
 - Cleaned up useless 2to3 conversion.
 
-- Introduce optionflag ``EXCEPTION_2TO3`` to normalize exception class names
-  in traceback output. In Python 3 they are displayed as the full dotted name.
-  In Python 2 they are displayed as "just" the class name.  When running
-  doctests in Python 3, the optionflag will not have any effect, however when
-  running the same test in Python 2, the segments in the full dotted name
-  leading up to the class name are stripped away from the "expected" string.
+- Introduce option flag ``IGNORE_EXCEPTION_MODULE_IN_PYTHON2`` to normalize
+  exception class names in traceback output. In Python 3 they are displayed as
+  the full dotted name. In Python 2 they are displayed as "just" the class
+  name.  When running doctests in Python 3, the option flag will not have any
+  effect, however when running the same test in Python 2, the segments in the
+  full dotted name leading up to the class name are stripped away from the
+  "expected" string.
 
 4.5.0 (2015-09-02)
 ------------------
