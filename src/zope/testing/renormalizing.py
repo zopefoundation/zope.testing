@@ -15,12 +15,13 @@ import sys
 import doctest
 
 
-EXCEPTION_2TO3 = doctest.register_optionflag('EXCEPTION_2TO3')
-EXCEPTION_2TO3_HINT = """\
+IGNORE_EXCEPTION_MODULE_IN_PYTHON2 = doctest.register_optionflag(
+    'IGNORE_EXCEPTION_MODULE_IN_PYTHON2')
+IGNORE_EXCEPTION_MODULE_IN_PYTHON2_HINT = """\
 ===============================================================
 HINT:
   You seem to test traceback output.
-  The optionflag EXCEPTION_2TO3 is set.
+  The optionflag IGNORE_EXCEPTION_MODULE_IN_PYTHON2 is set.
   Do you use the full dotted name for the exception class name?
 ==============================================================="""
 
@@ -54,7 +55,7 @@ class OutputChecker(doctest.OutputChecker):
             got = transformer(got)
 
         if sys.version_info[0] < 3:
-            if optionflags & EXCEPTION_2TO3:
+            if optionflags & IGNORE_EXCEPTION_MODULE_IN_PYTHON2:
                 want = strip_dottedname_from_traceback(want)
 
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
@@ -82,9 +83,9 @@ class OutputChecker(doctest.OutputChecker):
         example.want = want
 
         if sys.version_info[0] < 3:
-            if optionflags & EXCEPTION_2TO3:
+            if optionflags & IGNORE_EXCEPTION_MODULE_IN_PYTHON2:
                 if maybe_a_traceback(got) is not None:
-                    got += EXCEPTION_2TO3_HINT
+                    got += IGNORE_EXCEPTION_MODULE_IN_PYTHON2_HINT
 
         result = doctest.OutputChecker.output_difference(
             self, example, got, optionflags)

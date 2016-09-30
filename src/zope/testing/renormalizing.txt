@@ -236,7 +236,8 @@ Combining a checker with something else does not work:
 
 Using the 2to3 exception normalization:
 
-    >>> from zope.testing.renormalizing import EXCEPTION_2TO3
+    >>> from zope.testing.renormalizing import (
+    ...     IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
     >>> checker = OutputChecker()
     >>> want = """\
     ... Traceback (most recent call last):
@@ -244,7 +245,8 @@ Using the 2to3 exception normalization:
     >>> got = """\
     ... Traceback (most recent call last):
     ... FooBarError: requires at least one argument."""
-    >>> result = checker.check_output(want, got, EXCEPTION_2TO3)
+    >>> result = checker.check_output(
+    ...     want, got, IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
     >>> import sys
     >>> if sys.version_info[0] < 3:
     ...     expected = True
@@ -264,11 +266,12 @@ to be helpful by explaining how to test for exceptions in the traceback output.
     ... Traceback (most recent call last):
     ... FooBarError: requires at least one argument.
     ... """
-    >>> checker.check_output(want, got, EXCEPTION_2TO3)
+    >>> checker.check_output(want, got, IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
     False
     >>> from doctest import Example
     >>> example = Example('dummy', want)
-    >>> result = checker.output_difference(example, got, EXCEPTION_2TO3)
+    >>> result = checker.output_difference(
+    ...     example, got, IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
     >>> output = """\
     ... Expected:
     ...     Traceback (most recent call last):
@@ -281,7 +284,7 @@ to be helpful by explaining how to test for exceptions in the traceback output.
     ...     ===============================================================
     ...     HINT:
     ...       You seem to test traceback output.
-    ...       The optionflag EXCEPTION_2TO3 is set.
+    ...       The optionflag IGNORE_EXCEPTION_MODULE_IN_PYTHON2 is set.
     ...       Do you use the full dotted name for the exception class name?
     ...     ==============================================================="""
     >>> if sys.version_info[0] < 3:
