@@ -246,7 +246,7 @@ Using the 2to3 exception normalization:
     ... FooBarError: requires at least one argument."""
     >>> result = checker.check_output(want, got, EXCEPTION_2TO3)
     >>> import sys
-    >>> if sys.version < '3':
+    >>> if sys.version_info[0] < 3:
     ...     expected = True
     ... else:
     ...     expected = False
@@ -284,7 +284,7 @@ to be helpful by explaining how to test for exceptions in the traceback output.
     ...       The optionflag EXCEPTION_2TO3 is set.
     ...       Do you use the full dotted name for the exception class name?
     ...     ==============================================================="""
-    >>> if sys.version < '3':
+    >>> if sys.version_info[0] < 3:
     ...     expected = output + hint
     ... else:
     ...     expected = output

@@ -53,7 +53,7 @@ class OutputChecker(doctest.OutputChecker):
             want = transformer(want)
             got = transformer(got)
 
-        if sys.version < '3':
+        if sys.version_info[0] < 3:
             if optionflags & EXCEPTION_2TO3:
                 want = strip_dottedname_from_traceback(want)
 
@@ -81,7 +81,7 @@ class OutputChecker(doctest.OutputChecker):
         # temporarily hack example with normalized want:
         example.want = want
 
-        if sys.version < '3':
+        if sys.version_info[0] < 3:
             if optionflags & EXCEPTION_2TO3:
                 if maybe_a_traceback(got) is not None:
                     got += EXCEPTION_2TO3_HINT

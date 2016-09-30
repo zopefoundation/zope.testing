@@ -55,7 +55,7 @@ def test_suite():
 
     if sys.version_info[:2] >= (2, 7):
         suite.addTests(doctest.DocFileSuite('doctestcase.txt'))
-    if sys.version < '3':
+    if sys.version_info[0] < 3:
         suite.addTests(doctest.DocTestSuite('zope.testing.server'))
         suite.addTests(doctest.DocFileSuite('formparser.txt'))
     suite.addTest(
