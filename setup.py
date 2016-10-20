@@ -59,7 +59,7 @@ long_description = '\n\n'.join(
     chapters +
     [read('CHANGES.rst')]
 )
-
+keywords = "zope testing doctest RENormalizing OutputChecker timeout logging"
 
 setup(
     name='zope.testing',
@@ -88,6 +88,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Testing",
     ],
+    keywords=keywords,
     packages=[
         "zope",
         "zope.testing"],
