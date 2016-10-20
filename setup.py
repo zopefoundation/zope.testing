@@ -58,7 +58,7 @@ long_description = '\n\n'.join(
     [read('README.rst')] +
     chapters +
     [read('CHANGES.rst')]
-    )
+)
 
 
 setup(
@@ -87,7 +87,7 @@ setup(
         "Framework :: Zope3",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Testing",
-        ],
+    ],
     packages=[
         "zope",
         "zope.testing"],
