@@ -1,7 +1,7 @@
 Changes
 =======
 
-4.6.0 (unreleased)
+4.6.0 (2016-10-20)
 ------------------
 
 - Introduce option flag ``IGNORE_EXCEPTION_MODULE_IN_PYTHON2`` to normalize
