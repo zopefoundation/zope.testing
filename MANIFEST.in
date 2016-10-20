@@ -4,4 +4,6 @@ include bootstrap.py
 include buildout.cfg
 include tox.ini
 
-recursive-include src *
+exclude appveyor.yml
+
+recursive-include src *.py *.txt
