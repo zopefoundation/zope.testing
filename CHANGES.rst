@@ -4,12 +4,6 @@ Changes
 4.6.0 (unreleased)
 ------------------
 
-- Drop support for Python 2.6 and 3.2.
-
-- Add support for Python 3.5.
-
-- Cleaned up useless 2to3 conversion.
-
 - Introduce option flag ``IGNORE_EXCEPTION_MODULE_IN_PYTHON2`` to normalize
   exception class names in traceback output. In Python 3 they are displayed as
   the full dotted name. In Python 2 they are displayed as "just" the class
@@ -17,6 +11,12 @@ Changes
   effect, however when running the same test in Python 2, the segments in the
   full dotted name leading up to the class name are stripped away from the
   "expected" string.
+
+- Drop support for Python 2.6 and 3.2.
+
+- Add support for Python 3.5.
+
+- Cleaned up useless 2to3 conversion.
 
 4.5.0 (2015-09-02)
 ------------------
