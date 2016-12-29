@@ -31,7 +31,9 @@ def test_suite():
             'module.txt',
             # Python 3.3 changed exception messaging:
             #   https://bugs.launchpad.net/zope.testing/+bug/1055720
+            # and then Python 3.6 introduced ImportError subclasses
             checker=renormalizing.RENormalizing([
+                (re.compile('ModuleNotFoundError:'), 'ImportError:'),
                 (re.compile(
                     "No module named '?zope.testing.unlikelymodulename'?"),
                  'No module named unlikelymodulename'),

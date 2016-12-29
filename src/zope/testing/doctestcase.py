@@ -179,7 +179,7 @@ def docteststring(test, optionflags=0, checker=None, name=None):
 
 string = docteststring
 
-_not_word = re.compile('\W')
+_not_word = re.compile(r'\W')
 def doctestfile(path, optionflags=0, checker=None):
     """Define a doctest from a test file within a unittest.TestCase.
 
