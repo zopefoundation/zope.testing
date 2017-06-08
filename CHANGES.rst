@@ -7,6 +7,9 @@ Changes
 - Remove dependencies on ``zope.interface`` and ``zope.exceptions``;
   they're not used here.
 
+- Remove use of 2to3 for outdated versions of PyPy3, letting us build
+  universal wheels.
+
 
 4.6.1 (2017-01-04)
 ------------------
