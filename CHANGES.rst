@@ -4,7 +4,8 @@ Changes
 4.6.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove dependencies on ``zope.interface`` and ``zope.exceptions``;
+  they're not used here.
 
 
 4.6.1 (2017-01-04)
