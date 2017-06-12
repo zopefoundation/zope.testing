@@ -31,7 +31,8 @@ if platform.python_implementation() == 'PyPy' \
             'src/zope/testing/doctest.txt',
             'src/zope/testing/formparser.txt',
             'src/zope/testing/module.txt',
-            'src/zope/testing/setupstack.txt'],
+            'src/zope/testing/setupstack.txt',
+        ],
     )
 else:
     extras = {}
@@ -51,7 +52,8 @@ chapters = [
         'setupstack.txt',
         'wait.txt',
         'doctestcase.txt',
-    ]]
+    ]
+]
 
 
 long_description = '\n\n'.join(
@@ -92,13 +94,17 @@ setup(
     keywords=keywords,
     packages=[
         "zope",
-        "zope.testing"],
+        "zope.testing",
+    ],
     package_dir={'': 'src'},
     namespace_packages=['zope'],
     install_requires=[
         'setuptools',
-        'zope.exceptions',
-        'zope.interface'],
+    ],
+    extras_require={
+        'test': [
+        ],
+    },
     include_package_data=True,
     zip_safe=False,
     test_suite='zope.testing.tests.test_suite',

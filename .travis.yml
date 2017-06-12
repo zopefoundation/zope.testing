@@ -9,7 +9,7 @@ python:
     - pypy
     - pypy3
 install:
-    - pip install .
+    - pip install -e .[test]
 script:
     - python setup.py -q test -q
 notifications:
