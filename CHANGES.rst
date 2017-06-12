@@ -1,7 +1,7 @@
 Changes
 =======
 
-4.6.2 (unreleased)
+4.6.2 (2017-06-12)
 ------------------
 
 - Remove dependencies on ``zope.interface`` and ``zope.exceptions``;
