@@ -6,7 +6,7 @@
     :target: https://pypi.python.org/pypi/zope.testing/
     :alt: Latest Version
 
-.. image:: https://travis-ci.org/zopefoundation/zope.testing.png?branch=master
+.. image:: https://travis-ci.org/zopefoundation/zope.testing.svg?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.testing
 
 .. image:: https://readthedocs.org/projects/zopetesting/badge/?version=latest
