@@ -1,10 +1,14 @@
 Changes
 =======
 
-4.6.3 (unreleased)
+4.7.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+New Features:
+
+- Add doctest output output checker ``LiteralsOutputChecker`` which allows to
+  remove unicode and bytes prefixes from string literals in doctests. Inspired
+  by pytest.
 
 
 4.6.2 (2017-06-12)

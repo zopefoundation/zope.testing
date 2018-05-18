@@ -11,12 +11,13 @@
 ##############################################################################
 """Tests for the testing framework.
 """
-import doctest
-import sys
-import re
-import unittest
 from zope.testing import renormalizing
 from zope.testing.test_renormalizing import Exception2To3
+from zope.testing.test_stringliterals import TestLiteralsOutputChecker
+import doctest
+import re
+import sys
+import unittest
 
 def print_(*args):
     sys.stdout.write(' '.join(map(str, args))+'\n')
@@ -60,6 +61,8 @@ def test_suite():
     if sys.version_info[0] < 3:
         suite.addTests(doctest.DocTestSuite('zope.testing.server'))
         suite.addTests(doctest.DocFileSuite('formparser.txt'))
-    suite.addTest(
-        unittest.makeSuite(Exception2To3))
+    suite.addTests([
+        unittest.makeSuite(Exception2To3),
+        unittest.makeSuite(TestLiteralsOutputChecker),
+    ])
     return suite

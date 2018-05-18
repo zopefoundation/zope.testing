@@ -58,6 +58,10 @@ setupstack
   A simple framework for automating doctest set-up and tear-down.
   See setupstack.txt.
 
+stringliterals
+  Bytes / unicode normalizing output checker.
+  Useful for doctests under python 2 and 3.
+
 wait
   A small utility for dealing with timing non-determinism
   See wait.txt.
