@@ -31,7 +31,7 @@ HINT:
 
 
 class OutputChecker(doctest.OutputChecker):
-    """Pattern-normalizing outout checker
+    """Pattern-normalizing output checker
     """
 
     def __init__(self, patterns=None):
