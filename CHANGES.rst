@@ -4,7 +4,9 @@ Changes
 4.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add support for Python 3.8.
+
+- Drop support for Python 3.3, 3.4, and 3.5.
 
 
 4.7 (2018-10-04)
