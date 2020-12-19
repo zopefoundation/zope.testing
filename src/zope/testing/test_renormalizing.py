@@ -14,6 +14,15 @@ class Exception2To3(unittest.TestCase):
             FooBarError: requires at least one argument.""")
         self.assertEqual(expected, strip_dottedname_from_traceback(string))
 
+    def test_strip_dottedname_without_exception_arguments(self):
+        string = textwrap.dedent("""\
+            Traceback (most recent call last):
+            foo.bar.FooBarError""")
+        expected = textwrap.dedent("""\
+            Traceback (most recent call last):
+            FooBarError""")
+        self.assertEqual(expected, strip_dottedname_from_traceback(string))
+
     def test_no_dots_in_name(self):
         string = textwrap.dedent("""\
             Traceback (most recent call last):

@@ -110,9 +110,11 @@ def maybe_a_traceback(string):
 
     lines = string.splitlines()
     last = lines[-1]
+    if not last:
+        return None
     words = last.split(' ')
     first = words[0]
-    if not first.endswith(':'):
+    if len(words) > 1 and not first.endswith(':'):
         return None
 
     return lines, last, words, first
