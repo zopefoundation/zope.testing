@@ -1,9 +1,40 @@
-import unittest
+import sys
 import textwrap
-from zope.testing.renormalizing import strip_dottedname_from_traceback
+import unittest
+
+from zope.testing.renormalizing import (
+    is_dotted_name,
+    strip_dottedname_from_traceback,
+)
 
 
 class Exception2To3(unittest.TestCase):
+
+    def test_is_dotted_name_ascii_no_dots(self):
+        self.assertTrue(is_dotted_name('FooBarError'))
+
+    def test_is_dotted_name_ascii_dots(self):
+        self.assertTrue(is_dotted_name('foo.bar.FooBarError'))
+
+    def test_is_dotted_name_unicode_no_dots(self):
+        result = is_dotted_name(u'FooB\xe1rError')
+        if sys.version_info[0] >= 3:
+            self.assertTrue(result)
+        else:
+            self.assertFalse(result)
+
+    def test_is_dotted_name_unicode_dots(self):
+        result = is_dotted_name(u'foo.b\xe1r.FooB\xe1rError')
+        if sys.version_info[0] >= 3:
+            self.assertTrue(result)
+        else:
+            self.assertFalse(result)
+
+    def test_is_dotted_name_ellipsis(self):
+        self.assertFalse(is_dotted_name('...'))
+
+    def test_is_dotted_name_not_identifier(self):
+        self.assertFalse(is_dotted_name('foo=bar'))
 
     def test_strip_dottedname(self):
         string = textwrap.dedent("""\
@@ -49,6 +80,16 @@ class Exception2To3(unittest.TestCase):
     def test_input_spaces(self):
         string = '   '
         expected = '   '
+        self.assertEqual(expected, strip_dottedname_from_traceback(string))
+
+    def test_input_ellipsis(self):
+        string = '...'
+        expected = '...'
+        self.assertEqual(expected, strip_dottedname_from_traceback(string))
+
+    def test_input_last_line_not_dotted_name(self):
+        string = 'foo=bar'
+        expected = 'foo=bar'
         self.assertEqual(expected, strip_dottedname_from_traceback(string))
 
     def test_last_line_empty(self):
