@@ -13,6 +13,7 @@
 ##############################################################################
 import logging
 
+
 class Handler(logging.Handler):
 
     def __init__(self, *names, **kw):
@@ -46,15 +47,16 @@ class Handler(logging.Handler):
 
     def __str__(self):
         return '\n'.join(
-            [("%s %s\n  %s" %
-              (record.name, record.levelname,
-               '\n'.join([line
-                          for line in record.getMessage().split('\n')
-                          if line.strip()])
-               )
-              )
-              for record in self.records]
-              )
+            "%s %s\n  %s" % (
+                record.name, record.levelname,
+               '\n'.join(
+                   line
+                   for line in record.getMessage().split('\n')
+                   if line.strip()
+               ),
+            )
+            for record in self.records
+        )
 
 
 class InstalledHandler(Handler):

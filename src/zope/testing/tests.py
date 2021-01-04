@@ -18,8 +18,10 @@ import unittest
 from zope.testing import renormalizing
 from zope.testing.test_renormalizing import Exception2To3
 
+
 def print_(*args):
     sys.stdout.write(' '.join(map(str, args))+'\n')
+
 
 def setUp(test):
     test.globs['print_'] = print_

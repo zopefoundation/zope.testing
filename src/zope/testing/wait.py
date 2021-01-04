@@ -14,6 +14,7 @@
 
 import time
 
+
 class Wait:
 
     class TimeOutWaitingFor(Exception):
@@ -24,7 +25,7 @@ class Wait:
 
     def __init__(self,
                  timeout=None, wait=None, exception=None,
-                 getnow=(lambda : time.time), getsleep=(lambda : time.sleep)):
+                 getnow=lambda: time.time, getsleep=lambda: time.sleep):
 
         if timeout is not None:
             self.timeout = timeout
@@ -63,6 +64,7 @@ class Wait:
                     message or
                     getattr(func, '__doc__') or
                     getattr(func, '__name__')
-                    )
+                )
+
 
 wait = Wait()

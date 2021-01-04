@@ -35,7 +35,9 @@ addCleanup::
   addCleanUp(pigRegistry._clear)
 
 """
+
 _cleanups = []
+
 
 def addCleanUp(func, args=(), kw={}):
     """Register a cleanup routines
@@ -44,6 +46,7 @@ def addCleanUp(func, args=(), kw={}):
     Optional argument tuple and keyword arguments may be passed.
     """
     _cleanups.append((func, args, kw))
+
 
 class CleanUp(object):
     """Mix-in class providing clean-up setUp and tearDown routines."""
@@ -59,5 +62,6 @@ def cleanUp():
     """Clean up global data."""
     for func, args, kw in _cleanups:
         func(*args, **kw)
+
 
 setUp = tearDown = cleanUp

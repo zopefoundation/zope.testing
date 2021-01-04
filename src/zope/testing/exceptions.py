@@ -16,9 +16,11 @@
 
 import warnings
 # Tell people to use the builtin module instead.
-warnings.warn('zope.testing.exceptions is deprecated in favour of '
-              'zope.testrunner.exceptions', DeprecationWarning,
-               stacklevel=2)
+warnings.warn(
+    'zope.testing.exceptions is deprecated in favour of '
+    'zope.testrunner.exceptions', DeprecationWarning,
+    stacklevel=2)
+
 
 class DocTestFailureException(AssertionError):
     """Use custom exception for doctest unit test failures"""

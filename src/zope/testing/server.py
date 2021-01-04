@@ -11,7 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Functional test server to interactively inspect the state of the application.
+"""Functional test server to interactively inspect the state of the system.
 
 You can run it in a functional test by adding a line like this:
 
@@ -22,10 +22,13 @@ in the browser, the username and password are optional. When you're
 done with inspecting the application press Ctrl+C to continue with the
 functional test.
 """
-import urlparse
-import webbrowser
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from __future__ import print_function
+
 import sys
+import webbrowser
+import urlparse
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+# XXX: I don't think this module works on Python 3!
 
 
 def makeRequestHandler(http, user=None, password=None):
@@ -54,7 +57,7 @@ def makeRequestHandler(http, user=None, password=None):
                 while True:
                     try:
                         char = self.rfile.read()
-                    except:
+                    except Exception:  # XXX: should probably be IOError?
                         break
                     request += char
 
@@ -93,7 +96,7 @@ def startServer(http, url, user=None, password=None, port=8000):
         httpd = HTTPServer(server_address, requestHandler)
         # XXX we rely on browser being slower than our server
         webbrowser.open(url)
-        print >> sys.stderr, 'Starting HTTP server...'
+        print('Starting HTTP server...', file=sys.stderr)
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print >> sys.stderr, 'Stopped HTTP server.'
+        print('Stopped HTTP server.', file=sys.stderr)

@@ -36,7 +36,7 @@ class FormParser(object):
         self._parser.handle_starttag = self._handle_starttag
         self._parser.handle_startendtag = self._handle_starttag
         self._buffer = []
-        self.current = None # current form
+        self.current = None  # current form
         self.forms = FormCollection()
 
     def parse(self):

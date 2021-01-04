@@ -15,6 +15,7 @@
 """
 import logging
 
+
 class Handler(logging.Handler):
     """Handler for use with unittest.TestCase objects.
 
