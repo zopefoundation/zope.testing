@@ -12,7 +12,7 @@ with-docs = false
 with-sphinx-doctests = false
 
 [coverage]
-fail-under = 0
+fail-under = 55
 
 [manifest]
 additional-rules = [
