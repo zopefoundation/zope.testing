@@ -4,6 +4,7 @@ include *.rst
 include *.txt
 include buildout.cfg
 include tox.ini
+include appveyor.yml
 
 recursive-include src *.pt
 recursive-include src *.py

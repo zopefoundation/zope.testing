@@ -2,10 +2,10 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "b1a0ce9bae9fa73cb69c0d922eb73d55bd5c3080"
+commit-id = "7b24599f594f681212874ad0fa1993b6d3bc34e9"
 
 [python]
-with-appveyor = false
+with-appveyor = true
 with-pypy = true
 with-legacy-python = true
 with-docs = false
