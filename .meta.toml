@@ -13,8 +13,3 @@ with-sphinx-doctests = false
 
 [coverage]
 fail-under = 55
-
-[manifest]
-additional-rules = [
-    "exclude appveyor.yml",
-    ]
