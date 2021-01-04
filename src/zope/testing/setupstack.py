@@ -21,13 +21,16 @@ import stat
 import tempfile
 import unittest
 
+
 key = '__' + __name__
+
 
 def globs(test):
     try:
         return test.globs
     except AttributeError:
         return test.__dict__
+
 
 def register(test, function, *args, **kw):
     tglobs = globs(test)
@@ -36,6 +39,7 @@ def register(test, function, *args, **kw):
         stack = tglobs[key] = []
     stack.append((function, args, kw))
 
+
 def tearDown(test):
     tglobs = globs(test)
     stack = tglobs.get(key)
@@ -43,12 +47,14 @@ def tearDown(test):
         f, p, k = stack.pop()
         f(*p, **k)
 
+
 def setUpDirectory(test):
     tmp = tempfile.mkdtemp()
     register(test, rmtree, tmp)
     here = os.getcwd()
     register(test, os.chdir, here)
     os.chdir(tmp)
+
 
 def rmtree(path):
     for path, dirs, files in os.walk(path, False):
@@ -62,14 +68,17 @@ def rmtree(path):
             os.rmdir(dname)
     os.rmdir(path)
 
+
 def context_manager(test, manager):
     result = manager.__enter__()
     register(test, manager.__exit__, None, None, None)
     return result
 
+
 def mock(test, *args, **kw):
     import mock as mock_module
     return context_manager(test, mock_module.patch(*args, **kw))
+
 
 class TestCase(unittest.TestCase):
 

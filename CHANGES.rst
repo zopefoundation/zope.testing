@@ -4,9 +4,9 @@ Changes
 4.8 (unreleased)
 ----------------
 
-- Add support for Python 3.8.
+- Add support for Python 3.8 and 3.9.
 
-- Drop support for Python 3.3, 3.4, and 3.5.
+- Drop support for Python 3.3 and 3.4.
 
 - Extend IGNORE_EXCEPTION_MODULE_IN_PYTHON2 to cover also exceptions without
   arguments (thus without a colon on the last line of the traceback output).

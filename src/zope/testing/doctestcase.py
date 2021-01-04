@@ -108,10 +108,12 @@ __all__ = ['doctestmethod', 'docteststring', 'doctestfile']
 
 _parser = doctest.DocTestParser()
 
+
 def _testify(name):
     if not name.startswith('test'):
         name = 'test_' + name
     return name
+
 
 def doctestmethod(test=None, optionflags=0, checker=None):
     """Define a doctest from a method within a unittest.TestCase.
@@ -133,7 +135,9 @@ def doctestmethod(test=None, optionflags=0, checker=None):
 
     return _doctestmethod(test, optionflags, checker)
 
+
 method = doctestmethod
+
 
 def _doctestmethod(test, optionflags, checker):
     doc = test.__doc__
@@ -154,6 +158,7 @@ def _doctestmethod(test, optionflags, checker):
     test_method.__name__ = _testify(name)
 
     return test_method
+
 
 def docteststring(test, optionflags=0, checker=None, name=None):
     """Define a doctest from a string within a unittest.TestCase.
@@ -177,9 +182,12 @@ def docteststring(test, optionflags=0, checker=None, name=None):
 
     return test_string
 
+
 string = docteststring
 
 _not_word = re.compile(r'\W')
+
+
 def doctestfile(path, optionflags=0, checker=None):
     """Define a doctest from a test file within a unittest.TestCase.
 
@@ -209,10 +217,12 @@ def doctestfile(path, optionflags=0, checker=None):
     def test_file(self):
         if isinstance(self, types.FunctionType):
             setup = self
+
             def test_file_w_setup(self):
                 setup(self)
                 _run_test(self, test, {}, name, path, optionflags, checker,
                           'test')
+
             test_file_w_setup.__name__ = _testify(setup.__name__)
             test_file_w_setup.filepath = path
             test_file_w_setup.filename = os.path.basename(path)
@@ -226,7 +236,9 @@ def doctestfile(path, optionflags=0, checker=None):
 
     return test_file
 
+
 file = doctestfile
+
 
 def doctestfiles(*paths, **kw):
     """Define doctests from test files in a decorated class.
@@ -258,12 +270,15 @@ def doctestfiles(*paths, **kw):
 
     return doctestfiles_
 
+
 files = doctestfiles
+
 
 def name_from_path(path):
     return _testify(
         _not_word.sub('_', os.path.splitext(os.path.basename(path))[0])
         )
+
 
 def _run_test(self, test, globs, name, path,
               optionflags, checker, testname='self', lineno=0):

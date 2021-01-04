@@ -104,6 +104,7 @@ class OutputChecker(doctest.OutputChecker):
 
         return result
 
+
 RENormalizing = OutputChecker
 
 
