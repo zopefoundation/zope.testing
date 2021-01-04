@@ -11,8 +11,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-import sys
 import doctest
+import re
+import sys
 
 
 IGNORE_EXCEPTION_MODULE_IN_PYTHON2 = doctest.register_optionflag(
@@ -58,11 +59,17 @@ class OutputChecker(doctest.OutputChecker):
             want = transformer(want)
             got = transformer(got)
 
+        if doctest.OutputChecker.check_output(self, want, got, optionflags):
+            return True
+
         if sys.version_info[0] < 3:
             if optionflags & IGNORE_EXCEPTION_MODULE_IN_PYTHON2:
                 want = strip_dottedname_from_traceback(want)
+                if doctest.OutputChecker.check_output(
+                        self, want, got, optionflags):
+                    return True
 
-        return doctest.OutputChecker.check_output(self, want, got, optionflags)
+        return False
 
     def output_difference(self, example, got, optionflags):
 
@@ -100,6 +107,19 @@ class OutputChecker(doctest.OutputChecker):
 RENormalizing = OutputChecker
 
 
+def is_dotted_name(name):
+    if sys.version_info[0] >= 3:
+        return (
+            name and
+            all(element.isidentifier() for element in name.split('.')))
+    else:
+        # Python 2 lacked str.isidentifier, but also restricted identifiers
+        # to ASCII so a regex match is straightforward.
+        match = re.match(
+            r'^(?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*$', name)
+        return match is not None
+
+
 def maybe_a_traceback(string):
     # We wanted to confirm more strictly we're dealing with a traceback here.
     # However, doctest will preprocess exception output. It gets rid of the
@@ -110,9 +130,20 @@ def maybe_a_traceback(string):
 
     lines = string.splitlines()
     last = lines[-1]
+    if not last:
+        return None
     words = last.split(' ')
     first = words[0]
-    if not first.endswith(':'):
+    if len(words) > 1 and not first.endswith(':'):
+        return None
+    # If IGNORE_EXCEPTION_MODULE_IN_PYTHON2 was applied to an entire file,
+    # then this may run on strings that aren't the exception message part of
+    # a traceback.  The doctest interface makes it impossible to detect this
+    # reasonably, so do our best to restrict this to only lines that start
+    # with something that looks like a Python dotted name.  It's best to
+    # apply IGNORE_EXCEPTION_MODULE_IN_PYTHON2 only to examples that need
+    # it.
+    if not is_dotted_name(first[:-1]):
         return None
 
     return lines, last, words, first

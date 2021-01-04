@@ -8,6 +8,9 @@ Changes
 
 - Drop support for Python 3.3, 3.4, and 3.5.
 
+- Extend IGNORE_EXCEPTION_MODULE_IN_PYTHON2 to cover also exceptions without
+  arguments (thus without a colon on the last line of the traceback output).
+
 
 4.7 (2018-10-04)
 ----------------
