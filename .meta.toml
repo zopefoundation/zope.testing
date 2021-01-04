@@ -16,5 +16,5 @@ fail-under = 55
 
 [manifest]
 additional-rules = [
-    "include *.yml",
+    "exclude appveyor.yml",
     ]
