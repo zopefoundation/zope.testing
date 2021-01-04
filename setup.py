@@ -88,6 +88,7 @@ setup(
     ],
     extras_require={
         'test': [
+            'zope.testrunner',
         ],
     },
     include_package_data=True,
