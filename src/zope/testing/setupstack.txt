@@ -224,7 +224,8 @@ In addition to a tearDown method, the class provides methods:
 
 Here's an example:
 
-    >>> open('t', 'w').close()
+    >>> os.listdir('.') != []
+    True
 
     >>> class MyTests(zope.testing.setupstack.TestCase):
     ...
@@ -259,5 +260,4 @@ Here's an example:
     ...     sys.modules['mock'] = old_mock
     ... else:
     ...     del sys.modules['mock']
-    >>> os.remove('t')
 
