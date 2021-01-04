@@ -13,3 +13,8 @@ with-sphinx-doctests = false
 
 [coverage]
 fail-under = 0
+
+[manifest]
+additional-rules = [
+    "include *.yml",
+    ]
