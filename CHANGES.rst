@@ -1,10 +1,10 @@
 Changes
 =======
 
-4.9 (unreleased)
+4.8.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Make ``setupstack.txt`` test work again if the current directory is empty.
 
 
 4.8 (2021-01-04)
