@@ -224,9 +224,6 @@ In addition to a tearDown method, the class provides methods:
 
 Here's an example:
 
-    >>> os.listdir('.') != []
-    True
-
     >>> class MyTests(zope.testing.setupstack.TestCase):
     ...
     ...     def setUp(self):
@@ -239,7 +236,8 @@ Here's an example:
     ...             print('done w test')
     ...
     ...     def test(self):
-    ...         print(os.listdir('.'))
+    ...         if here == os.getcwd():
+    ...             print('Failed to change directory')
 
 .. let's try it
 
@@ -249,7 +247,6 @@ Here's an example:
     >>> result = suite.run(unittest.TestResult())
     enter
     enter time.time {'return_value': 42}
-    []
     done w test
     exit (None, None, None) time.time {'return_value': 42}
     exit (None, None, None)
