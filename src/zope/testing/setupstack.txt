@@ -238,7 +238,6 @@ Here's an example:
     ...     def test(self):
     ...         if here == os.getcwd():
     ...             print('Failed to change directory')
-    ...         print(os.listdir('.'))
 
 .. let's try it
 
@@ -248,7 +247,6 @@ Here's an example:
     >>> result = suite.run(unittest.TestResult())
     enter
     enter time.time {'return_value': 42}
-    []
     done w test
     exit (None, None, None) time.time {'return_value': 42}
     exit (None, None, None)
