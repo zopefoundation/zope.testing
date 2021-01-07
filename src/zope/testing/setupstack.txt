@@ -224,8 +224,6 @@ In addition to a tearDown method, the class provides methods:
 
 Here's an example:
 
-    >>> curdir = os.getcwd()
-
     >>> class MyTests(zope.testing.setupstack.TestCase):
     ...
     ...     def setUp(self):
@@ -238,7 +236,7 @@ Here's an example:
     ...             print('done w test')
     ...
     ...     def test(self):
-    ...         if os.getcwd() == curdir:
+    ...         if here == os.getcwd():
     ...             print('Failed to change directory')
     ...         print(os.listdir('.'))
 
