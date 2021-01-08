@@ -1,8 +1,8 @@
 Changes
 =======
 
-4.8.1 (unreleased)
-------------------
+4.9 (2021-01-08)
+----------------
 
 - Make ``setupstack.txt`` test work again if the current directory is empty.
 
