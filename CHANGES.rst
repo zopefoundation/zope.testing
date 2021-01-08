@@ -2,7 +2,7 @@ Changes
 =======
 
 4.8.1 (unreleased)
-----------------
+------------------
 
 - Make ``setupstack.txt`` test work again if the current directory is empty.
 
