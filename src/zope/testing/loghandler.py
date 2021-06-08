@@ -14,6 +14,12 @@
 """logging handler for tests that check logging output.
 """
 import logging
+import warnings
+
+
+warnings.warn(
+    'zope.testing.loghandler.Handler is deprecated. It probably'
+    'does not work on Python 3.', DeprecationWarning, stacklevel=2)
 
 
 class Handler(logging.Handler):

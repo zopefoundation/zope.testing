@@ -18,16 +18,16 @@ class Exception2To3(unittest.TestCase):
 
     def test_is_dotted_name_unicode_no_dots(self):
         result = is_dotted_name(u'FooB\xe1rError')
-        if sys.version_info[0] >= 3:
+        if sys.version_info[0] >= 3:  # pragma: PY3
             self.assertTrue(result)
-        else:
+        else:  # pragma: PY2
             self.assertFalse(result)
 
     def test_is_dotted_name_unicode_dots(self):
         result = is_dotted_name(u'foo.b\xe1r.FooB\xe1rError')
-        if sys.version_info[0] >= 3:
+        if sys.version_info[0] >= 3:  # pragma: PY3
             self.assertTrue(result)
-        else:
+        else:  # pragma: PY2
             self.assertFalse(result)
 
     def test_is_dotted_name_ellipsis(self):

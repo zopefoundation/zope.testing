@@ -25,13 +25,23 @@ functional test.
 from __future__ import print_function
 
 import sys
+import warnings
 import webbrowser
-import urlparse
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 # XXX: I don't think this module works on Python 3!
 
+try:  # pragma: PY3
+    from urllib import parse as urlparse
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+except ImportError:  # pragma: PY2
+    import urlparse
+    from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
-def makeRequestHandler(http, user=None, password=None):
+
+def makeRequestHandler(http, user=None, password=None):  # pragma: PY2
+    warnings.warn(
+        'zope.testing.server.makeRequestHandler is deprecated. It probably'
+        'does not work on Python 3.', DeprecationWarning, stacklevel=2)
+
     class FunctionalTestRequestHandler(BaseHTTPRequestHandler):
 
         def do_GET(self):
@@ -88,7 +98,10 @@ def addPortToURL(url, port):
     return url
 
 
-def startServer(http, url, user=None, password=None, port=8000):
+def startServer(http, url, user=None, password=None, port=8000):  # pragma: PY2
+    warnings.warn(
+        'zope.testing.server.startServer is deprecated. It probably'
+        'does not work on Python 3.', DeprecationWarning, stacklevel=2)
     try:
         server_address = ('', port)
         requestHandler = makeRequestHandler(http, user, password)

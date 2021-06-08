@@ -62,7 +62,7 @@ class OutputChecker(doctest.OutputChecker):
         if doctest.OutputChecker.check_output(self, want, got, optionflags):
             return True
 
-        if sys.version_info[0] < 3:
+        if sys.version_info[0] < 3:  # pragma: PY2
             if optionflags & IGNORE_EXCEPTION_MODULE_IN_PYTHON2:
                 want = strip_dottedname_from_traceback(want)
                 if doctest.OutputChecker.check_output(
@@ -93,7 +93,7 @@ class OutputChecker(doctest.OutputChecker):
         # temporarily hack example with normalized want:
         example.want = want
 
-        if sys.version_info[0] < 3:
+        if sys.version_info[0] < 3:  # pragma: PY2
             if optionflags & IGNORE_EXCEPTION_MODULE_IN_PYTHON2:
                 if maybe_a_traceback(got) is not None:
                     got += IGNORE_EXCEPTION_MODULE_IN_PYTHON2_HINT
@@ -109,11 +109,11 @@ RENormalizing = OutputChecker
 
 
 def is_dotted_name(name):
-    if sys.version_info[0] >= 3:
+    if sys.version_info[0] >= 3:  # pragma: PY3
         return (
             name and
             all(element.isidentifier() for element in name.split('.')))
-    else:
+    else:  # pragma: PY2
         # Python 2 lacked str.isidentifier, but also restricted identifiers
         # to ASCII so a regex match is straightforward.
         match = re.match(

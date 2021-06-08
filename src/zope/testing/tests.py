@@ -53,15 +53,14 @@ def test_suite():
                 # For Python 3.5
                 (re.compile('zope.testing.wait.Wait.TimeOutWaitingFor: '),
                  'TimeOutWaitingFor: '),
-                ])
-            ),
-        ))
+            ])
+        ),
+    ))
 
-    if sys.version_info[:2] >= (2, 7):
-        suite.addTests(doctest.DocFileSuite('doctestcase.txt'))
-    if sys.version_info[0] < 3:
-        suite.addTests(doctest.DocTestSuite('zope.testing.server'))
+    suite.addTests(doctest.DocFileSuite('doctestcase.txt'))
+    suite.addTests(doctest.DocFileSuite('cleanup.txt'))
+    suite.addTest(unittest.makeSuite(Exception2To3))
+    suite.addTests(doctest.DocTestSuite('zope.testing.server'))
+    if sys.version_info[0] < 3:  # pragma: PY2
         suite.addTests(doctest.DocFileSuite('formparser.txt'))
-    suite.addTest(
-        unittest.makeSuite(Exception2To3))
     return suite

@@ -228,6 +228,7 @@ Here's an example:
     ...
     ...     def setUp(self):
     ...         self.setUpDirectory()
+    ...         os.mkdir('example')
     ...         self.context_manager(manager)
     ...         self.mock("time.time", return_value=42)
     ...
