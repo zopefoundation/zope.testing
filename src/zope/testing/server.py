@@ -40,7 +40,7 @@ except ImportError:  # pragma: PY2
 def makeRequestHandler(http, user=None, password=None):  # pragma: PY2
     warnings.warn(
         'zope.testing.server.makeRequestHandler is deprecated. It probably'
-        'does not work on Python 3.', DeprecationWarning, stacklevel=2)
+        ' does not work on Python 3.', DeprecationWarning, stacklevel=2)
 
     class FunctionalTestRequestHandler(BaseHTTPRequestHandler):
 
@@ -101,7 +101,7 @@ def addPortToURL(url, port):
 def startServer(http, url, user=None, password=None, port=8000):  # pragma: PY2
     warnings.warn(
         'zope.testing.server.startServer is deprecated. It probably'
-        'does not work on Python 3.', DeprecationWarning, stacklevel=2)
+        ' does not work on Python 3.', DeprecationWarning, stacklevel=2)
     try:
         server_address = ('', port)
         requestHandler = makeRequestHandler(http, user, password)

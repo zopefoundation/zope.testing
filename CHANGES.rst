@@ -4,8 +4,10 @@ Changes
 4.10 (unreleased)
 -----------------
 
-- Improve test coverage show deprecation warnings when importing modules which
-  are not ported to Python 3.
+- Show deprecation warnings when importing modules which are not ported to
+  Python 3.
+
+- Improve test coverage.
 
 
 4.9 (2021-01-08)

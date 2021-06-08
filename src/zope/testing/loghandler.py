@@ -19,7 +19,7 @@ import warnings
 
 warnings.warn(
     'zope.testing.loghandler.Handler is deprecated. It probably'
-    'does not work on Python 3.', DeprecationWarning, stacklevel=2)
+    ' does not work on Python 3.', DeprecationWarning, stacklevel=2)
 
 
 class Handler(logging.Handler):
