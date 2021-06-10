@@ -22,7 +22,7 @@ You can define doctests in 4 ways:
 
    >>> __name__ = 'tests'
 
-Here are some examples::
+Here are some examples (they are tested via doctestcase.txt)::
 
     from zope.testing import doctestcase
     import doctest

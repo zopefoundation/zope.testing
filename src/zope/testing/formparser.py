@@ -13,6 +13,12 @@ __docformat__ = "reStructuredText"
 
 import HTMLParser
 import urlparse
+import warnings
+
+
+warnings.warn(
+    'zope.testing.formparser is deprecated. It does not work on Python 3.',
+    DeprecationWarning, stacklevel=2)
 
 
 def parse(data, base=None):

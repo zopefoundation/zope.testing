@@ -56,7 +56,17 @@ Here are some examples::
     ...     @doctestcase.doctestfile('test4.txt')
     ...     def test4(self):
     ...         self.x = 5
+    ...
 
+    >>> class MissingDocstring(unittest.TestCase):  #doctest: +ELLIPSIS
+    ...     """A doctest method has to have a docstring."""
+    ...
+    ...     @doctestcase.doctestmethod(optionflags=doctest.ELLIPSIS)
+    ...     def test55(self):
+    ...         pass
+    Traceback (most recent call last):
+    ...
+    ValueError: (<function ...test55 at 0x...>, 'has no docstring')
     >>> import sys
 
     >>> @doctestcase.doctestfiles('loggingsupport.txt', 'renormalizing.txt')
