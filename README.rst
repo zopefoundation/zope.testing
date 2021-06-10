@@ -72,7 +72,5 @@ doctestcase
 Getting started developing zope.testing
 =======================================
 
-zope.testing uses buildout.  To start, run ``python bootstrap.py``.  It will
-create a number of directories and the ``bin/buildout`` script.  Next, run
-``bin/buildout``.  It will create a test script for you.  Now, run ``bin/test``
-to run the zope.testing test suite.
+``zope.testing`` uses ``tox``.  To start, install ``tox`` using ``pip install tox``.
+Now, run ``tox`` to run the ``zope.testing`` test suite.
