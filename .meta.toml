@@ -2,18 +2,18 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "f9baadf16d8091d825297dc11596d4c736ffa908"
+commit-id = "5b60e8235223c5c73427d4cdf66be5fb2cce3cea"
 
 [python]
-with-appveyor = false
 with-pypy = true
 with-legacy-python = true
-with-docs = false
-with-sphinx-doctests = false
+with-docs = true
+with-sphinx-doctests = true
 with-windows = true
+with-future-python = false
 
 [coverage]
-fail-under = 99
+fail-under = 98
 
 [tox]
 use-flake8 = true
@@ -21,6 +21,8 @@ use-flake8 = true
 [manifest]
 additional-rules = [
     "recursive-include src *.txt",
+    "include .readthedocs.yml",
+    "include tox.ini"
     ]
 
 [coverage-run]
@@ -28,7 +30,6 @@ additional-config = [
     "# omit files which just contain BBB code or are not Python 3 compatible:",
     "omit =",
     "    src/zope/testing/exceptions.py",
-    "    src/zope/testing/formparser.py",
     "    src/zope/testing/loghandler.py",
     "    src/zope/testing/testrunner.py",
     ]

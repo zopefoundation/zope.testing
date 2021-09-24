@@ -10,19 +10,6 @@ on:
   # Allow to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-env:
-  # Weirdly, this has to be a top-level key, not ``defaults.env``
-  PYTHONHASHSEED: 8675309
-  PYTHONDONTWRITEBYTECODE: 1
-  PYTHONDEVMODE: 1
-  ZOPE_INTERFACE_STRICT_IRO: 1
-
-  PIP_UPGRADE_STRATEGY: eager
-  # Don't get warnings about Python 2 support being deprecated. We
-  # know. The env var works for pip 20.
-  PIP_NO_PYTHON_VERSION_WARNING: 1
-  PIP_NO_WARN_SCRIPT_LOCATION: 1
-
 jobs:
   build:
     strategy:
@@ -43,9 +30,11 @@ jobs:
         - ["3.9",   "py39"]
         - ["pypy2", "pypy"]
         - ["pypy3", "pypy3"]
+        - ["3.8",   "docs"]
         - ["3.8",   "coverage"]
         exclude:
           - { os: windows, config: ["3.8",   "lint"] }
+          - { os: windows, config: ["3.8",   "docs"] }
           - { os: windows, config: ["3.8",   "coverage"] }
 
     runs-on: ${{ matrix.os }}-latest

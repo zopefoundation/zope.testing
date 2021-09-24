@@ -4,11 +4,12 @@ include *.rst
 include *.txt
 include buildout.cfg
 include tox.ini
-include .readthedocs.yml
 
 recursive-include docs *.py
 recursive-include docs *.rst
+recursive-include docs *.txt
+recursive-include docs Makefile
 
 recursive-include src *.py
 recursive-include src *.txt
-recursive-include src *.rst
+include .readthedocs.yml
