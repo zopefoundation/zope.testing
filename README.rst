@@ -26,8 +26,6 @@ cleanup
 formparser
   An HTML parser that extracts form information.
 
-  **Python 2 only**
-
   This is intended to support functional tests that need to extract
   information from HTML forms returned by the publisher.
 
@@ -77,7 +75,7 @@ wait
   See `zope.testing.wait`
 
 doctestcase
-  Support for defining doctests as methods of ``unittest.TestCase``
+  Support for defining doctests as methods of `unittest.TestCase`
   classes so that they can be more easily found by test runners, like
   nose, that ignore test suites.
 

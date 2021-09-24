@@ -10,6 +10,7 @@
 
 - Improve test coverage.
 
+- Port ``zope.testing.formparser`` to Python 3.
 
 4.9 (2021-01-08)
 ================

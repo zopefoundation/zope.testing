@@ -278,14 +278,6 @@ autodoc_default_options = {
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'
 
-# Let us import the zope.testing.formparser module on Python 3;
-# we can't run its doctests though.
-if str is bytes:
-    autodoc_mock_imports = [
-        'HTMLParser',
-        'urlparse',
-    ]
-
 doctest_global_setup = '''
 from zope.testing.tests import print_
 '''

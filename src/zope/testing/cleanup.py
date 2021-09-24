@@ -13,15 +13,15 @@
 ##############################################################################
 """Provide a standard cleanup registry
 
-Unit tests that change global data should include the CleanUp base
-class, which provides simpler setUp and tearDown methods that call
+Unit tests that change global data should include the `CleanUp` base
+class, which provides simpler `setUp` and `tearDown` methods that call
 global-data cleanup routines::
 
   class Test(CleanUp, unittest.TestCase):
 
       ....
 
-If custom setUp or tearDown are needed, then the base routines should
+If custom `setUp` or `tearDown` are needed, then the base routines should
 be called, as in::
 
   def tearDown(self):
@@ -29,7 +29,7 @@ be called, as in::
       ....
 
 Cleanup routines for global data should be registered by passing them to
-addCleanup::
+`addCleanup`::
 
 
   addCleanUp(pigRegistry._clear)

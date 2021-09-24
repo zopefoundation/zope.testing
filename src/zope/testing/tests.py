@@ -61,6 +61,5 @@ def test_suite():
     suite.addTests(doctest.DocFileSuite('cleanup.txt'))
     suite.addTest(unittest.makeSuite(Exception2To3))
     suite.addTests(doctest.DocTestSuite('zope.testing.server'))
-    if sys.version_info[0] < 3:  # pragma: PY2
-        suite.addTests(doctest.DocFileSuite('formparser.txt'))
+    suite.addTests(doctest.DocFileSuite('formparser.txt', setUp=setUp))
     return suite
