@@ -67,8 +67,6 @@ doctestcase
   classes so that they can be more easily found by test runners, like
   nose, that ignore test suites.
 
-.. contents::
-
 Getting started developing zope.testing
 =======================================
 

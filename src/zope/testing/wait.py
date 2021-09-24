@@ -11,16 +11,31 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+"""
+Provides a class, `Wait`, and an instance, `wait`, that can be
+used for polling for a condition to become true, or raise an exception
+after a timeout.
+"""
+
 
 import time
 
 
-class Wait:
+class Wait(object):
+    """
+    A callable object that polls until *func* returns
+    a true value, sleeping *wait* seconds between
+    polling attempts.
+
+    If *timeout* seconds elapse, *exception* will be raised.
+    """
 
     class TimeOutWaitingFor(Exception):
-        "A test condition timed out"
+        "The default exception raised when a test condition timed out."
 
+    #: The default timeout value.
     timeout = 9
+    #: The default amount of time to sleep between polls.
     wait = .01
 
     def __init__(self,
@@ -67,4 +82,5 @@ class Wait:
                 )
 
 
+#: The default instance of `Wait`.
 wait = Wait()
