@@ -12,6 +12,9 @@
 #
 ##############################################################################
 """logging handler for tests that check logging output.
+
+.. caution:: This is deprecated and may not work on Python 3.
+
 """
 import logging
 import warnings
@@ -23,13 +26,13 @@ warnings.warn(
 
 
 class Handler(logging.Handler):
-    """Handler for use with unittest.TestCase objects.
+    """Handler for use with `unittest.TestCase` objects.
 
-    The handler takes a TestCase instance as a constructor argument.
+    The handler takes a ``TestCase`` instance as a constructor argument.
     It can be registered with one or more loggers and collects log
     records they generate.
 
-    The assertLogsMessage() and failIfLogsMessage() methods can be
+    The `assertLogsMessage` and `failIfLogsMessage` methods can be
     used to check the logger output and causes the test to fail as
     appropriate.
     """
@@ -67,6 +70,11 @@ class Handler(logging.Handler):
         self.records.append(record)
 
     def assertLogsMessage(self, msg, level=None):
+        """
+        Check that a record whose message equals *msg*
+        (and optionally at *level*) has been emitted, failing
+        if not.
+        """
         for r in self.records:
             if r.getMessage() == msg:
                 if level is not None and r.levelno == level:
@@ -77,6 +85,10 @@ class Handler(logging.Handler):
         self.testcase.fail(msg)
 
     def failIfLogsMessage(self, msg):
+        """
+        Check that a record whose message equals *msg*
+        has **not** been emitted, failing if it has.
+        """
         for r in self.records:
             if r.getMessage() == msg:
                 self.testcase.fail("Found log message %r" % msg)

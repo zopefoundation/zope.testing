@@ -265,6 +265,7 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'https://docs.python.org/': None,
+    'https://zopetestbrowser.readthedocs.io/en/latest/': None,
 }
 
 # Sphinx 1.8+ prefers this to `autodoc_default_flags`. It's documented that
@@ -276,7 +277,15 @@ autodoc_default_options = {
 }
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'
-autodoc_mock_imports = [
-    'HTMLParser',
-    'urlparse',
-]
+
+# Let us import the zope.testing.formparser module on Python 3;
+# we can't run its doctests though.
+if str is bytes:
+    autodoc_mock_imports = [
+        'HTMLParser',
+        'urlparse',
+    ]
+
+doctest_global_setup = '''
+from zope.testing.tests import print_
+'''

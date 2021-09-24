@@ -11,10 +11,17 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Fake module support
+"""Fake module support.
+
+See :doc:`../module` for documentation.
 """
 
 import sys
+
+__all__ = [
+    'setUp',
+    'tearDown',
+]
 
 
 class FakeModule(object):
@@ -32,6 +39,9 @@ class FakeModule(object):
 
 
 def setUp(test, name='__main__'):
+    """
+    Replace the module named *name* with a fake version.
+    """
     dict = test.globs
     dict['__name__'] = name
     module = FakeModule(dict)
@@ -43,6 +53,9 @@ def setUp(test, name='__main__'):
 
 
 def tearDown(test, name=None):
+    """
+    Remove the (fake) module named *name*.
+    """
     if name is None:
         name = test.globs['__name__']
     del test.globs['__name__']

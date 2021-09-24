@@ -1,11 +1,14 @@
-Parsing HTML Forms
-==================
+====================
+ Parsing HTML Forms
+====================
+
+.. currentmodule:: zope.testing.formparser
 
 Sometimes in functional tests, information from a generated form must
 be extracted in order to re-submit it as part of a subsequent request.
 The `zope.testing.formparser` module can be used for this purpose.
 
-NOTE
+.. caution::
    formparser doesn't support Python 3.
 
 The scanner is implemented using the `FormParser` class.  The

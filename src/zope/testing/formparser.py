@@ -3,7 +3,7 @@
 This is intended to support functional tests that need to extract
 information from HTML forms returned by the publisher.
 
-See *formparser.txt* for documentation.
+See :doc:`../formparser` for documentation.
 
 This isn't intended to simulate a browser session; that's provided by
 the `zope.testbrowser` package.
@@ -22,9 +22,9 @@ warnings.warn(
 
 
 def parse(data, base=None):
-    """Return a form collection parsed from `data`.
+    """Return a form collection parsed from *data*.
 
-    `base` should be the URL from which `data` was retrieved.
+    *base* should be the URL from which *data* was retrieved.
 
     """
     parser = FormParser(data, base)
@@ -32,7 +32,9 @@ def parse(data, base=None):
 
 
 class FormParser(object):
-
+    """
+    The parser.
+    """
     def __init__(self, data, base=None):
         self.data = data
         self.base = base

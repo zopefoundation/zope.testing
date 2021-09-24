@@ -15,6 +15,14 @@ import logging
 
 
 class Handler(logging.Handler):
+    """
+    A `logging.Handler` that collects logging records
+    that are emitted by the loggers named in *names*.
+
+    You must call `install` to begin collecting records,
+    and before destroying this object you must call
+    `uninstall`.
+    """
 
     def __init__(self, *names, **kw):
         logging.Handler.__init__(self)
@@ -27,12 +35,23 @@ class Handler(logging.Handler):
         self.oldlevels = {}
 
     def emit(self, record):
+        """
+        Save the given record in ``self.records``.
+        """
         self.records.append(record)
 
     def clear(self):
+        """
+        Delete all records collecting by this
+        object.
+        """
         del self.records[:]
 
     def install(self):
+        """
+        Begin collecting logging records for all the
+        logger names given to the constructor.
+        """
         for name in self.names:
             logger = logging.getLogger(name)
             self.oldlevels[name] = logger.level
@@ -40,6 +59,9 @@ class Handler(logging.Handler):
             logger.addHandler(self)
 
     def uninstall(self):
+        """
+        Stop collecting logging records.
+        """
         for name in self.names:
             logger = logging.getLogger(name)
             logger.setLevel(self.oldlevels[name])
@@ -60,6 +82,12 @@ class Handler(logging.Handler):
 
 
 class InstalledHandler(Handler):
+    """
+    A `Handler` that automatically calls `install`
+    when constructed.
+
+    You must still manually call `uninstall`.
+    """
 
     def __init__(self, *names, **kw):
         Handler.__init__(self, *names, **kw)

@@ -20,7 +20,7 @@ sphinx:
 # Set the version of Python and requirements required to build your
 # docs
 python:
-  version: 3
+  version: 2
   install:
     - method: pip
       path: .
