@@ -27,3 +27,4 @@ log/
 parts/
 pyvenv.cfg
 var/
+docs/_build/

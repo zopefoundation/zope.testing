@@ -90,6 +90,12 @@ setup(
         'test': [
             'zope.testrunner',
         ],
+        'docs': [
+            'sphinx',
+            'repoze.sphinx.autointerface',
+            'zope.exceptions',
+            'zope.interface'
+        ],
     },
     include_package_data=True,
     zip_safe=False,
