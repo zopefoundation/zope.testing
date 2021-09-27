@@ -2,8 +2,10 @@
  Cleanup registry
 ==================
 
-Unit tests that change global data should include the ``CleanUp`` base
-class, which provides simpler ``setUp`` and ``tearDown`` methods that call
+.. currentmodule:: zope.testing.cleanup
+
+Unit tests that change global data should include the `CleanUp` base
+class, which provides simpler `setUp` and `tearDown` methods that call
 global-data cleanup routines.
 
 
@@ -14,7 +16,7 @@ global-data cleanup routines.
 >>> from zope.testing.cleanup import addCleanUp, CleanUp
 >>> addCleanUp(print_args, ('1', 'foo'), {'bar': 42})
 
-``Cleanup`` calls the registered clean up functions on setup and tear down:
+`CleanUp` calls the registered clean up functions on setup and tear down:
 
 >>> CleanUp().setUp()
 ('1', 'foo')

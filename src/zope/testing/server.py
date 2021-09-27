@@ -82,6 +82,7 @@ def makeRequestHandler(http, user=None, password=None):  # pragma: PY2
 def addPortToURL(url, port):
     """Add a port number to the url.
 
+        >>> from zope.testing.server import addPortToURL
         >>> addPortToURL('http://localhost/foo/bar/baz.html', 3000)
         'http://localhost:3000/foo/bar/baz.html'
         >>> addPortToURL('http://foo.bar.com/index.html?param=some-value', 555)

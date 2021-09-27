@@ -1,14 +1,18 @@
-Stack-based test setUp and tearDown
-===================================
+=====================================
+ Stack-based test setUp and tearDown
+=====================================
 
-Writing doctest setUp and tearDown functions can be a bit tedious,
-especially when setUp/tearDown functions are combined.
+.. currentmodule:: zope.testing.setupstack
 
-the zope.testing.setupstack module provides a small framework for
-automating test tear down.  It provides a generic setUp function that
-sets up a stack. Normal test setUp functions call this function to set
-up the stack and then use the register function to register tear-down
-functions.
+Writing `doctest` ``setUp`` and ``tearDown`` functions can be a bit tedious,
+especially when setUp/tearDown functions are combined. This is also
+true of `unittest.TestCase` tests. The `zope.testing.setupstack` eases
+the tedium for both types of tests.
+
+The `zope.testing.setupstack` module provides a small framework for
+automating test tear down.  It provides a generic `tearDown` function that
+calls the `registered <register>` functions (in reverse order); there
+is no need for special setup code.
 
 To see how this works we'll create a faux test:
 
@@ -17,7 +21,7 @@ To see how this works we'll create a faux test:
     ...         self.globs = {}
     >>> test = Test()
 
-We'll register some tearDown functions that just print something:
+We'll register some `tearDown` functions that just print something:
 
     >>> import sys
     >>> import zope.testing.setupstack
@@ -26,7 +30,7 @@ We'll register some tearDown functions that just print something:
     >>> zope.testing.setupstack.register(
     ...     test, lambda : sys.stdout.write('td 2\n'))
 
-Now, when we call the tearDown function:
+Now, when we call the `tearDown` function:
 
     >>> zope.testing.setupstack.tearDown(test)
     td 2
@@ -35,8 +39,7 @@ Now, when we call the tearDown function:
 The registered tearDown functions are run. Note that they are run in
 the reverse order that they were registered.
 
-
-Extra positional arguments can be passed to register:
+Extra positional arguments can be passed to `register`:
 
     >>> zope.testing.setupstack.register(
     ...    test, lambda x, y, z: sys.stdout.write('%s %s %s\n' % (x, y, z)),
@@ -46,13 +49,13 @@ Extra positional arguments can be passed to register:
 
 
 Temporary Test Directory
-------------------------
+========================
 
 Often, tests create files as they demonstrate functionality.  They
 need to arrange for the removeal of these files when the test is
 cleaned up.
 
-The setUpDirectory function automates this.  We'll get the current
+The `setUpDirectory` function automates this.  We'll get the current
 directory first:
 
     >>> import os
@@ -62,12 +65,9 @@ We'll also create a new test:
 
     >>> test = Test()
 
-Now we'll call the setUpDirectory function:
+Now we'll call the `setUpDirectory` function:
 
     >>> zope.testing.setupstack.setUpDirectory(test)
-
-We don't have to call zope.testing.setupstack.setUp, because
-setUpDirectory calls it for us.
 
 Now the current working directory has changed:
 
@@ -96,7 +96,7 @@ well, and verify the teardown doesn't break because of that:
     >>> if sys.platform != 'win32':
     ...     os.symlink('NotThere', 'BrokenLink')
 
-When tearDown is called:
+When `tearDown` is called:
 
     >>> zope.testing.setupstack.tearDown(test)
 
@@ -112,11 +112,11 @@ directory that was created:
     False
 
 Context-manager support
------------------------
+=======================
 
-You can leverage context managers using the ``contextmanager`` method.
-The result of calling the content manager's __enter__ method will be
-returned. The context-manager's __exit__ method will be called as part
+You can leverage context managers using the `contextmanager` method.
+The result of calling the content manager's ``__enter__`` method will be
+returned. The context-manager's ``__exit__`` method will be called as part
 of test tear down:
 
     >>> class Manager(object):
@@ -140,17 +140,19 @@ of test tear down:
     >>> zope.testing.setupstack.tearDown(test)
     exit (None, None, None)
 
-.. faux mock
+.. doctest::
+   :hide:
 
-    >>> old_mock = sys.modules.get('mock')
+    >>> old_mock = zope.testing.setupstack._get_mock
     >>> class FauxMock:
     ...     @classmethod
     ...     def patch(self, *args, **kw):
     ...         return Manager(*args, **kw)
 
-    >>> sys.modules['mock'] = FauxMock
+    >>> zope.testing.setupstack._get_mock = lambda: FauxMock
 
-By far the most commonly called context manager is ``mock.patch``, so
+
+By far the most commonly called context manager is `unittest.mock.patch`, so
 there's a convenience function to make that simpler:
 
     >>> zope.testing.setupstack.mock(test, 'time.time', return_value=42)
@@ -161,13 +163,13 @@ there's a convenience function to make that simpler:
     exit (None, None, None) time.time {'return_value': 42}
 
 globs
------
+=====
 
 Doctests have ``globs`` attributes used to hold test globals.
 ``setupstack`` was originally designed to work with doctests, but can
 now work with either doctests, or other test objects, as long as the
 test objects have either a ``globs`` attribute or a ``__dict__``
-attribute.  The ``zope.testing.setupstack.globs`` function is used to
+attribute.  The `zope.testing.setupstack.globs` function is used to
 get the globals for a test object:
 
     >>> zope.testing.setupstack.globs(test) is test.globs
@@ -196,15 +198,15 @@ The ``globs`` function is used internally, but can also be used by
 setup code to support either doctests or other test objects.
 
 TestCase
---------
+========
 
-A TestCase class is provided that:
+A `TestCase` class is provided that:
 
 - Makes it easier to call setupstack apis, and
 
-- provides an inheritable tearDown method.
+- provides an inheritable `tearDown` method.
 
-In addition to a tearDown method, the class provides methods:
+In addition to a `tearDown` method, the class provides methods:
 
 ``setupDirectory()``
     Creates a temporary directory, runs the test, and cleans it up.
@@ -216,7 +218,7 @@ In addition to a tearDown method, the class provides methods:
     Enters a context manager and exits it on tearDown.
 
 ``mock(*args, **kw)``
-    Enters  ``mock.patch`` with the given arguments.
+    Enters  `unittest.mock.patch` with the given arguments.
 
     This is syntactic sugur for::
 
@@ -254,10 +256,7 @@ Here's an example:
     exit (None, None, None) time.time {'return_value': 42}
     exit (None, None, None)
 
-.. cleanup
+.. doctest::
+   :hide:
 
-    >>> if old_mock:
-    ...     sys.modules['mock'] = old_mock
-    ... else:
-    ...     del sys.modules['mock']
-
+    >>> zope.testing.setupstack._get_mock = old_mock

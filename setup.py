@@ -27,24 +27,7 @@ def read(*rnames):
         return f.read()
 
 
-chapters = [
-    read((os.path.join('src', 'zope', 'testing', name)))
-    for name in [
-        'formparser.txt',
-        'loggingsupport.txt',
-        'renormalizing.txt',
-        'setupstack.txt',
-        'wait.txt',
-        'doctestcase.txt',
-    ]
-]
-
-
-long_description = '\n\n'.join(
-    [read('README.rst')] +
-    chapters +
-    [read('CHANGES.rst')]
-)
+long_description = read('README.rst') + '\n\n' + read('CHANGES.rst')
 keywords = "zope testing doctest RENormalizing OutputChecker timeout logging"
 
 setup(
@@ -89,6 +72,13 @@ setup(
     extras_require={
         'test': [
             'zope.testrunner',
+        ],
+        'docs': [
+            'sphinx',
+            'repoze.sphinx.autointerface',
+            'zope.exceptions',
+            'zope.interface',
+            'mock; python_version == "2.7"'
         ],
     },
     include_package_data=True,

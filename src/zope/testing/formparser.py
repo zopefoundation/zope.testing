@@ -3,28 +3,33 @@
 This is intended to support functional tests that need to extract
 information from HTML forms returned by the publisher.
 
-See *formparser.txt* for documentation.
+See :doc:`../formparser` for documentation.
 
 This isn't intended to simulate a browser session; that's provided by
 the `zope.testbrowser` package.
 
+.. versionchanged:: 4.10.0
+   Add support for Python 3.
+
 """
 __docformat__ = "reStructuredText"
 
-import HTMLParser
-import urlparse
-import warnings
 
+try:
+    import html.parser as HTMLParser
+except ImportError:  # Python 2
+    import HTMLParser
 
-warnings.warn(
-    'zope.testing.formparser is deprecated. It does not work on Python 3.',
-    DeprecationWarning, stacklevel=2)
+try:
+    import urllib.parse as urlparse
+except ImportError:  # Python 2
+    import urlparse
 
 
 def parse(data, base=None):
-    """Return a form collection parsed from `data`.
+    """Return a form collection parsed from *data*.
 
-    `base` should be the URL from which `data` was retrieved.
+    *base* should be the URL from which *data* was retrieved.
 
     """
     parser = FormParser(data, base)
@@ -32,7 +37,9 @@ def parse(data, base=None):
 
 
 class FormParser(object):
-
+    """
+    The parser.
+    """
     def __init__(self, data, base=None):
         self.data = data
         self.base = base

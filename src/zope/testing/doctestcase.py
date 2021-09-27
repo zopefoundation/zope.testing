@@ -1,101 +1,5 @@
 r"""Doctests in TestCase classes
 
-The original ``doctest`` unittest integration was based on
-``unittest`` test suites, which have fallen out of favor. This module
-provides a way to define doctests inside of unittest ``TestCase``
-classes. It also provides better integration with unittest test
-fixtures, because doctests use setup provided by the containing test
-case class.  It also provides access to unittest assertion
-methods.
-
-You can define doctests in 4 ways:
-
-- references to named files
-
-- strings
-
-- decorated functions with docstrings
-
-- reference to named files decorating test-specific setup functions
-
-.. some setup
-
-   >>> __name__ = 'tests'
-
-Here are some examples (they are tested via doctestcase.txt)::
-
-    from zope.testing import doctestcase
-    import doctest
-    import unittest
-
-    g = 'global'
-    class MyTest(unittest.TestCase):
-
-        def setUp(self):
-            self.a = 1
-            self.globs = dict(c=9)
-
-        test1 = doctestcase.file('test1.txt', optionflags=doctest.ELLIPSIS)
-
-        test2 = doctestcase.docteststring('''
-          >>> self.a, g, c
-          (1, 'global', 9)
-        ''')
-
-        @doctestcase.doctestmethod(optionflags=doctest.ELLIPSIS)
-        def test3(self):
-            '''
-            >>> self.a, self.x, g, c
-            (1, 3, 'global', 9)
-            '''
-            self.x = 3
-
-        @doctestcase.doctestfile('test4.txt')
-        def test4(self):
-            self.x = 5
-
-In this example, 3 constructors were used:
-
-doctestfile (alias: file)
-  doctestfile makes a file-based test case.
-
-  This can be used as a decorator, in which case, the decorated
-  function is called before the test is run, to provide test-specific
-  setup.
-
-docteststring (alias string)
-  docteststring constructs a doctest from a string.
-
-doctestmethod (alias method)
-  doctestmethod constructs a doctest from a method.
-
-  The method's docstring provides the test. The method's body provides
-  optional test-specific setup.
-
-Note that short aliases are provided, which may be useful in certain
-import styles.
-
-Tests have access to the following data:
-
-- Tests created with the ``docteststring`` and ``doctestmethod``
-  constructors have access to the module globals of the defining
-  module.
-
-- In tests created with the ``docteststring`` and ``doctestmethod``
-  constructors, the test case instance is available as the ``self``
-  variable.
-
-- In tests created with the ``doctestfile`` constructor, the test case
-  instance is available as the ``test`` variable.
-
-- If a test case defines a globs attribute, it must be a dictionary
-  and its contents are added to the test globals.
-
-The constructors accept standard doctest ``optionflags`` and
-``checker`` arguments.
-
-Note that the doctest IGNORE_EXCEPTION_DETAIL option flag is
-added to optionflags.
 """
 import doctest
 import inspect
@@ -104,7 +8,19 @@ import re
 import sys
 import types
 
-__all__ = ['doctestmethod', 'docteststring', 'doctestfile']
+__all__ = [
+    'doctestmethod',
+    'method',
+
+    'docteststring',
+    'string',
+
+    'doctestfile',
+    'file',
+
+    'doctestfiles',
+    'files',
+]
 
 _parser = doctest.DocTestParser()
 
@@ -136,6 +52,7 @@ def doctestmethod(test=None, optionflags=0, checker=None):
     return _doctestmethod(test, optionflags, checker)
 
 
+#: Alias of `doctestmethod`
 method = doctestmethod
 
 
@@ -183,6 +100,7 @@ def docteststring(test, optionflags=0, checker=None, name=None):
     return test_string
 
 
+#: Alias of `docteststring`
 string = docteststring
 
 _not_word = re.compile(r'\W')
@@ -237,6 +155,7 @@ def doctestfile(path, optionflags=0, checker=None):
     return test_file
 
 
+#: Alias of `doctestfile`
 file = doctestfile
 
 
@@ -271,6 +190,7 @@ def doctestfiles(*paths, **kw):
     return doctestfiles_
 
 
+#: Alias of `doctestfiles`
 files = doctestfiles
 
 

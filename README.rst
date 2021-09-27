@@ -15,19 +15,21 @@
 
 This package provides a number of testing frameworks.
 
+For complete documentation, see https://zopetesting.readthedocs.io
+
 cleanup
   Provides a mixin class for cleaning up after tests that
   make global changes.
 
+  See `zope.testing.cleanup`
+
 formparser
   An HTML parser that extracts form information.
-
-  **Python 2 only**
 
   This is intended to support functional tests that need to extract
   information from HTML forms returned by the publisher.
 
-  See formparser.txt.
+  See `zope.testing.formparser`
 
 loggingsupport
   Support for testing logging code
@@ -35,17 +37,23 @@ loggingsupport
   If you want to test that your code generates proper log output, you
   can create and install a handler that collects output.
 
+  See `zope.testing.loggingsupport`
+
 loghandler
   Logging handler for tests that check logging output.
+
+  See `zope.testing.loghandler`
 
 module
   Lets a doctest pretend to be a Python module.
 
-  See module.txt.
+  See `zope.testing.module`
 
 renormalizing
   Regular expression pattern normalizing output checker.
   Useful for doctests.
+
+  See `zope.testing.renormalizing`
 
 server
   Provides a simple HTTP server compatible with the zope.app.testing
@@ -54,20 +62,24 @@ server
 
   **Python 2 only**
 
+  See `zope.testing.server`
+
 setupstack
   A simple framework for automating doctest set-up and tear-down.
-  See setupstack.txt.
+
+  See `zope.testing.setupstack`
 
 wait
   A small utility for dealing with timing non-determinism
-  See wait.txt.
+
+  See `zope.testing.wait`
 
 doctestcase
-  Support for defining doctests as methods of ``unittest.TestCase``
+  Support for defining doctests as methods of `unittest.TestCase`
   classes so that they can be more easily found by test runners, like
   nose, that ignore test suites.
 
-.. contents::
+  See `zope.testing.doctestcase`
 
 Getting started developing zope.testing
 =======================================

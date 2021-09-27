@@ -1,7 +1,11 @@
-Regular expression pattern normalizing output checker
-=====================================================
+=======================================================
+ Regular expression pattern normalizing output checker
+=======================================================
 
-The pattern-normalizing output checker extends the default output checker with
+.. currentmodule:: zope.testing.renormalizing
+
+The pattern-normalizing output checker from
+`zope.testing.renormalizing` extends the default output checker with
 an option to normalize expected and actual output.
 
 You specify a sequence of patterns and replacements.  The replacements are
@@ -47,7 +51,7 @@ different:
     >>> doctest.OutputChecker().check_output(want, got, 0)
     False
 
-We'll use the zope.testing.renormalizing.OutputChecker to normalize both the
+We'll use the `zope.testing.renormalizing.OutputChecker` to normalize both the
 wanted and gotten strings to ignore differences in times and
 addresses:
 
@@ -61,7 +65,7 @@ addresses:
     >>> checker.check_output(want, got, 0)
     True
 
-Usual OutputChecker options work as expected:
+Usual `doctest.OutputChecker` options work as expected:
 
     >>> want_ellided = '''\
     ... <object object at 0xb7f14438>
@@ -135,9 +139,10 @@ When we get differencs, we output them with normalized text:
         + <BLANKLINE>
     <BLANKLINE>
 
-    If the wanted text is empty, however, we don't transform the actual output.
-    This is usful when writing tests.  We leave the expected output empty, run
-    the test, and use the actual output as expected, after reviewing it.
+If the wanted text is empty, however, we don't transform the actual
+output. This is usful when writing tests. We leave the expected output
+empty, run the test, and use the actual output as expected, after
+reviewing it.
 
     >>> source = '''\
     ... >>> do_something()
@@ -188,7 +193,7 @@ case during comparison:
     >>> checker.check_output(want, got, 0)
     True
 
-Suppose we forgot that <BLANKLINE> must be in upper case:
+Suppose we forgot that ``<BLANKLINE>`` must be in upper case:
 
     >>> checker = OutputChecker([
     ...    lambda s: s.lower(),
@@ -214,7 +219,7 @@ The difference would show us that:
     <BLANKLINE>
 
 
-It is possible to combine OutputChecker checkers for easy reuse:
+It is possible to combine `OutputChecker` checkers for easy reuse:
 
     >>> address_and_time_checker = OutputChecker([
     ...    (re.compile('[0-9]*[.][0-9]* seconds'), '<SOME NUMBER OF> seconds'),

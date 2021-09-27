@@ -11,6 +11,11 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+"""
+Support for advanced normalization of output in doctests.
+
+See :doc:`../renormalizing` for documentation.
+"""
 import doctest
 import re
 import sys

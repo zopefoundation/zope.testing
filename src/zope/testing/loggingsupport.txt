@@ -1,8 +1,12 @@
-Support for testing logging code
-================================
+==================================
+ Support for testing logging code
+==================================
+
+.. currentmodule:: zope.testing.loggingsupport
 
 If you want to test that your code generates proper log output, you
-can create and install a handler that collects output:
+can create and install a handler that collects output using
+`zope.testing.loggingsupport`:
 
   >>> from zope.testing.loggingsupport import InstalledHandler
   >>> handler = InstalledHandler('foo.bar')

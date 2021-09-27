@@ -1,19 +1,18 @@
-Parsing HTML Forms
-==================
+====================
+ Parsing HTML Forms
+====================
+
+.. currentmodule:: zope.testing.formparser
 
 Sometimes in functional tests, information from a generated form must
 be extracted in order to re-submit it as part of a subsequent request.
 The `zope.testing.formparser` module can be used for this purpose.
-
-NOTE
-   formparser doesn't support Python 3.
 
 The scanner is implemented using the `FormParser` class.  The
 constructor arguments are the page data containing the form and
 (optionally) the URL from which the page was retrieved:
 
   >>> import zope.testing.formparser
-
   >>> page_text = '''\
   ... <html><body>
   ...   <form name="form1" action="/cgi-bin/foobar.py" method="POST">
@@ -74,8 +73,7 @@ attributes and individual field values:
   >>> form.method
   'post'
 
-  >>> keys = form.keys()
-  >>> keys.sort()
+  >>> keys = sorted(form.keys())
   >>> keys
   ['do-it-now', 'f1', 'not-really', 'pick-two']
 
@@ -104,7 +102,7 @@ constructor.
   'http://www.example.com/base/else.png'
 
 Fields which are repeated are reported as lists of objects that
-represent each instance of the field::
+represent each instance of the field:
 
   >>> field = forms[1]["multi"]
   >>> isinstance(field, list)
@@ -117,9 +115,9 @@ represent each instance of the field::
 The ``<textarea>`` element provides some additional attributes:
 
   >>> ta = forms[1]["sometext"]
-  >>> print ta.rows
+  >>> print_(ta.rows)
   5
-  >>> print ta.cols
+  >>> print_(ta.cols)
   None
   >>> ta.value
   'Some text.'

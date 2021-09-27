@@ -1,9 +1,12 @@
-Module setup
-============
+==============
+ Module setup
+==============
+
+.. currentmodule:: zope.testing.module
 
 Normally when you create a class in a doctest, it will have the
 ``__module__`` attribute of ``'__builtin__'``. This is sometimes not
-desirable. Let's demonstrate the behavior::
+desirable. Let's demonstrate the behavior:
 
   >>> class Foo(object):
   ...    pass
@@ -11,14 +14,14 @@ desirable. Let's demonstrate the behavior::
   >>> 'builtin' in Foo.__module__
   True
 
-By using ``zope.testing.module.setUp`` this can be
+By using `zope.testing.module.setUp` this can be
 controlled. Normally you set up your tests with it, but in this case
 we'll just call it manually.
 
 To call this function manually, we need to set up a fake ``test``
-object.  This because the ``setUp`` function expects a test with at
+object.  This because the `setUp` function expects a test with at
 least the ``globs`` dictionary attribute being present. Let's make
-such a fake test object, using the globals of the doctest::
+such a fake test object, using the globals of the doctest:
 
   >>> class FakeTest(object):
   ...     def __init__(self):
@@ -26,20 +29,20 @@ such a fake test object, using the globals of the doctest::
 
   >>> test = FakeTest()
 
-We can now call the ``setUp`` function::
+We can now call the `setUp` function:
 
   >>> from zope.testing.module import setUp
   >>> setUp(test)
 
 We will now demonstrate that the ``__module__`` argument is something
-else, in this case the default, ``__main__``::
+else, in this case the default, ``__main__``:
 
   >>> class Foo(object):
   ...     pass
   >>> Foo.__module__
   '__main__'
 
-Calling ``dir`` on the module will yield the expected attributes,
+Calling `dir` on the module will yield the expected attributes,
 including the ``FakeTest`` class we added above.
 
   >>> import __main__
@@ -47,12 +50,12 @@ including the ``FakeTest`` class we added above.
   >>> "FakeTest" in attrs
   True
 
-Let's tear this down again::
+Let's tear this down again using `tearDown`:
 
   >>> from zope.testing.module import tearDown
   >>> tearDown(test)
 
-We should now be back to the original situation::
+We should now be back to the original situation:
 
   >>> class Foo(object):
   ...    pass
@@ -60,30 +63,37 @@ We should now be back to the original situation::
   True
 
 Importing
----------
+=========
 
 Let's now imagine a more complicated example, were we actually want to
-be able to import the fake module as well::
+be able to import the fake module as well:
 
   >>> setUp(test, 'fake')
   >>> a = 'Hello world'
 
-The import should not fail::
+The import should not fail:
 
   >>> import fake
   >>> fake.a
   'Hello world'
 
-Let's tear it down again::
+Let's tear it down again:
 
   >>> tearDown(test)
-  >>> import fake
-  Traceback (most recent call last):
+
+.. See tests.py; the doctest directive is only relevant
+   in Sphinx
+
+.. doctest::
+   :pyversion: < 3
+
+   >>> import fake
+   Traceback (most recent call last):
     ...
-  ImportError: No module named fake
+   ImportError: No module named fake
 
 If we enter a dotted name, it will actually try to place the fake
-module in that dotted name::
+module in that dotted name:
 
   >>> setUp(test, 'zope.testing.unlikelymodulename')
   >>> a = 'Bye world'
@@ -94,19 +104,23 @@ module in that dotted name::
   >>> unlikelymodulename.a
   'Bye world'
   >>> tearDown(test)
-  >>> import zope.testing.unlikelymodulename
-  Traceback (most recent call last):
-    ...
-  ImportError: No module named unlikelymodulename
 
-This only works for packages that already exist::
- 
+.. doctest::
+   :pyversion: < 3
+
+   >>> import zope.testing.unlikelymodulename
+   Traceback (most recent call last):
+    ...
+   ImportError: No module named unlikelymodulename
+
+This only works for packages that already exist:
+
   >>> setUp(test, 'unlikelynamespacename.fake')
   Traceback (most recent call last):
     ...
   KeyError: 'unlikelynamespacename'
 
-Even so, we still need to tear down::
+Even so, we still need to tear down:
 
   >>> tearDown(test)
   Traceback (most recent call last):
