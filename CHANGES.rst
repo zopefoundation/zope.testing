@@ -12,6 +12,9 @@
 
 - Port ``zope.testing.formparser`` to Python 3.
 
+- Add support for Python 3.10.
+
+
 4.9 (2021-01-08)
 ================
 
