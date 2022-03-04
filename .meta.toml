@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "5b60e8235223c5c73427d4cdf66be5fb2cce3cea"
+commit-id = "33148ad0239543bf03adf814688d10723062457e"
 
 [python]
 with-pypy = true
@@ -22,7 +22,7 @@ use-flake8 = true
 additional-rules = [
     "recursive-include src *.txt",
     "include .readthedocs.yml",
-    "include tox.ini"
+    "include tox.ini",
     ]
 
 [coverage-run]
@@ -32,4 +32,9 @@ additional-config = [
     "    src/zope/testing/exceptions.py",
     "    src/zope/testing/loghandler.py",
     "    src/zope/testing/testrunner.py",
+    ]
+
+[check-manifest]
+additional-ignores = [
+    "docs/_build/html/_sources/api/*",
     ]
