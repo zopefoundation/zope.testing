@@ -32,7 +32,7 @@ keywords = "zope testing doctest RENormalizing OutputChecker timeout logging"
 
 setup(
     name='zope.testing',
-    version='4.10.dev0',
+    version='4.10',
     url='https://github.com/zopefoundation/zope.testing',
     license='ZPL 2.1',
     description='Zope testing helpers',

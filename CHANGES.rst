@@ -2,8 +2,8 @@
  Changes
 =========
 
-4.10.0 (unreleased)
-===================
+4.10 (2022-03-07)
+=================
 
 - Show deprecation warnings when importing modules which are not ported to
   Python 3.
