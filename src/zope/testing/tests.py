@@ -58,7 +58,15 @@ def test_suite():
         ),
     ))
 
-    suite.addTests(doctest.DocFileSuite('doctestcase.txt'))
+    suite.addTests(
+        doctest.DocFileSuite(
+            'doctestcase.txt',
+            checker=renormalizing.RENormalizing([
+                # for Python 3.11+
+                (re.compile(r'\(tests\.MyTest\.test.?\)'), '(tests.MyTest)'),
+                (re.compile(r'\(tests.MoreTests.test_.*\)'),
+                 '(tests.MoreTests)')
+                ])))
     suite.addTests(doctest.DocFileSuite('cleanup.txt'))
     suite.addTest(unittest.makeSuite(Exception2To3))
     suite.addTests(doctest.DocTestSuite('zope.testing.server'))
