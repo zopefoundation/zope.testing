@@ -12,9 +12,10 @@
 """Tests for the testing framework.
 """
 import doctest
-import sys
 import re
+import sys
 import unittest
+
 from zope.testing import renormalizing
 from zope.testing.test_renormalizing import Exception2To3
 

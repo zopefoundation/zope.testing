@@ -8,6 +8,7 @@ import re
 import sys
 import types
 
+
 __all__ = [
     'doctestmethod',
     'method',

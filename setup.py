@@ -19,6 +19,7 @@
 """Setup for zope.testing package
 """
 import os
+
 from setuptools import setup
 
 

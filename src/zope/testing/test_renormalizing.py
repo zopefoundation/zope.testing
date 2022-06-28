@@ -2,10 +2,8 @@ import sys
 import textwrap
 import unittest
 
-from zope.testing.renormalizing import (
-    is_dotted_name,
-    strip_dottedname_from_traceback,
-)
+from zope.testing.renormalizing import is_dotted_name
+from zope.testing.renormalizing import strip_dottedname_from_traceback
 
 
 class Exception2To3(unittest.TestCase):
