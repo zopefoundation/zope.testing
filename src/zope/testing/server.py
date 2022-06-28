@@ -27,14 +27,18 @@ from __future__ import print_function
 import sys
 import warnings
 import webbrowser
+
+
 # XXX: I don't think this module works on Python 3!
 
 try:  # pragma: PY3
+    from http.server import BaseHTTPRequestHandler
+    from http.server import HTTPServer
     from urllib import parse as urlparse
-    from http.server import BaseHTTPRequestHandler, HTTPServer
 except ImportError:  # pragma: PY2
     import urlparse
-    from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+    from BaseHTTPServer import BaseHTTPRequestHandler
+    from BaseHTTPServer import HTTPServer
 
 
 def makeRequestHandler(http, user=None, password=None):  # pragma: PY2
