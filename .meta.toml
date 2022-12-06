@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "d8ee00613a60c98a8d2227b0564403d0e447741a"
+commit-id = "87317261ee0b2f29130009d48d1e2d1616aa508a"
 
 [python]
 with-pypy = true
