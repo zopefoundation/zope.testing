@@ -33,7 +33,7 @@ keywords = "zope testing doctest RENormalizing OutputChecker timeout logging"
 
 setup(
     name='zope.testing',
-    version='4.11.dev0',
+    version='5.0.dev0',
     url='https://github.com/zopefoundation/zope.testing',
     license='ZPL 2.1',
     description='Zope testing helpers',
@@ -46,11 +46,7 @@ setup(
         "License :: OSI Approved :: Zope Public License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
@@ -83,7 +79,6 @@ setup(
             'repoze.sphinx.autointerface',
             'zope.exceptions',
             'zope.interface',
-            'mock; python_version == "2.7"'
         ],
     },
     include_package_data=True,

@@ -21,7 +21,7 @@ after a timeout.
 import time
 
 
-class Wait(object):
+class Wait:
     """
     A callable object that polls until *func* returns
     a true value, sleeping *wait* seconds between

@@ -2,8 +2,28 @@
  Changes
 =========
 
-4.11 (unreleased)
-=================
+5.0 (unreleased)
+================
+
+Backwards incompatible changes
+------------------------------
+
+- Drop support for Python 2.7, 3.5, 3.6.
+
+- Drop modules which do not seem to be Python compatible:
+
+    + ``zope.testing.loghandler``
+    + ``zope.testing.server``
+
+- Drop doctest option ``IGNORE_EXCEPTION_MODULE_IN_PYTHON2``.
+
+- Remove functions:
+
+    + ``zope.testing.renormalizing.strip_dottedname_from_traceback``
+    + ``zope.testing.renormalizing.is_dotted_name``
+
+Features
+--------
 
 - Add support for Python 3.11.
 

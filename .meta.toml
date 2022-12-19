@@ -14,7 +14,7 @@ with-future-python = false
 with-macos = false
 
 [coverage]
-fail-under = 98
+fail-under = 97
 
 [tox]
 use-flake8 = true

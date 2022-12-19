@@ -17,7 +17,6 @@ import sys
 import unittest
 
 from zope.testing import renormalizing
-from zope.testing.test_renormalizing import Exception2To3
 
 
 def print_(*args):
@@ -30,32 +29,11 @@ def setUp(test):
 
 def test_suite():
     suite = unittest.TestSuite((
-        doctest.DocFileSuite(
-            'module.txt',
-            # Python 3.3 changed exception messaging:
-            #   https://bugs.launchpad.net/zope.testing/+bug/1055720
-            # and then Python 3.6 introduced ImportError subclasses
-            checker=renormalizing.RENormalizing([
-                (re.compile('ModuleNotFoundError:'), 'ImportError:'),
-                (re.compile(
-                    "No module named '?zope.testing.unlikelymodulename'?"),
-                 'No module named unlikelymodulename'),
-                (re.compile("No module named '?fake'?"),
-                 'No module named fake')])),
+        doctest.DocFileSuite('module.txt'),
         doctest.DocFileSuite('loggingsupport.txt', setUp=setUp),
         doctest.DocFileSuite('renormalizing.txt', setUp=setUp),
         doctest.DocFileSuite('setupstack.txt', setUp=setUp),
-        doctest.DocFileSuite(
-            'wait.txt', setUp=setUp,
-            checker=renormalizing.RENormalizing([
-                # For Python 3.4.
-                (re.compile('zope.testing.wait.TimeOutWaitingFor: '),
-                 'TimeOutWaitingFor: '),
-                # For Python 3.5
-                (re.compile('zope.testing.wait.Wait.TimeOutWaitingFor: '),
-                 'TimeOutWaitingFor: '),
-            ])
-        ),
+        doctest.DocFileSuite('wait.txt', setUp=setUp)
     ))
 
     suite.addTests(
@@ -68,7 +46,5 @@ def test_suite():
                  '(tests.MoreTests)')
                 ])))
     suite.addTests(doctest.DocFileSuite('cleanup.txt'))
-    suite.addTest(unittest.makeSuite(Exception2To3))
-    suite.addTests(doctest.DocTestSuite('zope.testing.server'))
     suite.addTests(doctest.DocFileSuite('formparser.txt', setUp=setUp))
     return suite

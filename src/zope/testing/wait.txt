@@ -23,7 +23,7 @@ immediately.  If the condition doesn't hold, then we'll get a timeout:
     >>> wait((lambda : False), timeout=.01)
     Traceback (most recent call last):
     ...
-    TimeOutWaitingFor: <lambda>
+    zope.testing.wait.Wait.TimeOutWaitingFor: <lambda>
 
 ``wait`` has some keyword options:
 
@@ -54,14 +54,14 @@ message
     ...     pass
     Traceback (most recent call last):
     ...
-    TimeOutWaitingFor: no_way
+    zope.testing.wait.Wait.TimeOutWaitingFor: no_way
 
     >>> @wait(timeout=.01)
     ... def no_way():
     ...     "never true"
     Traceback (most recent call last):
     ...
-    TimeOutWaitingFor: never true
+    zope.testing.wait.Wait.TimeOutWaitingFor: never true
 
 .. more tests
 
@@ -72,7 +72,7 @@ message
     ...     "never true"
     Traceback (most recent call last):
     ...
-    TimeOutWaitingFor: dang
+    zope.testing.wait.Wait.TimeOutWaitingFor: dang
 
     >>> .01 < (time.time() - now) < .03
     True
@@ -166,4 +166,4 @@ wait
     ...     state.append(0)
     Traceback (most recent call last):
     ...
-    TimeOutWaitingFor: _
+    zope.testing.wait.Wait.TimeOutWaitingFor: _
