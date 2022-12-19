@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "87317261ee0b2f29130009d48d1e2d1616aa508a"
+commit-id = "d6240444ec6c9e203f2fd9f62c3e6038f9189e96"
 
 [python]
 with-pypy = true
@@ -28,10 +28,9 @@ additional-rules = [
 
 [coverage-run]
 additional-config = [
-    "# omit files which just contain BBB code or are not Python 3 compatible:",
+    "# omit files which just contain BBB code:",
     "omit =",
     "    src/zope/testing/exceptions.py",
-    "    src/zope/testing/loghandler.py",
     "    src/zope/testing/testrunner.py",
     ]
 
