@@ -69,7 +69,7 @@ class Handler(logging.Handler):
 
     def __str__(self):
         return '\n'.join(
-            "%s %s\n  %s" % (
+            "{} {}\n  {}".format(
                 record.name, record.levelname,
                '\n'.join(
                    line

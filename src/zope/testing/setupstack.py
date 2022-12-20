@@ -110,10 +110,7 @@ def context_manager(test, manager):
 
 def _get_mock():
     # A hook for the setupstack.txt doctest :
-    try:
-        from unittest import mock as mock_module
-    except ImportError:
-        import mock as mock_module
+    from unittest import mock as mock_module
 
     return mock_module
 
@@ -124,8 +121,6 @@ def mock(test, *args, **kw):
     with the *args* and *kw* given, and returns the result.
 
     This will be torn down when the *test* is torn down.
-
-    .. note:: On Python 2, you must manually install the ``mock`` package.
     """
     mock_module = _get_mock()
     return context_manager(test, mock_module.patch(*args, **kw))

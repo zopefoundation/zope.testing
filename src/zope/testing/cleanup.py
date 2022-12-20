@@ -48,7 +48,7 @@ def addCleanUp(func, args=(), kw={}):
     _cleanups.append((func, args, kw))
 
 
-class CleanUp(object):
+class CleanUp:
     """Mix-in class providing clean-up setUp and tearDown routines."""
 
     def cleanUp(self):

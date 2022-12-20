@@ -15,15 +15,8 @@ the `zope.testbrowser` package.
 __docformat__ = "reStructuredText"
 
 
-try:
-    import html.parser as HTMLParser
-except ImportError:  # Python 2
-    import HTMLParser
-
-try:
-    import urllib.parse as urlparse
-except ImportError:  # Python 2
-    import urlparse
+import html.parser as HTMLParser
+import urllib.parse as urlparse
 
 
 def parse(data, base=None):
@@ -36,7 +29,7 @@ def parse(data, base=None):
     return parser.parse()
 
 
-class FormParser(object):
+class FormParser:
     """
     The parser.
     """
@@ -194,7 +187,7 @@ class Form(dict):
     # `zope.testbrowser` package.
 
     def __init__(self, name, id, method, action, enctype):
-        super(Form, self).__init__()
+        super().__init__()
         self.name = name
         self.id = id
         self.method = method
@@ -202,7 +195,7 @@ class Form(dict):
         self.enctype = enctype
 
 
-class Input(object):
+class Input:
     """Input element."""
 
     rows = None
@@ -210,7 +203,7 @@ class Input(object):
 
     def __init__(self, name, id, type, value, checked, disabled, readonly,
                  src, size, maxlength):
-        super(Input, self).__init__()
+        super().__init__()
         self.name = name
         self.id = id
         self.type = type
@@ -227,19 +220,19 @@ class Select(Input):
     """Select element."""
 
     def __init__(self, name, id, disabled, multiple, size):
-        super(Select, self).__init__(name, id, "select", None, None,
-                                     disabled, None, None, size, None)
+        super().__init__(name, id, "select", None, None,
+                         disabled, None, None, size, None)
         self.options = []
         self.multiple = multiple
         if multiple:
             self.value = []
 
 
-class Option(object):
+class Option:
     """Individual value representation for a select element."""
 
     def __init__(self, id, value, selected, label, disabled):
-        super(Option, self).__init__()
+        super().__init__()
         self.id = id
         self.value = value
         self.selected = selected

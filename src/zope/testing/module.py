@@ -25,7 +25,7 @@ __all__ = [
 ]
 
 
-class FakeModule(object):
+class FakeModule:
     def __init__(self, dict):
         self.__dict = dict
 

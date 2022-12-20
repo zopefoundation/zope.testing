@@ -23,10 +23,6 @@ zope.testing.loggingsupport
 ===========================
 .. automodule:: zope.testing.loggingsupport
 
-zope.testing.loghandler
-=======================
-.. automodule:: zope.testing.loghandler
-
 zope.testing.module
 ===================
 .. automodule:: zope.testing.module
@@ -34,10 +30,6 @@ zope.testing.module
 zope.testing.renormalizing
 ==========================
 .. automodule:: zope.testing.renormalizing
-
-zope.testing.server
-===================
-.. automodule:: zope.testing.server
 
 zope.testing.setupstack
 =======================
