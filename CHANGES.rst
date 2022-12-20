@@ -2,8 +2,8 @@
  Changes
 =========
 
-5.1 (unreleased)
-================
+5.0.1 (2022-12-20)
+==================
 
 - Make wheels no longer universal.
 
