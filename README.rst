@@ -39,11 +39,6 @@ loggingsupport
 
   See `zope.testing.loggingsupport`
 
-loghandler
-  Logging handler for tests that check logging output.
-
-  See `zope.testing.loghandler`
-
 module
   Lets a doctest pretend to be a Python module.
 
@@ -54,15 +49,6 @@ renormalizing
   Useful for doctests.
 
   See `zope.testing.renormalizing`
-
-server
-  Provides a simple HTTP server compatible with the zope.app.testing
-  functional testing API.  Lets you interactively play with the system
-  under test.  Helpful in debugging functional doctest failures.
-
-  **Python 2 only**
-
-  See `zope.testing.server`
 
 setupstack
   A simple framework for automating doctest set-up and tear-down.
