@@ -2,11 +2,10 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "cc836c39"
+commit-id = "1a1f5e27"
 
 [python]
 with-pypy = true
-with-legacy-python = true
 with-docs = true
 with-sphinx-doctests = true
 with-windows = true
@@ -21,6 +20,7 @@ use-flake8 = true
 
 [manifest]
 additional-rules = [
+    "include *.yaml",
     "recursive-include src *.txt",
     "include .readthedocs.yml",
     "include tox.ini",
