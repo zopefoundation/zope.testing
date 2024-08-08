@@ -2,8 +2,8 @@
  Changes
 =========
 
-5.0.2 (unreleased)
-==================
+5.1 (unreleased)
+================
 
 - Add support for Python 3.12
 
