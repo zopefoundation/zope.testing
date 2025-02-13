@@ -42,12 +42,16 @@ jobs:
     name: ${{ matrix.os[0] }}-${{ matrix.config[1] }}
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Install uv + caching
+      uses: astral-sh/setup-uv@v5
       with:
-        python-version: ${{ matrix.config[0] }}
-    - name: Install uv
-      uses: hynek/setup-cached-uv@v2
+        enable-cache: true
+        cache-dependency-glob: |
+          setup.*
+          tox.ini
+        cache-suffix: ) }}
+        python-version: ${{ matrix.matrix.config[0] }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Test
       if: ${{ !startsWith(runner.os, 'Mac') }}
       run: uvx --with tox-uv tox -e ${{ matrix.config[1] }}
