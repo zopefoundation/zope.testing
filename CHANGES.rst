@@ -5,9 +5,9 @@
 5.1 (unreleased)
 ================
 
-- Drop support for Python 3.7.
+- Drop support for Python 3.7, 3.8.
 
-- Add support for Python 3.12
+- Add support for Python 3.12, 3.13.
 
 
 5.0.1 (2022-12-20)

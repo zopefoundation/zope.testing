@@ -240,13 +240,13 @@ whereas the unittest and py.test test runners use class dictionary keys.
     >>> result = suite.run(unittest.TextTestResult(sys.stdout, True, 1))
     FFF
     >>> for c, e in result.failures:
-    ...     print(e) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    ...     print(e) # doctest: +ELLIPSIS +REPORT_UDIFF
     Traceback (most recent call last):
       ...
     ...: Failed doctest test for <string>
       File "<string>", line 0, in <string>
     <BLANKLINE>
-    ----------------------------------------------------------------------
+    ...----------...
     File "<string>", line 4, in <string>
     Failed example:
         1 + 1
@@ -261,7 +261,7 @@ whereas the unittest and py.test test runners use class dictionary keys.
     ...: Failed doctest test for test3
       File "None", line 10, in test3
     <BLANKLINE>
-    ----------------------------------------------------------------------
+    ...----------...
     Line 4, in test3
     Failed example:
         1 + 1
@@ -276,7 +276,7 @@ whereas the unittest and py.test test runners use class dictionary keys.
     ...: Failed doctest test for test4f.txt
       File "...test4f.txt", line 0, in txt
     <BLANKLINE>
-    ----------------------------------------------------------------------
+    ...----------...
     File "...test4f.txt", line 3, in test4f.txt
     Failed example:
         1 + 1
