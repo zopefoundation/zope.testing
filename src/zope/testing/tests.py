@@ -20,7 +20,7 @@ from zope.testing import renormalizing
 
 
 def print_(*args):
-    sys.stdout.write(' '.join(map(str, args))+'\n')
+    sys.stdout.write(' '.join(map(str, args)) + '\n')
 
 
 def setUp(test):
@@ -44,7 +44,7 @@ def test_suite():
                 (re.compile(r'\(tests\.MyTest\.test.?\)'), '(tests.MyTest)'),
                 (re.compile(r'\(tests.MoreTests.test_.*\)'),
                  '(tests.MoreTests)')
-                ])))
+            ])))
     suite.addTests(doctest.DocFileSuite('cleanup.txt'))
     suite.addTests(doctest.DocFileSuite('formparser.txt', setUp=setUp))
     return suite
