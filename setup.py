@@ -35,11 +35,11 @@ setup(
     name='zope.testing',
     version='5.1.dev0',
     url='https://github.com/zopefoundation/zope.testing',
-    license='ZPL 2.1',
+    license='ZPL-2.1',
     description='Zope testing helpers',
     long_description=long_description,
     author='Zope Foundation and Contributors',
-    author_email='zope-dev@zope.org',
+    author_email='zope-dev@zope.dev',
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
