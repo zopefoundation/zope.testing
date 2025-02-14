@@ -127,7 +127,7 @@ def doctestfile(path, optionflags=0, checker=None):
     """
     base = os.path.dirname(os.path.abspath(
         sys._getframe(2).f_globals['__file__']
-        ))
+    ))
     path = os.path.join(base, path)
     with open(path) as f:
         test = f.read()
@@ -198,7 +198,7 @@ files = doctestfiles
 def name_from_path(path):
     return _testify(
         _not_word.sub('_', os.path.splitext(os.path.basename(path))[0])
-        )
+    )
 
 
 def _run_test(self, test, globs, name, path,
@@ -210,4 +210,4 @@ def _run_test(self, test, globs, name, path,
         _parser.get_doctest(test, globs, name, path, lineno),
         optionflags=optionflags,
         checker=checker,
-        ).runTest()
+    ).runTest()

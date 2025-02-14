@@ -33,6 +33,7 @@ class FormParser:
     """
     The parser.
     """
+
     def __init__(self, data, base=None):
         self.data = data
         self.base = base
