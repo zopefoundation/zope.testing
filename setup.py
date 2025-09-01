@@ -61,19 +61,13 @@ setup(
         "Topic :: Software Development :: Testing",
     ],
     keywords=keywords,
-    packages=[
-        "zope",
-        "zope.testing",
-    ],
-    package_dir={'': 'src'},
-    namespace_packages=['zope'],
     python_requires='>=3.9',
     install_requires=[
         'setuptools',
     ],
     extras_require={
         'test': [
-            'zope.testrunner',
+            'zope.testrunner >= 6.4',
         ],
         'docs': [
             'sphinx',
