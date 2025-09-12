@@ -33,7 +33,7 @@ keywords = "zope testing doctest RENormalizing OutputChecker timeout logging"
 
 setup(
     name='zope.testing',
-    version='5.2.dev0',
+    version='6.0.dev0',
     url='https://github.com/zopefoundation/zope.testing',
     license='ZPL-2.1',
     description='Zope testing helpers',
@@ -61,19 +61,13 @@ setup(
         "Topic :: Software Development :: Testing",
     ],
     keywords=keywords,
-    packages=[
-        "zope",
-        "zope.testing",
-    ],
-    package_dir={'': 'src'},
-    namespace_packages=['zope'],
     python_requires='>=3.9',
     install_requires=[
         'setuptools',
     ],
     extras_require={
         'test': [
-            'zope.testrunner',
+            'zope.testrunner >= 6.4',
         ],
         'docs': [
             'sphinx',
