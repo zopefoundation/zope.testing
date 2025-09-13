@@ -5,7 +5,7 @@
 6.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Fix test failures when ``fake.py`` package is installed.
 
 
 6.0 (2025-09-12)

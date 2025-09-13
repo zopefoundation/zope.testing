@@ -68,13 +68,13 @@ Importing
 Let's now imagine a more complicated example, were we actually want to
 be able to import the fake module as well:
 
-  >>> setUp(test, 'fake')
+  >>> setUp(test, '__fake__')
   >>> a = 'Hello world'
 
 The import should not fail:
 
-  >>> import fake
-  >>> fake.a
+  >>> import __fake__
+  >>> __fake__.a
   'Hello world'
 
 Let's tear it down again:
@@ -87,10 +87,10 @@ Let's tear it down again:
 .. doctest::
    :pyversion: < 3
 
-   >>> import fake
+   >>> import __fake__
    Traceback (most recent call last):
     ...
-   ModuleNotFoundError: No module named 'fake'
+   ModuleNotFoundError: No module named '__fake__'
 
 If we enter a dotted name, it will actually try to place the fake
 module in that dotted name:
