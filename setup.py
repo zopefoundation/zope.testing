@@ -62,9 +62,6 @@ setup(
     ],
     keywords=keywords,
     python_requires='>=3.9',
-    install_requires=[
-        'setuptools',
-    ],
     extras_require={
         'test': [
             'zope.testrunner >= 6.4',
