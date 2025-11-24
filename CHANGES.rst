@@ -7,6 +7,8 @@
 
 - Fix test failures when ``fake.py`` package is installed.
 
+- Remove run-time dependency on ``setuptools``.
+
 
 6.0 (2025-09-12)
 ================
