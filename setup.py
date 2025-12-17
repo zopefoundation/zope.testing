@@ -38,6 +38,7 @@ setup(
     license='ZPL-2.1',
     description='Zope testing helpers',
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.dev',
     classifiers=[
@@ -47,11 +48,11 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Framework :: Zope :: 3",
@@ -61,7 +62,7 @@ setup(
         "Topic :: Software Development :: Testing",
     ],
     keywords=keywords,
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     extras_require={
         'test': [
             'zope.testrunner >= 6.4',
