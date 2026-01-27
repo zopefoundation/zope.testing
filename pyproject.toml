@@ -1,12 +1,66 @@
 # Generated with zope.meta (https://zopemeta.readthedocs.io/) from:
 # https://github.com/zopefoundation/meta/tree/master/src/zope/meta/pure-python
-
 [build-system]
 requires = [
     "setuptools >= 78.1.1,< 81",
     "wheel",
 ]
 build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "zope.testing"
+version = "6.2.dev0"
+description = "Zope testing helpers"
+license = "ZPL-2.1"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Framework :: Zope :: 3",
+    "Framework :: Zope :: 4",
+    "Framework :: Zope :: 5",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Testing",
+]
+dynamic = ["readme"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Zope Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+keywords = [
+    "zope",
+    "testing",
+    "doctest",
+    "RENormalizing",
+    "OutputChecker",
+    "timeout",
+    "logging",
+]
+
+[project.optional-dependencies]
+test = ["zope.testrunner >= 6.4"]
+docs = [
+    "sphinx",
+    "repoze.sphinx.autointerface",
+    "zope.exceptions",
+    "zope.interface",
+]
+
+[project.urls]
+Source = "https://github.com/zopefoundation/zope.testing"
 
 [tool.coverage.run]
 branch = true
@@ -31,3 +85,7 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "parts/htmlcov"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "CHANGES.rst"]}
+
