@@ -61,7 +61,9 @@ docs = [
 ]
 
 [project.urls]
+Issues = "https://github.com/zopefoundation/zope.testing/issues"
 Source = "https://github.com/zopefoundation/zope.testing"
+Changelog = "https://github.com/zopefoundation/zope.testing/blob/master/CHANGES.rst"
 
 [tool.coverage.run]
 branch = true
