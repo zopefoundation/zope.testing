@@ -5,6 +5,8 @@
 6.2 (unreleased)
 ================
 
+- Add support for Python 3.15.
+
 - Move package metadata from setup.py to pyproject.toml.
 
 

@@ -3,10 +3,12 @@ r"""Doctests in TestCase classes
 """
 import doctest
 import inspect
+import io
 import os
 import re
 import sys
 import types
+import unittest
 
 
 __all__ = [
@@ -203,11 +205,38 @@ def name_from_path(path):
 
 def _run_test(self, test, globs, name, path,
               optionflags, checker, testname='self', lineno=0):
+    # This deliberately avoids DocTestCase.run()/.runTest(), which (as of
+    # Python 3.15) report each example as a separate subtest of the
+    # enclosing unittest result, rather than raising on failure. We want
+    # the whole doctest to be run in one go, with any failures raised
+    # here so that they become a failure of *this* test.
     globs.update(getattr(self, 'globs', ()))
     globs[testname] = self
     optionflags |= doctest.IGNORE_EXCEPTION_DETAIL
-    doctest.DocTestCase(
-        _parser.get_doctest(test, globs, name, path, lineno),
-        optionflags=optionflags,
-        checker=checker,
-    ).runTest()
+    if not (optionflags & doctest.REPORTING_FLAGS):
+        optionflags |= getattr(doctest, '_unittest_reportflags', 0)
+
+    dtest = _parser.get_doctest(test, globs, name, path, lineno)
+    runner = doctest.DocTestRunner(
+        optionflags=optionflags, checker=checker, verbose=False)
+    out = io.StringIO()
+    old_stdout = sys.stdout
+    try:
+        runner.DIVIDER = "-" * 70
+        results = runner.run(dtest, out=out.write, clear_globs=False)
+        # TestResults.skipped was only added in Python 3.13.
+        if hasattr(results, 'skipped') and (
+                results.skipped == results.attempted):
+            raise unittest.SkipTest("all examples were skipped")
+    finally:
+        sys.stdout = old_stdout
+
+    if results.failed:
+        lineno = ('unknown line number' if dtest.lineno is None
+                  else str(dtest.lineno))
+        lname = dtest.name.rsplit('.', 1)[-1]
+        raise self.failureException(
+            'Failed doctest test for %s\n'
+            '  File "%s", line %s, in %s\n\n%s'
+            % (dtest.name, dtest.filename, lineno, lname,
+               out.getvalue().rstrip('\n')))
