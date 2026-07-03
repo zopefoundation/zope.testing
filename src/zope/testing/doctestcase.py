@@ -9,6 +9,15 @@ import re
 import sys
 import types
 import unittest
+import warnings
+
+
+warnings.warn(
+    'zope.testing.doctestcase is deprecated and will be removed in a '
+    'future release. Use plain doctest (e.g. doctest.DocTestSuite or '
+    'doctest.DocFileSuite) instead.',
+    DeprecationWarning,
+    stacklevel=2)
 
 
 __all__ = [
