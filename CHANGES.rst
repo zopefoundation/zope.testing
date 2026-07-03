@@ -5,6 +5,11 @@
 6.2 (unreleased)
 ================
 
+- Add support for Python 3.15.
+
+- Deprecate ``zope.testing.doctestcase`` in favour of plain ``doctest``
+  (e.g. ``doctest.DocTestSuite`` or ``doctest.DocFileSuite``).
+
 - Move package metadata from setup.py to pyproject.toml.
 
 
