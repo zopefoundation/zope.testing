@@ -39,3 +39,6 @@ additional-config = [
 additional-ignores = [
     "docs/_build/html/_sources/api/*",
     ]
+
+[pypi]
+trusted-publishing = true
